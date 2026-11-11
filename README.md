@@ -31,6 +31,19 @@ Eine kleine Web-App zur Vorbereitung auf die **luxemburgische Staatsbürgerschaf
 
 **Profil:** Beim ersten Start legt jeder auf dem eigenen Gerät sein Profil an (nur ein Name, keine Anmeldung). Der Fortschritt wird lokal im Browser gespeichert. Unter „Mehr“ kann er gesichert und wiederhergestellt werden.
 
+## Design: „Luftpost & Löwe“
+
+Die Oberfläche hat eine eigene Bildsprache, die sich aus dem Thema ergibt – Post, Pass und Wappen:
+
+- **Papier und Tinte:** warmer Papierton mit Punktraster, dunkelblaue Konturen, Knöpfe und Kacheln mit hartem, versetztem Schatten zum „Drücken“.
+- **Luftpost-Streifen** in Rot, Weiß und Blau als wiederkehrendes Band (Kopfzeile, Titelkarte, Fortschrittsbalken).
+- **Eigenes Icon-Set** ([`js/ui.js`](js/ui.js)): rund 50 Icons mit Tintenkontur und leicht versetzter Farbfläche, wie ein Druck, der nicht ganz im Register sitzt. Emojis im Markup werden beim Rendern automatisch ersetzt.
+- **Maskottchen:** der gekrönte rote Löwe aus dem Wappen, in drei Stimmungen; er blinzelt, begrüßt und feiert Ergebnisse.
+- **Illustrationen:** Skyline der Stadt Luxemburg (Pont Adolphe, Kathedrale, Gëlle Fra, Bockfelsen), Bildkarten im Postkarten-Rahmen.
+- **Lernkarte:** eine linierte Karteikarte auf einem Stapel, die sich in 3D umdreht; darunter die Lernstufen.
+- **Stempel und Bewegung:** erledigte Aufgaben bekommen einen „gemaach“-Stempel, die Navigation hat einen wandernden Farbfleck, Antworten wackeln oder springen, bei Erfolgen fällt Konfetti. Wer im System „Bewegung reduzieren“ eingestellt hat, sieht keine Animationen.
+- **Schriften:** *Fraunces* (Überschriften) und *Figtree* (Text), beide unter der SIL Open Font License und lokal in `fonts/` abgelegt, damit die App offline gleich aussieht.
+
 ## Benutzen
 
 Die App ist reines HTML/CSS/JavaScript, ohne Build-Schritt und ohne Abhängigkeiten.

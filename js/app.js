@@ -7,6 +7,7 @@
   const VOICES = window.LUX_VOICES || []; // echte Aufnahmen von LOD.lu
   const VERBS = window.LUX_VERBS || [];   // Konjugation aus den LOD-Tabellen
   const VIVRE = window.LUX_VIVRE || [];
+  const UI = window.LUX_UI; // Icons, Maskottchen, Illustrationen
   const VIVRE_EXAM = window.LUX_VIVRE_EXAM || { parts: [], minutes: 60, pass: 28 };
   const $view = document.getElementById("view");
   const $title = document.getElementById("page-title");
@@ -91,7 +92,18 @@
   const isDue = (c) => { const s = state.cards[c.id]; return s && s.due <= Date.now(); };
   const isNew = (c) => !state.cards[c.id];
   const learned = (c) => { const s = state.cards[c.id]; return s && s.box >= 3; };
-  function render(title, html) { $title.textContent = title; $view.innerHTML = html; window.scrollTo(0, 0); }
+  function render(title, html) {
+    $title.textContent = title;
+    $view.innerHTML = html;
+    UI.decorate($view);                 // Emojis im Markup durch das eigene Icon-Set ersetzen
+    $view.classList.remove("enter");    // Einblend-Animation neu starten
+    void $view.offsetWidth;
+    $view.classList.add("enter");
+    window.scrollTo(0, 0);
+  }
+  // Auch nachträglich eingefügte Inhalte (Feedback, Buttons) bekommen die Icons
+  new MutationObserver((list) => list.forEach((m) => m.addedNodes.forEach((n) => UI.decorate(n.nodeType === 1 ? n : n.parentElement))))
+    .observe($view, { childList: true, subtree: true });
   function normalize(s) {
     return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "")
       .replace(/[.,!?…;:()"“”]/g, "").replace(/[’`]/g, "'").replace(/\s+/g, " ").trim();
@@ -178,19 +190,28 @@
     const seen = cards.filter((c) => !isNew(c)).length;
     const pct = Math.round((known / cards.length) * 100);
     render("Moien Lëtzebuerg", `
-      <div class="card">
-        <h2>Moien${activeProfile().name ? ", " + esc(activeProfile().name) : ""}! 👋</h2>
-        <p class="muted">Dein Ziel: die luxemburgische Staatsbürgerschaft. Dafür übst du hier den <b>Sproochentest</b>
-        (Sprechen A2, Hörverstehen B1) und die Landeskunde für <b>„Vivre ensemble“</b>.</p>
+      <section class="hero">
+        <div class="hero-head">
+          <div>
+            <p class="eyebrow">Dein Lernpass</p>
+            <h2 class="hero-title">Moien${activeProfile().name ? ",<br>" + esc(activeProfile().name) : ""}!</h2>
+            <p class="hero-sub">Dein Weg zur luxemburgischen Staatsbürgerschaft.</p>
+          </div>
+          <div class="ring" style="--p:${pct}" title="${pct}% des Wortschatzes sicher gelernt">
+            <svg viewBox="0 0 120 120" aria-hidden="true"><circle class="ring-bg" cx="60" cy="60" r="54"/><circle class="ring-fg" cx="60" cy="60" r="54"/></svg>
+            ${UI.lion()}
+            <span class="ring-pct">${pct}%</span>
+          </div>
+        </div>
         <div class="stats">
           <div><b>${streak()}</b><small>Tage in Folge</small></div>
           <div><b>${due}</b><small>fällige Karten</small></div>
           <div><b>${known}</b><small>sicher gelernt</small></div>
         </div>
-        <div class="bar" style="margin-top:12px"><i style="width:${pct}%"></i></div>
-        <p class="muted">${pct}% des Wortschatzes sicher · ${seen} von ${cards.length} Karten gesehen</p>
-        <a class="btn" style="width:100%" href="#/lernen/heute">${due ? `Jetzt ${due} ${due === 1 ? "Karte" : "Karten"} wiederholen` : "Tägliche Lerneinheit starten"}</a>
-      </div>
+        <p class="hero-note">${pct}% des Wortschatzes sicher · ${seen} von ${cards.length} Karten gesehen</p>
+        <a class="btn red hero-cta" href="#/lernen/heute">${due ? `Jetzt ${due} ${due === 1 ? "Karte" : "Karten"} wiederholen` : "Tägliche Lerneinheit starten"}</a>
+        ${UI.skyline}
+      </section>
       ${planCard()}
       <div class="grid">
         <a class="tile" href="#/lernen"><div class="ico">🃏</div><b>Karteikarten</b><small>Wortschatz nach Themen</small></a>
@@ -216,8 +237,9 @@
   // Erster Start: Profil anlegen
   function viewWelcome() {
     render("Willkommen", `
-      <div class="card">
-        <h2>Moien! 👋</h2>
+      <div class="card welcome">
+        <div class="welcome-art">${UI.lion("frou")}${UI.skyline}</div>
+        <h2>Moien!</h2>
         <p><b>Moien Lëtzebuerg</b> bereitet dich auf die luxemburgische Staatsbürgerschaft vor: Luxemburgisch für den <b>Sproochentest</b> und Landeskunde für <b>„Vivre ensemble“</b>.</p>
         <h3>Erstelle dein Profil</h3>
         <form id="nameform">
@@ -385,28 +407,37 @@
       render(title, `
         <div class="bar"><i style="width:${Math.round((done / total) * 100)}%"></i></div>
         <p class="muted">${done} / ${total} · ${isNew(c) ? "neu" : "Wiederholung"}</p>
-        <div class="card flash" id="flash">
-          <div class="lang">${rev ? "Deutsch" : "Lëtzebuergesch"}</div>
-          <div class="front">${esc(front)}</div>
-          ${rev ? "" : audioBtn(`c-${c.id}`)}
-          <div id="back" hidden>
-            <div class="back">${esc(back)}</div>
-            ${rev ? audioBtn(`c-${c.id}`) : ""}
-            ${c.ex ? `<div class="ex">${esc(c.ex)} ${audioBtn(`e-${c.id}`)}</div>` : ""}
+        <div class="flash" id="flash" role="button" tabindex="0" aria-label="Karte umdrehen">
+          <div class="flash-inner">
+            <div class="face front">
+              <span class="tab-label">${esc((topicById[c.topic] || {}).title || "")}</span>
+              <div class="lang">${rev ? "Deutsch" : "Lëtzebuergesch"}</div>
+              <div class="fword">${esc(front)}</div>
+              ${rev ? "" : audioBtn(`c-${c.id}`)}
+              <div class="hint">Antippen zum Umdrehen</div>
+            </div>
+            <div class="face back">
+              <span class="tab-label">${esc((topicById[c.topic] || {}).title || "")}</span>
+              <div class="lang">${rev ? "Lëtzebuergesch" : "Deutsch"}</div>
+              <div class="fword">${esc(back)}</div>
+              <div class="word-small">${esc(front)}</div>
+              ${rev ? audioBtn(`c-${c.id}`) : ""}
+              ${c.ex ? `<div class="ex">${esc(c.ex)} ${audioBtn(`e-${c.id}`)}</div>` : ""}
+            </div>
           </div>
-          <div class="hint" id="hint">Antippen zum Umdrehen</div>
         </div>
+        <div class="boxes" title="Lernstufe dieser Karte">${Array.from({ length: INTERVALS.length - 1 }, (_, k) => `<i class="${k < ((state.cards[c.id] || {}).box || 0) ? "on" : ""}"></i>`).join("")}</div>
         <div class="row" id="answer" hidden>
           <button class="btn bad" id="no">✗ Nochmal</button>
           <button class="btn good" id="yes">✓ Gewusst</button>
         </div>`);
       const flip = (e) => {
         if (e.target.closest("[data-audio]")) return; // Lautsprecher dreht die Karte nicht um
-        document.getElementById("back").hidden = false;
-        document.getElementById("hint").hidden = true;
+        document.getElementById("flash").classList.toggle("flipped");
         document.getElementById("answer").hidden = false;
       };
       document.getElementById("flash").onclick = flip;
+      document.getElementById("flash").onkeydown = (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); flip(e); } };
       document.getElementById("yes").onclick = () => grade(c, true);
       document.getElementById("no").onclick = () => grade(c, false);
     }
@@ -1506,7 +1537,8 @@ ${sents.map((s) => `<p class="s"><span class="lb">${esc(s.lb)}</span><br><span c
     const [a, b, c] = parts;
     const tab = { lernen: "lernen", liste: "lernen", quiz: "quiz", sprechen: "sprechen", verstehen: "mehr", grammatik: "mehr", pruefung: "mehr", mehr: "mehr", profil: "mehr", ich: "sprechen", schwer: "lernen", zuelen: "lernen", simulation: "mehr", stemmen: "mehr", satzbau: "lernen", pruefliste: "mehr", verben: "lernen", vivre: "mehr" }[a] || "home";
     const who = document.getElementById("who");
-    who.textContent = "👤 " + (activeProfile().name || "Profil");
+    who.innerHTML = `<span class="who-av">${esc((activeProfile().name || "?").charAt(0).toUpperCase())}</span>${esc(activeProfile().name || "Profil")}`;
+    document.querySelector(".tabs").style.setProperty("--tab", ["home", "lernen", "quiz", "sprechen", "mehr"].indexOf(tab));
     document.querySelectorAll(".tabs a").forEach((x) => x.classList.toggle("active", x.dataset.tab === tab));
     if (!activeProfile().name) { who.hidden = true; return viewWelcome(); } // erster Start
     who.hidden = false;
@@ -1533,6 +1565,10 @@ ${sents.map((s) => `<p class="s"><span class="lb">${esc(s.lb)}</span><br><span c
       default: return viewHome();
     }
   }
+
+  // Kopfzeile und Navigation mit dem Icon-Set bestücken
+  document.getElementById("crest").innerHTML = UI.lion();
+  document.querySelectorAll("[data-ic]").forEach((el) => { el.innerHTML = UI.icon(el.dataset.ic); });
 
   $view.addEventListener("click", (e) => {
     const b = e.target.closest("[data-audio]");

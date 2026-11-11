@@ -5,31 +5,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Moien Lëtzebuerg</title>
   <meta name="description" content="Sprache und Landeskunde für die luxemburgische Staatsbürgerschaft: Sproochentest und Vivre ensemble">
-  <meta name="theme-color" content="#00a1de">
+  <meta name="theme-color" content="#F5EFE3">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Moien Lëtz.">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icons/icon-180.png">
+  <link rel="preload" href="fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+  <!-- raue Kanten für Stempel -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="ink"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="4"/><feDisplacementMap in="SourceGraphic" scale="2.2"/></filter></svg>
+
   <header class="top">
+    <a class="brand" href="#/" aria-label="Zur Startseite"><span id="crest"></span></a>
     <h1 id="page-title">Moien Lëtzebuerg</h1>
-    <a id="who" href="#/profil" aria-label="Mein Profil">👤 Profil</a>
+    <a id="who" href="#/profil" aria-label="Mein Profil">Profil</a>
   </header>
 
   <main id="view" aria-live="polite"></main>
 
   <nav class="tabs" aria-label="Hauptnavigation">
-    <a href="#/" data-tab="home"><span>🏠</span>Start</a>
-    <a href="#/lernen" data-tab="lernen"><span>🃏</span>Lernen</a>
-    <a href="#/quiz" data-tab="quiz"><span>✅</span>Quiz</a>
-    <a href="#/sprechen" data-tab="sprechen"><span>🎙️</span>Sprechen</a>
-    <a href="#/mehr" data-tab="mehr"><span>📚</span>Mehr</a>
+    <i class="tab-ind" aria-hidden="true"></i>
+    <a href="#/" data-tab="home"><span data-ic="home"></span>Start</a>
+    <a href="#/lernen" data-tab="lernen"><span data-ic="cards"></span>Lernen</a>
+    <a href="#/quiz" data-tab="quiz"><span data-ic="quiz"></span>Quiz</a>
+    <a href="#/sprechen" data-tab="sprechen"><span data-ic="mic"></span>Sprechen</a>
+    <a href="#/mehr" data-tab="mehr"><span data-ic="more"></span>Mehr</a>
   </nav>
 
+  <script src="js/ui.js"></script>
   <script src="js/data.js"></script>
   <script src="js/me.js"></script>
   <script src="js/train.js"></script>
