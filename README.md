@@ -1,0 +1,44 @@
+# Sproochentest Trainer 🇱🇺
+
+Eine kleine Web-App zum Luxemburgischlernen. Sie ist gezielt auf den **Sproochentest** für die
+luxemburgische Staatsbürgerschaft ausgerichtet:
+
+- **Mündlicher Ausdruck:** Niveau **A2**
+- **Hörverstehen:** Niveau **B1**
+- Lesen und Schreiben werden nicht geprüft
+
+## Funktionen
+
+| Bereich | Inhalt |
+|---|---|
+| 🃏 **Karteikarten** | ca. 270 Wörter und Sätze in 13 Prüfungsthemen (Vorstellen, Familie, Wohnen, Arbeit, Alltag, Zahlen, Essen, Gesundheit, Freizeit, Verkehr, Wetter, Bildbeschreibung, Luxemburg). Mit Wiederholungssystem (Leitner-Boxen), das fällige Karten automatisch wieder vorlegt. Richtung umschaltbar (LB→DE / DE→LB). |
+| ✅ **Quiz** | Multiple Choice in beide Richtungen und ein Schreibmodus (Akzentfehler werden verziehen) |
+| 🎙️ **Sprechen** | Typische Prüfungsfragen pro Thema, Aufnahmefunktion mit Timer und eine A2-Musterantwort mit Übersetzung |
+| 👂 **Verstehen** | Kurze Dialoge und Durchsagen (Arzt, Bäckerei, Bahnhof, Wetter, Gemeinde) mit Multiple-Choice-Fragen |
+| 📐 **Grammatik** | Nur das Nötige: Artikel, n-Regel, sinn/hunn, Perfekt, Modalverben, Possessivpronomen, Satzbau |
+| 🎓 **Prüfung** | Ablauf, Tipps und Links (INL, LOD.lu, RTL, Guichet.lu) |
+
+Der Fortschritt wird lokal im Browser gespeichert. Unter „Mehr“ kann er gesichert und wiederhergestellt werden.
+
+## Benutzen
+
+Die App ist reines HTML/CSS/JavaScript, ohne Build-Schritt und ohne Abhängigkeiten.
+
+**Lokal:**
+```bash
+python3 -m http.server 8000
+# dann http://localhost:8000 öffnen
+```
+
+**Aufs Handy (empfohlen):** Repository-Einstellungen → *Pages* → Branch auswählen → Speichern.
+Danach die GitHub-Pages-Adresse in Safari/Chrome öffnen und **„Zum Home-Bildschirm“** wählen.
+Die App funktioniert dann wie eine normale App, auch offline.
+
+## Inhalte erweitern
+
+Alle Lerninhalte stehen in [`js/data.js`](js/data.js): Vokabeln (`topics`), Grammatik (`grammar`),
+Sprechfragen (`speaking`) und Verstehenstexte (`dialogues`). Neue Einträge erscheinen automatisch in der App.
+
+> Hinweis: Termine, Gebühren und Bestehensgrenzen des Sproochentest bitte immer aktuell beim
+> [INL](https://www.inll.lu) bzw. auf [Guichet.lu](https://guichet.public.lu) prüfen.
+> Für die Aussprache ist [LOD.lu](https://lod.lu) (offizielles Wörterbuch mit Audio) ideal.

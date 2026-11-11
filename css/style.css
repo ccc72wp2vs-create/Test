@@ -1,0 +1,140 @@
+:root {
+  --bg: #f4f6f8;
+  --card: #ffffff;
+  --text: #1c2430;
+  --muted: #5f6b7a;
+  --line: #dde3ea;
+  --accent: #00a1de;   /* Luxemburger Hellblau */
+  --red: #ed2939;      /* Flaggenrot */
+  --good: #1e9e5a;
+  --bad: #d6453d;
+  --radius: 14px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #11161c;
+    --card: #1b232c;
+    --text: #e8edf2;
+    --muted: #9aa7b5;
+    --line: #2c3742;
+  }
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { margin: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.45;
+  -webkit-tap-highlight-color: transparent;
+  padding-bottom: calc(72px + env(safe-area-inset-bottom));
+}
+.top {
+  position: sticky; top: 0; z-index: 5;
+  background: var(--card);
+  border-bottom: 3px solid var(--accent);
+  padding: calc(10px + env(safe-area-inset-top)) 16px 10px;
+}
+.top h1 { margin: 0; font-size: 1.15rem; }
+main { max-width: 640px; margin: 0 auto; padding: 16px; }
+
+.tabs {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 5;
+  display: flex; background: var(--card); border-top: 1px solid var(--line);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.tabs a {
+  flex: 1; text-align: center; text-decoration: none; color: var(--muted);
+  font-size: .72rem; padding: 8px 0 6px;
+}
+.tabs a span { display: block; font-size: 1.3rem; }
+.tabs a.active { color: var(--accent); font-weight: 600; }
+
+h2 { font-size: 1.2rem; margin: 8px 0 12px; }
+h3 { font-size: 1.02rem; margin: 0 0 8px; }
+p { margin: 0 0 10px; }
+.muted { color: var(--muted); font-size: .92rem; }
+
+.card {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 16px; margin-bottom: 12px;
+}
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.tile {
+  display: block; background: var(--card); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 14px; text-decoration: none; color: inherit;
+  cursor: pointer; text-align: left; font: inherit;
+}
+.tile .ico { font-size: 1.6rem; }
+.tile b { display: block; margin-top: 4px; }
+.tile small { color: var(--muted); }
+
+.btn {
+  display: inline-block; border: 0; border-radius: 10px; padding: 12px 16px;
+  font: inherit; font-weight: 600; cursor: pointer; text-decoration: none;
+  background: var(--accent); color: #fff; text-align: center;
+}
+.btn.secondary { background: transparent; color: var(--accent); border: 1.5px solid var(--accent); }
+.btn.good { background: var(--good); }
+.btn.bad { background: var(--bad); }
+.btn.red { background: var(--red); }
+.btn:disabled { opacity: .5; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; }
+.row .btn { flex: 1; }
+
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; text-align: center; }
+.stats div { background: var(--bg); border-radius: 10px; padding: 10px 4px; }
+.stats b { display: block; font-size: 1.4rem; color: var(--accent); }
+.stats small { color: var(--muted); font-size: .75rem; }
+
+.bar { height: 8px; background: var(--line); border-radius: 4px; overflow: hidden; margin: 6px 0; }
+.bar i { display: block; height: 100%; background: var(--accent); }
+
+/* Karteikarte */
+.flash {
+  min-height: 220px; display: flex; flex-direction: column; justify-content: center;
+  align-items: center; text-align: center; cursor: pointer; user-select: none;
+}
+.flash .front { font-size: 1.5rem; font-weight: 700; }
+.flash .back { font-size: 1.15rem; margin-top: 14px; color: var(--muted); }
+.flash .ex { font-size: .95rem; margin-top: 8px; font-style: italic; }
+.flash .hint { margin-top: 16px; font-size: .8rem; color: var(--muted); }
+.lang { font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 6px; }
+
+/* Quiz */
+.opt {
+  display: block; width: 100%; text-align: left; margin-bottom: 8px; font: inherit;
+  padding: 13px 14px; border-radius: 10px; border: 1.5px solid var(--line);
+  background: var(--card); color: var(--text); cursor: pointer;
+}
+.opt.right { border-color: var(--good); background: color-mix(in srgb, var(--good) 15%, var(--card)); }
+.opt.wrong { border-color: var(--bad); background: color-mix(in srgb, var(--bad) 15%, var(--card)); }
+input[type=text] {
+  width: 100%; font: inherit; padding: 12px; border-radius: 10px;
+  border: 1.5px solid var(--line); background: var(--card); color: var(--text); margin-bottom: 10px;
+}
+.feedback { padding: 10px 12px; border-radius: 10px; margin: 8px 0; }
+.feedback.ok { background: color-mix(in srgb, var(--good) 15%, var(--card)); }
+.feedback.no { background: color-mix(in srgb, var(--bad) 15%, var(--card)); }
+
+/* Grammatik & Tabellen */
+table { border-collapse: collapse; width: 100%; margin: 6px 0 12px; font-size: .95rem; }
+th, td { border: 1px solid var(--line); padding: 6px 8px; text-align: left; }
+th { background: var(--bg); }
+.ex { background: var(--bg); border-left: 3px solid var(--accent); padding: 8px 10px; border-radius: 6px; }
+details.card summary { cursor: pointer; font-weight: 600; }
+details.card[open] summary { margin-bottom: 10px; }
+
+.wordlist { list-style: none; padding: 0; margin: 0; }
+.wordlist li { padding: 8px 0; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; gap: 12px; }
+.wordlist li b { font-weight: 600; }
+.wordlist li span { color: var(--muted); text-align: right; }
+.box-badge { font-size: .7rem; background: var(--bg); border-radius: 6px; padding: 1px 6px; color: var(--muted); }
+
+.timer { font-size: 2.2rem; font-weight: 700; text-align: center; font-variant-numeric: tabular-nums; }
+.rec-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--red); animation: blink 1s infinite; }
+@keyframes blink { 50% { opacity: .2; } }
+audio { width: 100%; margin-top: 8px; }
+.dialog-line { margin: 4px 0; }
+a { color: var(--accent); }
