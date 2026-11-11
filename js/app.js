@@ -121,9 +121,6 @@
     render("Sproochentest Trainer", `
       <div class="card">
         <h2>Moien${activeProfile().name ? ", " + esc(activeProfile().name) : ""}! 👋</h2>
-        ${activeProfile().name ? "" : `<form id="nameform" class="row" style="margin-bottom:12px">
-          <input type="text" id="myname" maxlength="20" placeholder="Wie heißt du?" style="flex:2;margin:0" aria-label="Dein Name">
-          <button class="btn" type="submit">Speichern</button></form>`}
         <p class="muted">Dein Ziel: der <b>Sproochentest</b> für die luxemburgische Staatsbürgerschaft –
         <b>Sprechen auf Niveau A2</b> und <b>Hörverstehen auf Niveau B1</b>.</p>
         <div class="stats">
@@ -152,61 +149,71 @@
         <a class="tile" href="#/grammatik"><div class="ico">📐</div><b>Grammatik</b><small>Das Nötigste für A2</small></a>
         <a class="tile" href="#/pruefung"><div class="ico">🎓</div><b>Die Prüfung</b><small>Ablauf & Tipps</small></a>
       </div>`);
-    const nf = document.getElementById("nameform");
-    if (nf) nf.onsubmit = (e) => {
+  }
+
+  // ---------- Profile ----------
+  const cleanName = (s) => String(s || "").replace(/\s+/g, " ").trim().slice(0, 20);
+  // Erster Start: Profil anlegen
+  function viewWelcome() {
+    render("Willkommen", `
+      <div class="card">
+        <h2>Moien! 👋</h2>
+        <p>Mit dieser App lernst du Luxemburgisch für den <b>Sproochentest</b> – genau das, was du für die Staatsbürgerschaft brauchst.</p>
+        <h3>Erstelle dein Profil</h3>
+        <form id="nameform">
+          <input type="text" id="myname" maxlength="20" placeholder="Wie heißt du?" aria-label="Dein Name" required>
+          <button class="btn" type="submit" style="width:100%">Los geht's</button>
+        </form>
+        <p class="muted" style="margin-top:10px">Dein Profil und dein Lernfortschritt werden nur auf diesem Gerät gespeichert – ohne Anmeldung und ohne Konto.</p>
+      </div>`);
+    document.getElementById("nameform").onsubmit = (e) => {
       e.preventDefault();
       const name = cleanName(document.getElementById("myname").value);
       if (name) { activeProfile().name = name; saveProfiles(); route(); }
     };
   }
 
-  // ---------- Profile ----------
-  const cleanName = (s) => String(s || "").replace(/\s+/g, " ").trim().slice(0, 20);
-  function viewProfiles() {
-    const rows = profiles.list.map((p) => {
-      const s = p.id === profiles.active ? state : load(p.id);
-      const known = cards.filter((c) => s.cards[c.id] && s.cards[c.id].box >= 3).length;
-      const active = p.id === profiles.active;
-      return `<div class="card profile${active ? " active" : ""}">
+  function viewProfile() {
+    const me = activeProfile();
+    const known = cards.filter(learned).length;
+    // Falls auf dem Gerät noch weitere Profile aus einer früheren Version liegen, bleiben sie erreichbar.
+    const others = profiles.list.filter((p) => p.id !== me.id).map((p) => `<div class="card profile">
         <div class="who"><span class="avatar">${esc((p.name || "?").charAt(0).toUpperCase())}</span>
-          <div><b>${esc(p.name || "Ohne Namen")}</b>${active ? ' <span class="box-badge">aktiv</span>' : ""}<br>
-          <small class="muted">${known} sicher gelernt · ${Object.keys(s.cards).length} Karten gesehen · ${streak(s)} Tage in Folge</small></div></div>
-        <div class="row">
-          ${active ? "" : `<button class="btn" data-act="use" data-id="${p.id}">Wechseln</button>`}
-          <button class="btn secondary" data-act="rename" data-id="${p.id}">Umbenennen</button>
-          ${profiles.list.length > 1 ? `<button class="btn secondary" data-act="del" data-id="${p.id}">Löschen</button>` : ""}
-        </div></div>`;
-    }).join("");
-    render("Profile", `
-      <p class="muted">Jedes Profil hat seinen eigenen Lernfortschritt. So können mehrere Personen die App auf diesem Gerät nutzen.</p>
-      ${rows}
-      <form class="card" id="addform"><h3>Neues Profil</h3>
-        <input type="text" id="newname" maxlength="20" placeholder="Name" aria-label="Name des neuen Profils">
-        <button class="btn" type="submit" style="width:100%">Profil anlegen</button></form>
-      <p class="muted">Die Profile werden nur auf diesem Gerät gespeichert. Wer die App auf dem eigenen Handy öffnet, hat dort automatisch einen eigenen Fortschritt.</p>`);
-    document.getElementById("addform").onsubmit = (e) => {
+          <div><b>${esc(p.name || "Ohne Namen")}</b><br><small class="muted">${Object.keys(load(p.id).cards).length} Karten gesehen</small></div></div>
+        <div class="row"><button class="btn secondary" data-act="use" data-id="${p.id}">Wechseln</button>
+          <button class="btn secondary" data-act="del" data-id="${p.id}">Löschen</button></div></div>`).join("");
+    render("Mein Profil", `
+      <div class="card profile active">
+        <div class="who"><span class="avatar">${esc(me.name.charAt(0).toUpperCase())}</span>
+          <div><b>${esc(me.name)}</b><br><small class="muted">Profil auf diesem Gerät</small></div></div>
+        <div class="stats">
+          <div><b>${streak()}</b><small>Tage in Folge</small></div>
+          <div><b>${Object.keys(state.cards).length}</b><small>Karten gesehen</small></div>
+          <div><b>${known}</b><small>sicher gelernt</small></div>
+        </div>
+        <p class="muted" style="margin-top:10px">${state.days.length} Lerntage insgesamt</p>
+        <form id="renameform" class="row">
+          <input type="text" id="myname" maxlength="20" value="${esc(me.name)}" style="flex:2;margin:0" aria-label="Dein Name">
+          <button class="btn secondary" type="submit">Name ändern</button>
+        </form>
+      </div>
+      <p class="muted">Dein Profil und dein Fortschritt liegen nur auf diesem Gerät. Unter <a href="#/mehr">Mehr</a> kannst du den Fortschritt sichern, z. B. bevor du das Handy wechselst.</p>
+      ${others ? `<h2>Weitere Profile auf diesem Gerät</h2>${others}` : ""}`);
+    document.getElementById("renameform").onsubmit = (e) => {
       e.preventDefault();
-      const name = cleanName(document.getElementById("newname").value);
-      if (!name) return;
-      const id = "p" + Date.now();
-      profiles.list.push({ id, name });
-      switchProfile(id);
-      go("#/");
+      const name = cleanName(document.getElementById("myname").value);
+      if (name) { me.name = name; saveProfiles(); route(); }
     };
     $view.querySelectorAll("[data-act]").forEach((b) => {
       b.onclick = () => {
         const p = profiles.list.find((x) => x.id === b.dataset.id);
         if (b.dataset.act === "use") { switchProfile(p.id); return go("#/"); }
-        if (b.dataset.act === "rename") {
-          const name = cleanName(prompt("Neuer Name:", p.name));
-          if (name) { p.name = name; saveProfiles(); }
-        }
-        if (b.dataset.act === "del" && confirm(`Profil „${p.name || "Ohne Namen"}“ mit dem gesamten Lernfortschritt löschen?`)) {
-          try { localStorage.removeItem(storeKey(p.id)); } catch (e) { /* ignorieren */ }
+        if (confirm(`Profil „${p.name || "Ohne Namen"}“ mit dem gesamten Lernfortschritt löschen?`)) {
+          try { localStorage.removeItem(storeKey(p.id)); } catch (err) { /* ignorieren */ }
           profiles.list = profiles.list.filter((x) => x.id !== p.id);
-          if (profiles.active === p.id) switchProfile(profiles.list[0].id); else saveProfiles();
+          saveProfiles();
+          route();
         }
-        route();
       };
     });
   }
@@ -623,10 +630,10 @@
         <a class="tile" href="#/verstehen"><div class="ico">👂</div><b>Verstehen</b><small>Dialoge & Fragen</small></a>
         <a class="tile" href="#/grammatik"><div class="ico">📐</div><b>Grammatik</b><small>Das Nötigste für A2</small></a>
         <a class="tile" href="#/pruefung"><div class="ico">🎓</div><b>Die Prüfung</b><small>Ablauf, Tipps, Links</small></a>
-        <a class="tile" href="#/profil"><div class="ico">👤</div><b>Profile</b><small>${profiles.list.length} auf diesem Gerät</small></a>
+        <a class="tile" href="#/profil"><div class="ico">👤</div><b>Mein Profil</b><small>${esc(activeProfile().name)}</small></a>
       </div>
       <div class="card" style="margin-top:12px"><h3>Fortschritt${activeProfile().name ? " von " + esc(activeProfile().name) : ""}</h3>
-        <p class="muted">Der Fortschritt wird nur auf diesem Gerät gespeichert. Sichern, Wiederherstellen und Zurücksetzen gelten für das aktive Profil.</p>
+        <p class="muted">Der Fortschritt wird nur auf diesem Gerät gespeichert. Mit „Sichern“ erhältst du eine Datei, die du auf einem neuen Gerät wiederherstellen kannst.</p>
         <div class="row">
           <button class="btn secondary" id="exp">Sichern</button>
           <label class="btn secondary">Wiederherstellen<input type="file" id="imp" accept="application/json" hidden></label>
@@ -682,6 +689,8 @@
     const who = document.getElementById("who");
     who.textContent = "👤 " + (activeProfile().name || "Profil");
     document.querySelectorAll(".tabs a").forEach((x) => x.classList.toggle("active", x.dataset.tab === tab));
+    if (!activeProfile().name) { who.hidden = true; return viewWelcome(); } // erster Start
+    who.hidden = false;
     switch (a) {
       case undefined: return viewHome();
       case "lernen": return b ? viewFlash(b) : viewTopics();
@@ -692,7 +701,7 @@
       case "grammatik": return viewGrammar();
       case "pruefung": return viewExam();
       case "mehr": return viewMore();
-      case "profil": return viewProfiles();
+      case "profil": return viewProfile();
       default: return viewHome();
     }
   }

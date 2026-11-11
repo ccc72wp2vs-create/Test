@@ -19,7 +19,7 @@ luxemburgische Staatsbürgerschaft ausgerichtet:
 | 📐 **Grammatik** | Nur das Nötige: Artikel, n-Regel, sinn/hunn, Perfekt, Modalverben, Possessivpronomen, Satzbau |
 | 🎓 **Prüfung** | Ablauf, Tipps und Links (INL, LOD.lu, RTL, Guichet.lu) |
 
-**Profile:** Mehrere Personen können die App auf demselben Gerät nutzen. Jedes Profil hat seinen eigenen Lernfortschritt; gewechselt wird über den Namen oben rechts. Der Fortschritt wird lokal im Browser gespeichert. Unter „Mehr“ kann er gesichert und wiederhergestellt werden.
+**Profil:** Beim ersten Start legt jeder auf dem eigenen Gerät sein Profil an (nur ein Name, keine Anmeldung). Der Fortschritt wird lokal im Browser gespeichert. Unter „Mehr“ kann er gesichert und wiederhergestellt werden.
 
 ## Benutzen
 
