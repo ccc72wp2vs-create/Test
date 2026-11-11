@@ -14,6 +14,7 @@ luxemburgische Staatsbürgerschaft ausgerichtet:
 | 🃏 **Karteikarten** | ca. 270 Wörter und Sätze in 13 Prüfungsthemen (Vorstellen, Familie, Wohnen, Arbeit, Alltag, Zahlen, Essen, Gesundheit, Freizeit, Verkehr, Wetter, Bildbeschreibung, Luxemburg). Mit Wiederholungssystem (Leitner-Boxen), das fällige Karten automatisch wieder vorlegt. Richtung umschaltbar (LB→DE / DE→LB). |
 | ✅ **Quiz** | Multiple Choice in beide Richtungen und ein Schreibmodus (Akzentfehler werden verziehen) |
 | 🎙️ **Sprechen** | Typische Prüfungsfragen pro Thema, vier Bilder zur Bildbeschreibung, Aufnahmefunktion mit Timer und A2-Musterantworten mit Übersetzung |
+| ⭐ **Meine Vorstellung** | Eigene Daten eintragen (Alter, Herkunft, Wohnort, Familie, Arbeit, Sprachen, Hobbys) – die App erstellt daraus die persönliche Vorstellung auf Luxemburgisch mit Übersetzung. Mit Auswendig-Modus, Druck/PDF und Export als Datei |
 | 👂 **Verstehen** | Kurze Dialoge und Durchsagen (Arzt, Bäckerei, Bahnhof, Wetter, Gemeinde) zum Anhören, mit Multiple-Choice-Fragen |
 | 🔊 **Aussprache** | Alle Vokabeln, Beispielsätze, Prüferfragen, Musterantworten und Dialoge lassen sich anhören (auch offline) |
 | 📐 **Grammatik** | Nur das Nötige: Artikel, n-Regel, sinn/hunn, Perfekt, Modalverben, Possessivpronomen, Satzbau |
