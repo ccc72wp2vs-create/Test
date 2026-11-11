@@ -20,6 +20,7 @@ Eine kleine Web-App zur Vorbereitung auf die **luxemburgische Staatsbürgerschaf
 | 📅 **Wochenplan** | Prüfungstermin eintragen: Countdown, passendes Karten-Tempo und vier Aufgaben pro Tag zum Abhaken |
 | 🔤 **Verben** | Die 30 wichtigsten Verben in Gegenwart und Perfekt, als Tabelle und als Quiz (Formen aus den LOD-Tabellen) |
 | 🇱🇺 **Vivre ensemble** | 100 inoffizielle Übungsfragen, aufgebaut nach den drei offiziellen Prüfungsfächern (Grundrechte, Institutionen, Geschichte & Europa), plus Zusatzwissen. Prüfungssimulation mit 40 Fragen (10/20/10) in 60 Minuten, bestanden ab 28 |
+| 🛂 **Lernpass** | Stempel für 19 Meilensteine, geschätzte Bereitschaft je Prüfungsteil (Sprechen, Hören, Vivre ensemble) und Wochenrückblick |
 | 📝 **Prüfliste** | Alle luxemburgischen Texte der App auf einer druckbaren Seite, zum Gegenlesen durch eine Lehrkraft |
 | ⏱️ **Prüfungssimulation** | Kompletter Durchlauf: 3 B1-Hörtexte, die höchstens zweimal abgespielt werden, danach Gespräch und Bildbeschreibung mit Aufnahme; Auswertung mit Lösungen, Musterantworten und Verlauf |
 | 💬 **Rückfragen** | Typische Nachfragen der Prüfer, passend zu den eigenen Angaben, mit Audio, Übersetzung und Satzanfang |
@@ -43,6 +44,21 @@ Die Oberfläche hat eine eigene Bildsprache, die sich aus dem Thema ergibt – P
 - **Lernkarte:** eine linierte Karteikarte auf einem Stapel, die sich in 3D umdreht; darunter die Lernstufen.
 - **Stempel und Bewegung:** erledigte Aufgaben bekommen einen „gemaach“-Stempel, die Navigation hat einen wandernden Farbfleck, Antworten wackeln oder springen, bei Erfolgen fällt Konfetti. Wer im System „Bewegung reduzieren“ eingestellt hat, sieht keine Animationen.
 - **Schriften:** *Fraunces* (Überschriften) und *Figtree* (Text), beide unter der SIL Open Font License und lokal in `fonts/` abgelegt, damit die App offline gleich aussieht.
+
+## Entwicklung
+
+- **Quellcode der App:** [`src/app/`](src/app) – nach Bereichen aufgeteilt (Kern, Startseite, Lernen, Sprechen/Hören, Vorstellung,
+  Training, Vivre ensemble, Lernpass, Router). Die Teile sind Abschnitte einer gemeinsamen Funktion und werden zu `js/app.js`
+  zusammengesetzt:
+  ```bash
+  node tools/build.js      # nach jeder Änderung in src/app/
+  ```
+- **Tests:** ein Durchlauftest prüft Daten, alle Seiten und die wichtigsten Abläufe in einem echten Browser.
+  ```bash
+  npm install && npx playwright install chromium   # einmalig
+  npm test
+  ```
+- **Nach Änderungen an Dateien**, die offline verfügbar sein sollen, in `sw.js` die Versionsnummer von `CACHE` erhöhen.
 
 ## Benutzen
 

@@ -328,3 +328,39 @@ audio { width: 100%; margin-top: 10px; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
 .tile b, .task b, h2, h3 { overflow-wrap: anywhere; hyphens: auto; }
+
+/* ---------- Startseite: Gruppen ---------- */
+.passlink { display: flex; align-items: center; gap: 12px; padding: 12px 14px; margin-bottom: 4px; text-decoration: none; color: var(--ink); background: var(--gold); border: 1.5px solid var(--edge); border-radius: 16px; box-shadow: 0 4px 0 var(--press); transition: transform .1s, box-shadow .1s; }
+.passlink:active { transform: translateY(4px); box-shadow: 0 0 0 var(--press); }
+.passlink-ic { width: 40px; height: 40px; flex: none; display: grid; place-items: center; background: var(--card); border: 1.5px solid var(--edge); border-radius: 50%; font-size: 1.2rem; transform: rotate(-8deg); --ic: var(--red); color: var(--text); }
+.passlink span:nth-child(2) { flex: 1; } .passlink b { display: block; font-family: var(--display); font-size: 1.08rem; } .passlink small { font-size: .8rem; font-weight: 600; opacity: .8; } .passlink i { font-style: normal; font-size: 1.4rem; }
+.more-tools { margin-top: 22px; } .more-tools > summary { font-family: var(--display); font-size: 1.2rem; margin-bottom: 12px; }
+
+/* ---------- Lernpass ---------- */
+.passport { background: var(--ink); color: #F3EDE0; border: 1.5px solid var(--edge); border-radius: 20px; padding: 0 0 12px; margin-bottom: 18px; overflow: hidden; box-shadow: 5px 6px 0 var(--shade); }
+@media (prefers-color-scheme: dark) { .passport { background: #0B1020; } }
+.passport-head { display: flex; justify-content: space-between; padding: 12px 16px 10px; font-size: .72rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); border-bottom: 6px solid transparent; border-image: var(--airmail) 6; background: linear-gradient(#fff, #fff) bottom / 100% 6px no-repeat; }
+.passport-body { display: flex; gap: 16px; align-items: center; padding: 16px; }
+.passport-photo { width: 96px; flex: none; padding: 8px; background: var(--tint-sky); border: 1.5px solid #F3EDE0; border-radius: 10px; transform: rotate(-3deg); }
+.passport dl { margin: 0; min-width: 0; } .passport dt { font-size: .66rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); }
+.passport dd { margin: 0 0 8px; font-family: var(--display); font-size: 1.12rem; font-weight: 600; overflow-wrap: anywhere; } .passport dd a { color: var(--gold); }
+.mrz { padding: 0 16px; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .74rem; letter-spacing: .12em; line-height: 1.5; opacity: .6; white-space: nowrap; overflow: hidden; }
+.meter { margin-bottom: 14px; } .meter-top { display: flex; justify-content: space-between; align-items: center; } .meter-top > b { font-family: var(--display); font-size: 1.15rem; }
+.stamps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px 8px; }
+.pstamp-slot { text-align: center; } .pstamp-slot b { display: block; font-size: .82rem; line-height: 1.2; margin-top: 8px; } .pstamp-slot small { color: var(--muted); font-size: .72rem; }
+.pstamp { display: inline-grid; place-items: center; width: 68px; height: 68px; border-radius: 50%; font-size: 1.6rem; color: var(--line); border: 2px dashed var(--line); }
+.pstamp .ic-f { opacity: 0; }
+.pstamp.on { color: var(--red); border: 4px double currentColor; transform: rotate(var(--tilt, -6deg)); filter: url(#ink); box-shadow: inset 0 0 0 5px var(--card), inset 0 0 0 6.5px currentColor; animation: stamp .45s cubic-bezier(.3, 1.8, .5, 1) both; }
+.pstamp.on .ic-f { opacity: .35; fill: currentColor; } .pstamp.on.c1 { color: var(--sky); } .pstamp.on.c2 { color: var(--green); }
+#view.enter .pstamp-slot:nth-child(3n+2) .pstamp.on { animation-delay: .12s; } #view.enter .pstamp-slot:nth-child(3n) .pstamp.on { animation-delay: .24s; }
+.chart { display: flex; align-items: flex-end; gap: 8px; height: 130px; margin: 6px 0 4px; }
+.chart-col { flex: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 4px; }
+.chart-col span { font-size: .72rem; font-weight: 700; color: var(--muted); }
+.chart-col i { width: 100%; min-height: 4px; border-radius: 8px 8px 3px 3px; background: var(--line); border: 1.5px solid transparent; transform-origin: bottom; animation: grow .6s cubic-bezier(.2, .9, .3, 1) both; }
+.chart-col.on i { background: var(--sky); border-color: var(--edge); } .chart-col.on:nth-child(even) i { background: var(--red); }
+.chart-col b { font-size: .76rem; color: var(--muted); }
+@keyframes grow { from { transform: scaleY(0); } }
+.toast { position: fixed; z-index: 30; left: 50%; top: calc(14px + env(safe-area-inset-top)); transform: translateX(-50%); width: min(420px, calc(100% - 28px)); display: flex; align-items: center; gap: 14px; padding: 10px 16px 10px 12px; text-decoration: none; color: var(--text); background: var(--card); border: 1.5px solid var(--edge); border-radius: 18px; box-shadow: 0 5px 0 var(--press), 0 16px 30px rgba(0, 0, 0, .25); animation: toast 4.6s cubic-bezier(.3, 1.4, .5, 1) both; }
+.toast .pstamp { width: 48px; height: 48px; font-size: 1.2rem; flex: none; } .toast b { display: block; font-family: var(--display); } .toast small { color: var(--muted); }
+@keyframes toast { 0% { transform: translate(-50%, -140%); } 8%, 90% { transform: translate(-50%, 0); } 100% { transform: translate(-50%, -160%); } }
+@media print { .toast { display: none; } }

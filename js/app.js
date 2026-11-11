@@ -1,3 +1,4 @@
+// Automatisch erzeugt aus src/app/*.js – dort ändern und `node tools/build.js` ausführen.
 (() => {
   "use strict";
 
@@ -32,7 +33,7 @@
   // Speicherplatz, damit vorhandener Fortschritt erhalten bleibt.
   const PROFILES_KEY = "sproochentest-profiles";
   const storeKey = (id) => (id === "p1" ? STORE_KEY : `${STORE_KEY}:${id}`);
-  const emptyState = () => ({ cards: {}, days: [], quizBest: {}, reversed: false, miss: {}, sims: [], done: {}, examDate: "" });
+  const emptyState = () => ({ cards: {}, days: [], quizBest: {}, reversed: false, miss: {}, sims: [], done: {}, examDate: "", recs: 0, heard: [], vmiss: {}, log: {}, stamps: [] });
   function loadProfiles() {
     try {
       const p = JSON.parse(localStorage.getItem(PROFILES_KEY));
@@ -76,6 +77,7 @@
       Object.keys(state.done).sort().slice(0, -30).forEach((k) => delete state.done[k]); // nur die letzten 30 Tage behalten
     }
     save();
+    checkStamps(true);
   }
   function streak(s = state) {
     const set = new Set(s.days);
@@ -213,21 +215,31 @@
         ${UI.skyline}
       </section>
       ${planCard()}
+      <a class="passlink" href="#/pass"><span class="passlink-ic">${UI.icon("star")}</span><span><b>Mein Lernpass</b><small>${earnedStamps().length} von ${STAMPS.length} Stempeln · Bereitschaft · Wochenrückblick</small></span><i>›</i></a>
+      <h2>Sproochentest</h2>
       <div class="grid">
         <a class="tile" href="#/lernen"><div class="ico">🃏</div><b>Karteikarten</b><small>Wortschatz nach Themen</small></a>
-        <a class="tile" href="#/quiz"><div class="ico">✅</div><b>Quiz</b><small>Wissen testen</small></a>
-        <a class="tile" href="#/sprechen"><div class="ico">🎙️</div><b>Sprechen</b><small>Prüfungsfragen üben</small></a>
+        <a class="tile" href="#/sprechen"><div class="ico">🎙️</div><b>Sprechen</b><small>Prüfungsfragen & Bilder</small></a>
+        <a class="tile" href="#/verstehen"><div class="ico">👂</div><b>Verstehen</b><small>Hörtexte A2 & B1</small></a>
         <a class="tile" href="#/ich"><div class="ico">⭐</div><b>Meine Vorstellung</b><small>Persönlicher Text</small></a>
-        <a class="tile" href="#/verstehen"><div class="ico">👂</div><b>Verstehen</b><small>Dialoge & Fragen</small></a>
-        <a class="tile" href="#/grammatik"><div class="ico">📐</div><b>Grammatik</b><small>Das Nötigste für A2</small></a>
-        <a class="tile" href="#/stemmen"><div class="ico">🗣️</div><b>Echte Stimmen</b><small>Sätze von Muttersprachlern</small></a>
-        <a class="tile" href="#/satzbau"><div class="ico">🧩</div><b>Satzbau</b><small>Sätze zusammensetzen</small></a>
-        <a class="tile" href="#/zuelen"><div class="ico">🔢</div><b>Zahlen & Uhrzeit</b><small>Hörtraining</small></a>
         <a class="tile" href="#/simulation"><div class="ico">⏱️</div><b>Prüfungssimulation</b><small>${state.sims.length ? `Zuletzt: Hören ${state.sims[state.sims.length - 1].r}/${state.sims[state.sims.length - 1].t}` : "Kompletter Durchlauf"}</small></a>
-        <a class="tile" href="#/verben"><div class="ico">🔤</div><b>Verben</b><small>Gegenwart & Perfekt</small></a>
-        <a class="tile" href="#/vivre"><div class="ico">🇱🇺</div><b>Vivre ensemble</b><small>Landeskunde-Quiz</small></a>
-        <a class="tile" href="#/pruefung"><div class="ico">🎓</div><b>Die Prüfung</b><small>Ablauf & Tipps</small></a>
-      </div>`);
+        <a class="tile" href="#/quiz"><div class="ico">✅</div><b>Quiz</b><small>Wortschatz testen</small></a>
+      </div>
+      <h2>Vivre ensemble</h2>
+      <div class="grid">
+        <a class="tile" href="#/vivre"><div class="ico">🇱🇺</div><b>Landeskunde</b><small>${VIVRE.length} Übungsfragen in drei Fächern</small></a>
+        <a class="tile" href="#/vivre/examen"><div class="ico">🎓</div><b>Prüfung simulieren</b><small>${state.vivreSims && state.vivreSims.length ? `Zuletzt: ${state.vivreSims[state.vivreSims.length - 1].r}/40` : "40 Fragen in 60 Minuten"}</small></a>
+      </div>
+      <details class="more-tools"><summary>Mehr Übungen & Nachschlagen</summary>
+        <div class="grid">
+          <a class="tile" href="#/stemmen"><div class="ico">🗣️</div><b>Echte Stimmen</b><small>Sätze von Muttersprachlern</small></a>
+          <a class="tile" href="#/satzbau"><div class="ico">🧩</div><b>Satzbau</b><small>Sätze zusammensetzen</small></a>
+          <a class="tile" href="#/zuelen"><div class="ico">🔢</div><b>Zahlen & Uhrzeit</b><small>Hörtraining</small></a>
+          <a class="tile" href="#/verben"><div class="ico">🔤</div><b>Verben</b><small>Gegenwart & Perfekt</small></a>
+          <a class="tile" href="#/grammatik"><div class="ico">📐</div><b>Grammatik</b><small>Das Nötigste für A2</small></a>
+          <a class="tile" href="#/pruefung"><div class="ico">📋</div><b>Die Prüfung</b><small>Ablauf & Tipps</small></a>
+        </div>
+      </details>`);
     const ef = document.getElementById("examform");
     if (ef) ef.onsubmit = (e) => { e.preventDefault(); const v = document.getElementById("examdate").value; if (v) { state.examDate = v; save(); route(); } };
   }
@@ -283,6 +295,7 @@
           <button class="btn secondary" type="submit">Name ändern</button>
         </form>
       </div>
+      <a class="tile star" style="margin-bottom:12px" href="#/pass"><b>⭐ Mein Lernpass</b><small>Stempel, Bereitschaft und Wochenrückblick</small></a>
       <a class="tile star" style="margin-bottom:12px" href="#/ich"><b>⭐ Meine Vorstellung</b><small>${state.me ? "Persönlichen Text ansehen oder Daten ändern" : "Alter, Arbeit, Familie eintragen und persönlichen Text erstellen"}</small></a>
       <p class="muted">Dein Profil und dein Fortschritt liegen nur auf diesem Gerät. Unter <a href="#/mehr">Mehr</a> kannst du den Fortschritt sichern, z. B. bevor du das Handy wechselst.</p>
       ${others ? `<h2>Weitere Profile auf diesem Gerät</h2>${others}` : ""}`);
@@ -443,7 +456,11 @@
     }
 
     function grade(c, ok) {
+      const wasNew = !state.cards[c.id];
       const s = state.cards[c.id] || { box: 0, due: 0, firstTry: true };
+      const day = state.log[today()] || (state.log[today()] = { n: 0, neu: 0 }); // für den Wochenrückblick
+      day.n++; if (wasNew) day.neu++;
+      Object.keys(state.log).sort().slice(0, -60).forEach((k) => delete state.log[k]);
       queue.shift();
       if (ok) {
         if (s.firstTry !== false) right++;
@@ -616,6 +633,7 @@
         const url = URL.createObjectURL(new Blob(chunks, { type: rec.mimeType || type || "audio/webm" }));
         if (out.isConnected) out.innerHTML = `<audio controls src="${url}"></audio><p class="muted">Hör dir zu: Verstehst du dich selbst? Hast du ganze Sätze benutzt?</p>`;
         markActive("schwatzen");
+        state.recs = (state.recs || 0) + 1; save();
         if (onDone) onDone(url);
       };
       rec.start();
@@ -703,6 +721,7 @@
         answered++;
         if (+b.dataset.o === q.a) right++;
         if (answered === d.questions.length) {
+          if (!state.heard.includes(idx)) state.heard.push(idx);
           markActive("heieren");
           document.getElementById("res").innerHTML = `<div class="feedback ${right === answered ? "ok" : "no"}">${right} von ${answered} richtig.</div>`;
         }
@@ -1139,6 +1158,7 @@ ${sents.map((s) => `<p class="s"><span class="lb">${esc(s.lb)}</span><br><span c
             <div style="margin:8px 0">${d.text.map((l) => `<p class="dialog-line">${esc(l)}</p>`).join("")}</div>${audioBtn(`d-${di}`, "Anhören")}</details></div>`;
       }).join("");
       const pct = Math.round((right / total) * 100);
+      texts.forEach((di) => { if (!state.heard.includes(di)) state.heard.push(di); });
       state.sims.push({ d: today(), r: right, t: total });
       state.sims = state.sims.slice(-20);
       save(); markActive("sim");
@@ -1428,7 +1448,10 @@ ${sents.map((s) => `<p class="s"><span class="lb">${esc(s.lb)}</span><br><span c
       </div>
       <h2>Nach Fächern üben</h2>
       <div class="grid">${VIVRE_EXAM.parts.map(([c, n]) => tile(c, `${n} von ${total} Prüfungsfragen`)).join("")}</div>
-      <a class="btn secondary" style="width:100%;margin:12px 0" href="#/vivre/all">Gemischtes Quiz aus den drei Fächern (10 Fragen)</a>
+      <div class="row" style="margin:14px 0">
+        <a class="btn secondary" href="#/vivre/all">Gemischtes Quiz</a>
+        <a class="btn secondary" href="#/vivre/fehler">🔥 Meine Fehler (${Object.keys(state.vmiss).filter((k) => VIVRE.some((q) => q.q === k)).length})</a>
+      </div>
       ${extra.length ? `<h2>Zusatzwissen</h2><div class="grid">${extra.map((c) => tile(c, "kein Prüfungsfach")).join("")}</div>` : ""}
       <div class="card" style="margin-top:12px"><p class="muted" style="margin:0"><b>Wichtig:</b> Die echten Prüfungsfragen sind nicht öffentlich. Diese ${VIVRE.length} Fragen sind inoffizielles
       Übungsmaterial (Stand 2026), aufgebaut nach den drei offiziellen Fächern. Sie ersetzen weder den Kurs noch die offiziellen Unterlagen; Zahlen und Personen können sich ändern.</p></div>`);
@@ -1462,6 +1485,7 @@ ${sents.map((s) => `<p class="s"><span class="lb">${esc(s.lb)}</span><br><span c
     function finish(timeout) {
       stopMedia();
       const right = qs.filter((x) => x.pick === x.q.a).length, ok = right >= VIVRE_EXAM.pass;
+      qs.filter((x) => x.pick !== x.q.a).forEach((x) => { state.vmiss[x.q.q] = (state.vmiss[x.q.q] || 0) + 1; });
       state.vivreSims = (state.vivreSims || []).concat([{ d: today(), r: right }]).slice(-20);
       save(); markActive();
       const per = VIVRE_EXAM.parts.map(([c, n]) => `<li><div>${esc(c)}</div><span>${qs.filter((x) => x.q.c === c && x.pick === x.q.a).length} / ${n}</span></li>`).join("");
@@ -1490,9 +1514,13 @@ ${sents.map((s) => `<p class="s"><span class="lb">${esc(s.lb)}</span><br><span c
   function viewVivre(cat) {
     cat = decodeURIComponent(cat);
     const official = VIVRE_EXAM.parts.map((x) => x[0]);
-    const pool = cat === "all" ? VIVRE.filter((q) => official.includes(q.c)) : VIVRE.filter((q) => q.c === cat);
-    if (!pool.length) return go("#/vivre");
-    const qs = shuffle(pool).slice(0, 10);
+    const pool = cat === "fehler" ? VIVRE.filter((q) => state.vmiss[q.q]).sort((x, y) => state.vmiss[y.q] - state.vmiss[x.q])
+      : cat === "all" ? VIVRE.filter((q) => official.includes(q.c)) : VIVRE.filter((q) => q.c === cat);
+    if (!pool.length) {
+      if (cat !== "fehler") return go("#/vivre");
+      return render("Vivre ensemble", `<div class="card"><h2>Keine offenen Fehler 👍</h2><p>Hier sammeln sich die Fragen, die du im Quiz oder in der Prüfungssimulation falsch beantwortest. Jede richtige Antwort in dieser Runde streicht sie wieder.</p><a class="btn" href="#/vivre">Zur Übersicht</a></div>`);
+    }
+    const qs = (cat === "fehler" ? pool : shuffle(pool)).slice(0, 10);
     let i = 0, score = 0;
     function ask() {
       if (i >= qs.length) {
@@ -1516,6 +1544,9 @@ ${sents.map((s) => `<p class="s"><span class="lb">${esc(s.lb)}</span><br><span c
         b.onclick = () => {
           const ok = +b.dataset.k === q.a;
           if (ok) score++;
+          if (!ok) state.vmiss[q.q] = (state.vmiss[q.q] || 0) + 1;
+          else if (cat === "fehler" && state.vmiss[q.q]) { state.vmiss[q.q]--; if (!state.vmiss[q.q]) delete state.vmiss[q.q]; }
+          save();
           $view.querySelectorAll(".opt").forEach((x) => {
             x.disabled = true;
             if (+x.dataset.k === q.a) x.classList.add("right"); else if (x === b) x.classList.add("wrong");
@@ -1526,6 +1557,106 @@ ${sents.map((s) => `<p class="s"><span class="lb">${esc(s.lb)}</span><br><span c
       });
     }
     ask();
+  }
+
+  // ---------- Lernpass: Stempel, Bereitschaft, Wochenrückblick ----------
+  const best = (prefix) => Math.max(0, ...Object.keys(state.quizBest).filter((k) => k.startsWith(prefix)).map((k) => state.quizBest[k]));
+  function longestStreak() {
+    const days = [...new Set(state.days)].sort();
+    let run = 0, max = 0, prev = null;
+    days.forEach((d) => { const t = new Date(d + "T00:00:00Z").getTime(); run = prev !== null && t - prev === DAY ? run + 1 : 1; max = Math.max(max, run); prev = t; });
+    return max;
+  }
+  const b1Texts = () => D.dialogues.map((d, i) => i).filter((i) => D.dialogues[i].level === "B1");
+  const STAMPS = [
+    { id: "start", ic: "cards", t: "Erste Karte", s: "Los geht's", ok: () => Object.keys(state.cards).length >= 1 },
+    { id: "w50", ic: "cards", t: "50 Wörter", s: "gesehen", ok: () => Object.keys(state.cards).length >= 50 },
+    { id: "w150", ic: "cards", t: "150 Wörter", s: "gesehen", ok: () => Object.keys(state.cards).length >= 150 },
+    { id: "wall", ic: "star", t: "Alle Wörter", s: "gesehen", ok: () => cards.every((c) => state.cards[c.id]) },
+    { id: "k50", ic: "quiz", t: "50 sicher", s: "gelernt", ok: () => cards.filter(learned).length >= 50 },
+    { id: "k150", ic: "quiz", t: "150 sicher", s: "gelernt", ok: () => cards.filter(learned).length >= 150 },
+    { id: "d3", ic: "flame", t: "3 Tage", s: "in Folge", ok: () => longestStreak() >= 3 },
+    { id: "d7", ic: "flame", t: "7 Tage", s: "in Folge", ok: () => longestStreak() >= 7 },
+    { id: "d30", ic: "calendar", t: "30 Lerntage", s: "Ausdauer", ok: () => new Set(state.days).size >= 30 },
+    { id: "ich", ic: "user", t: "Vorstellung", s: "erstellt", ok: () => !!state.me },
+    { id: "rec1", ic: "mic", t: "Erste Aufnahme", s: "Mut", ok: () => state.recs >= 1 },
+    { id: "rec10", ic: "mic", t: "10 Aufnahmen", s: "Sprechen", ok: () => state.recs >= 10 },
+    { id: "b1", ic: "ear", t: "Alle B1-Texte", s: "gehört", ok: () => b1Texts().every((i) => state.heard.includes(i)) },
+    { id: "stem", ic: "voices", t: "Gutes Ohr", s: "Echte Stimmen 8/10", ok: () => (state.quizBest.stemmen || 0) >= 8 },
+    { id: "zuel", ic: "numbers", t: "Zahlen-Profi", s: "8/10", ok: () => best("zuelen/") >= 8 },
+    { id: "verb", ic: "verbs", t: "Verben-Profi", s: "8/10", ok: () => best("verben/") >= 8 },
+    { id: "sim1", ic: "timer", t: "Simulation", s: "erster Durchlauf", ok: () => state.sims.length >= 1 },
+    { id: "sim75", ic: "cap", t: "Hören 75 %", s: "in der Simulation", ok: () => state.sims.some((x) => x.r / x.t >= 0.75) },
+    { id: "viv", ic: "flaglu", t: "Vivre ensemble", s: "bestanden", ok: () => (state.vivreSims || []).some((x) => x.r >= VIVRE_EXAM.pass) }
+  ];
+  const earnedStamps = () => STAMPS.filter((x) => x.ok()).map((x) => x.id);
+  // Neue Stempel merken und – wenn gewünscht – kurz melden
+  function checkStamps(announce) {
+    const fresh = earnedStamps().filter((id) => !state.stamps.includes(id));
+    if (!fresh.length) return;
+    state.stamps = state.stamps.concat(fresh);
+    save();
+    if (!announce) return;
+    const st = STAMPS.find((x) => x.id === fresh[0]);
+    const el = document.createElement("a");
+    el.className = "toast"; el.href = "#/pass";
+    el.innerHTML = `<span class="pstamp on">${UI.icon(st.ic)}</span><span><b>Neuer Stempel im Lernpass</b><small>${esc(st.t)}${fresh.length > 1 ? ` und ${fresh.length - 1} weitere` : ""}</small></span>`;
+    document.querySelectorAll(".toast").forEach((x) => x.remove());
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 4600);
+  }
+  // Grobe Schätzung, wie weit die Vorbereitung je Prüfungsteil ist (0–100)
+  function readiness() {
+    const known = cards.filter(learned).length / cards.length;
+    const lastSims = state.sims.slice(-3), simAvg = lastSims.length ? lastSims.reduce((n, x) => n + x.r / x.t, 0) / lastSims.length : 0;
+    const b1 = b1Texts(), heard = b1.filter((i) => state.heard.includes(i)).length / b1.length;
+    const viv = state.vivreSims && state.vivreSims.length ? state.vivreSims[state.vivreSims.length - 1].r / 40 : 0;
+    const vivCats = VIVRE_EXAM.parts.reduce((n, x) => n + Math.min(10, state.quizBest["vivre/" + x[0]] || 0) / 10, 0) / (VIVRE_EXAM.parts.length || 1);
+    const pct = (x) => Math.round(Math.min(1, x) * 100);
+    return [
+      { t: "Sprechen (A2)", ic: "mic", v: pct(0.5 * known + (state.me ? 0.15 : 0) + 0.2 * Math.min(state.recs, 10) / 10 + 0.15 * Math.min(state.sims.length, 3) / 3), hint: "Wortschatz, eigene Vorstellung, Aufnahmen, Simulationen" },
+      { t: "Hörverstehen (B1)", ic: "ear", v: pct(0.5 * simAvg + 0.3 * heard + 0.2 * ((state.quizBest.stemmen || 0) + best("zuelen/")) / 20), hint: "Simulationen, B1-Texte, Echte Stimmen, Zahlen" },
+      { t: "Vivre ensemble", ic: "flaglu", v: pct(0.6 * viv + 0.4 * vivCats), hint: "letzte Prüfungssimulation und Bestwerte je Fach" }
+    ];
+  }
+
+  function viewPass() {
+    checkStamps(false);
+    const me = activeProfile(), have = earnedStamps(), left = daysLeft();
+    const mrz = ("P<LUX" + me.name.toUpperCase().normalize("NFD").replace(/[^A-Z]/g, "<") + "<".repeat(40)).slice(0, 30);
+    const week = Array.from({ length: 7 }, (_, i) => { const d = new Date(Date.now() - (6 - i) * DAY), key = d.toISOString().slice(0, 10); return { key, wd: "SMDMDFS"[d.getUTCDay()], log: state.log[key] || { n: 0, neu: 0 }, done: Object.keys(state.done[key] || {}).length, on: state.days.includes(key) }; });
+    const maxN = Math.max(10, ...week.map((x) => x.log.n));
+    const sum = (f) => week.reduce((n, x) => n + f(x), 0);
+    render("Mein Lernpass", `
+      <section class="passport">
+        <div class="passport-head"><span>Lëtzebuerg · Lernpass</span><span>${have.length}/${STAMPS.length}</span></div>
+        <div class="passport-body">
+          <div class="passport-photo">${UI.lion()}</div>
+          <dl>
+            <dt>Name</dt><dd>${esc(me.name)}</dd>
+            <dt>Prüfung</dt><dd>${state.examDate ? esc(state.examDate.split("-").reverse().join(".")) + (left >= 0 ? ` · noch ${left} ${left === 1 ? "Tag" : "Tage"}` : "") : `<a href="#/profil">Termin eintragen</a>`}</dd>
+            <dt>Längste Serie</dt><dd>${longestStreak()} ${longestStreak() === 1 ? "Tag" : "Tage"}</dd>
+          </dl>
+        </div>
+        <div class="mrz">${esc(mrz)}<br>${esc(("MOIEN<LETZEBUERG<<" + String(have.length).padStart(2, "0") + "<STEMPEL" + "<".repeat(30)).slice(0, 30))}</div>
+      </section>
+      <div class="card"><h2>Wie bereit bin ich?</h2>
+        ${readiness().map((r) => `<div class="meter"><div class="meter-top"><span>${UI.icon(r.ic)} <b>${r.t}</b></span><b>${r.v} %</b></div>
+          <div class="bar"><i style="width:${r.v}%"></i></div><small class="muted">${r.hint}</small></div>`).join("")}
+        <p class="muted" style="margin-top:10px">Eine grobe Schätzung aus deinen Übungsdaten – keine Vorhersage des Prüfungsergebnisses.</p></div>
+      <h2>Stempel</h2>
+      <div class="stamps">${STAMPS.map((x, i) => { const on = have.includes(x.id); return `<div class="pstamp-slot"><span class="pstamp${on ? " on c" + (i % 3) : ""}" style="--tilt:${((i * 37) % 17) - 8}deg">${UI.icon(x.ic)}</span><b>${esc(x.t)}</b><small>${esc(x.s)}</small></div>`; }).join("")}</div>
+      <div class="card" style="margin-top:18px"><h2>Wochenrückblick</h2>
+        <div class="chart">${week.map((x) => `<div class="chart-col${x.on ? " on" : ""}"><span>${x.log.n || ""}</span><i style="height:${Math.round((x.log.n / maxN) * 100)}%"></i><b>${x.wd}</b></div>`).join("")}</div>
+        <div class="stats">
+          <div><b>${sum((x) => (x.on ? 1 : 0))}</b><small>Lerntage</small></div>
+          <div><b>${sum((x) => x.log.n)}</b><small>Karten geübt</small></div>
+          <div><b>${sum((x) => x.log.neu)}</b><small>neue Wörter</small></div>
+        </div>
+        <p class="muted" style="margin-top:10px">${sum((x) => x.done)} Tagesaufgaben erledigt in den letzten 7 Tagen.</p>
+        ${state.sims.length ? `<h3 style="margin-top:14px">Hören in der Simulation</h3><ul class="wordlist">${state.sims.slice(-5).reverse().map((x) => `<li><div>${esc(x.d.split("-").reverse().join("."))}</div><span>${x.r}/${x.t} · ${Math.round((x.r / x.t) * 100)} %</span></li>`).join("")}</ul>` : ""}
+        ${state.vivreSims && state.vivreSims.length ? `<h3 style="margin-top:14px">Vivre ensemble</h3><ul class="wordlist">${state.vivreSims.slice(-5).reverse().map((x) => `<li><div>${esc(x.d.split("-").reverse().join("."))}</div><span>${x.r}/40 ${x.r >= VIVRE_EXAM.pass ? "✅" : ""}</span></li>`).join("")}</ul>` : ""}
+      </div>`);
   }
 
   // ---------- Router ----------
@@ -1560,6 +1691,7 @@ ${sents.map((s) => `<p class="s"><span class="lb">${esc(s.lb)}</span><br><span c
       case "stemmen": return viewVoices();
       case "satzbau": return b ? viewBuild(b) : viewBuildMenu();
       case "pruefliste": return viewChecklist();
+      case "pass": return viewPass();
       case "verben": return !b ? viewVerbsMenu() : /^\d+$/.test(b) ? viewVerb(+b) : viewVerbQuiz(b);
       case "vivre": return !b ? viewVivreMenu() : b === "examen" ? viewVivreExam() : viewVivre(b);
       default: return viewHome();
@@ -1574,6 +1706,7 @@ ${sents.map((s) => `<p class="s"><span class="lb">${esc(s.lb)}</span><br><span c
     const b = e.target.closest("[data-audio]");
     if (b) play(b.dataset.audio, b);
   });
+  checkStamps(false);
   window.addEventListener("hashchange", route);
   route();
 
