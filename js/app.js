@@ -551,7 +551,8 @@
         <p class="muted">Die Audiodateien (ca. 4 MB) werden beim ersten Anhören gespeichert. Hier kannst du alle auf einmal laden, damit die Aussprache auch ohne Internet funktioniert.</p>
         <button class="btn secondary" id="dl" style="width:100%">Alle Audios herunterladen</button>
       </div>
-      <p class="muted">Die Aussprache stammt von einer computererzeugten luxemburgischen Stimme (Piper „MaryLux“). Sie ist gut verständlich, aber nicht perfekt – im Zweifel gilt <a href="https://lod.lu" target="_blank" rel="noopener">LOD.lu</a>.</p>`);
+      <p class="muted">Einzelne Wörter hörst du als <b>echte Aufnahmen</b> aus dem <a href="https://lod.lu" target="_blank" rel="noopener">Lëtzebuerger Online Dictionnaire (LOD.lu)</a> des Zenter fir d'Lëtzebuerger Sprooch (CC0).
+      Ganze Sätze, Musterantworten und Hörtexte spricht eine computererzeugte luxemburgische Stimme (Piper „MaryLux“) – gut verständlich, aber nicht perfekt.</p>`);
     document.getElementById("dl").onclick = async (e) => {
       const b = e.target, keys = audioKeys();
       b.disabled = true;

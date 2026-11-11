@@ -37,15 +37,20 @@ Die App funktioniert dann wie eine normale App, auch offline.
 
 ## Aussprache (Audio)
 
-Die Dateien in `audio/` wurden mit [Piper](https://github.com/OHF-Voice/piper1-gpl) und der luxemburgischen
-Stimme *MaryLux* erzeugt (Datensatz [marylux-data](https://github.com/marytts/marylux-data), Lizenz CC BY-NC-SA 4.0,
-also nur für nicht-kommerzielle Nutzung). Die Stimme ist computererzeugt und nicht fehlerfrei; im Zweifel gilt LOD.lu.
+- **Einzelne Wörter:** echte Aufnahmen aus dem [Lëtzebuerger Online Dictionnaire (LOD.lu)](https://lod.lu) des
+  Zenter fir d'Lëtzebuerger Sprooch, Lizenz CC0. Welche Karte welchen LOD-Eintrag nutzt, steht in
+  [`audio/lod-quellen.json`](audio/lod-quellen.json).
+- **Sätze, Musterantworten, Hörtexte:** computererzeugt mit [Piper](https://github.com/OHF-Voice/piper1-gpl) und der
+  luxemburgischen Stimme *MaryLux* (Datensatz [marylux-data](https://github.com/marytts/marylux-data), CC BY-NC-SA 4.0,
+  also nur für nicht-kommerzielle Nutzung). Nicht fehlerfrei; im Zweifel gilt LOD.lu.
 
-Nach Änderungen an `js/data.js` die Audios neu erzeugen:
+Nach Änderungen an `js/data.js` die Audios neu erzeugen (erst Computerstimme, dann LOD-Aufnahmen darüber):
 ```bash
 pip install piper-tts
 python3 tools/gen_audio.py /pfad/zu/lb_LU-marylux-medium.onnx
+python3 tools/fetch_lod_audio.py
 ```
+Danach in `sw.js` die Versionsnummer von `AUDIO` erhöhen, damit Geräte die neuen Dateien laden.
 
 ## Inhalte erweitern
 

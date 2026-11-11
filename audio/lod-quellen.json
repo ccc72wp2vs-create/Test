@@ -1,0 +1,1077 @@
+{
+ "c-virstellen-0": {
+  "text": "Moien!",
+  "lod": [
+   "MOIEN1"
+  ]
+ },
+ "c-virstellen-4": {
+  "text": "Äddi!",
+  "lod": [
+   "ADDI1"
+  ]
+ },
+ "c-virstellen-20": {
+  "text": "Merci!",
+  "lod": [
+   "MERCI1"
+  ]
+ },
+ "c-virstellen-25": {
+  "text": "Pardon!",
+  "lod": [
+   "PARDON1"
+  ]
+ },
+ "c-virstellen-26": {
+  "text": "Jo / Neen",
+  "lod": [
+   "JO2",
+   "NEEN1"
+  ]
+ },
+ "c-famill-0": {
+  "text": "d'Famill",
+  "lod": [
+   "FAMILL1"
+  ]
+ },
+ "c-famill-1": {
+  "text": "de Papp",
+  "lod": [
+   "PAPP1"
+  ]
+ },
+ "c-famill-2": {
+  "text": "d'Mamm",
+  "lod": [
+   "MAMM1"
+  ]
+ },
+ "c-famill-3": {
+  "text": "d'Elteren",
+  "lod": [
+   "ELTEREN1"
+  ]
+ },
+ "c-famill-4": {
+  "text": "de Brudder",
+  "lod": [
+   "BRUDDER1"
+  ]
+ },
+ "c-famill-5": {
+  "text": "d'Schwëster",
+  "lod": [
+   "SCHWESTER1"
+  ]
+ },
+ "c-famill-6": {
+  "text": "d'Geschwëster",
+  "lod": [
+   "GESCHWESTER1"
+  ]
+ },
+ "c-famill-7": {
+  "text": "de Jong",
+  "lod": [
+   "JONG1"
+  ]
+ },
+ "c-famill-8": {
+  "text": "d'Duechter",
+  "lod": [
+   "DUECHTER1"
+  ]
+ },
+ "c-famill-9": {
+  "text": "d'Kand",
+  "lod": [
+   "KAND1"
+  ]
+ },
+ "c-famill-11": {
+  "text": "de Mann",
+  "lod": [
+   "MANN1"
+  ]
+ },
+ "c-famill-12": {
+  "text": "d'Fra",
+  "lod": [
+   "FRA1"
+  ]
+ },
+ "c-famill-13": {
+  "text": "de Bopa",
+  "lod": [
+   "BOPA1"
+  ]
+ },
+ "c-famill-14": {
+  "text": "d'Bomi",
+  "lod": [
+   "BOMI1"
+  ]
+ },
+ "c-famill-15": {
+  "text": "de Monni",
+  "lod": [
+   "MONNI1"
+  ]
+ },
+ "c-famill-16": {
+  "text": "d'Tatta",
+  "lod": [
+   "TATTA1"
+  ]
+ },
+ "c-famill-17": {
+  "text": "de Koseng",
+  "lod": [
+   "KOSENG1"
+  ]
+ },
+ "c-famill-18": {
+  "text": "d'Cousine",
+  "lod": [
+   "COUSINE1"
+  ]
+ },
+ "c-famill-19": {
+  "text": "bestuet",
+  "lod": [
+   "BESTUET1"
+  ]
+ },
+ "c-famill-20": {
+  "text": "celibataire",
+  "lod": [
+   "CELIBATAIRE1"
+  ]
+ },
+ "c-wunnen-0": {
+  "text": "d'Haus",
+  "lod": [
+   "HAUS1"
+  ]
+ },
+ "c-wunnen-1": {
+  "text": "d'Wunneng",
+  "lod": [
+   "WUNNENG1"
+  ]
+ },
+ "c-wunnen-2": {
+  "text": "d'Appartement",
+  "lod": [
+   "APPARTEMENT1"
+  ]
+ },
+ "c-wunnen-3": {
+  "text": "d'Kichen",
+  "lod": [
+   "KICHEN1"
+  ]
+ },
+ "c-wunnen-4": {
+  "text": "d'Stuff",
+  "lod": [
+   "STUFF1"
+  ]
+ },
+ "c-wunnen-5": {
+  "text": "d'Schlofzëmmer",
+  "lod": [
+   "SCHLOFZEMMER1"
+  ]
+ },
+ "c-wunnen-6": {
+  "text": "d'Buedzëmmer",
+  "lod": [
+   "BUEDZEMMER1"
+  ]
+ },
+ "c-wunnen-7": {
+  "text": "de Keller",
+  "lod": [
+   "KELLER1"
+  ]
+ },
+ "c-wunnen-8": {
+  "text": "de Gaart",
+  "lod": [
+   "GAART1"
+  ]
+ },
+ "c-wunnen-9": {
+  "text": "de Balcon",
+  "lod": [
+   "BALCON1"
+  ]
+ },
+ "c-wunnen-10": {
+  "text": "den Noper / d'Nopesch",
+  "lod": [
+   "NOPER1",
+   "NOPESCH1"
+  ]
+ },
+ "c-wunnen-11": {
+  "text": "d'Strooss",
+  "lod": [
+   "STROOSS1"
+  ]
+ },
+ "c-wunnen-12": {
+  "text": "d'Duerf",
+  "lod": [
+   "DUERF1"
+  ]
+ },
+ "c-wunnen-13": {
+  "text": "d'Stad",
+  "lod": [
+   "STAD1"
+  ]
+ },
+ "c-wunnen-14": {
+  "text": "d'Gemeng",
+  "lod": [
+   "GEMENG1"
+  ]
+ },
+ "c-wunnen-15": {
+  "text": "de Loyer",
+  "lod": [
+   "LOYER1"
+  ]
+ },
+ "c-wunnen-16": {
+  "text": "lounen",
+  "lod": [
+   "LOUNEN2"
+  ]
+ },
+ "c-wunnen-17": {
+  "text": "kafen",
+  "lod": [
+   "KAFEN1"
+  ]
+ },
+ "c-wunnen-18": {
+  "text": "plënneren",
+  "lod": [
+   "PLENNEREN2"
+  ]
+ },
+ "c-wunnen-19": {
+  "text": "grouss / kleng",
+  "lod": [
+   "GROUSS2",
+   "KLENG1"
+  ]
+ },
+ "c-wunnen-20": {
+  "text": "al / nei",
+  "lod": [
+   "AL2",
+   "NEI1"
+  ]
+ },
+ "c-aarbecht-0": {
+  "text": "d'Aarbecht",
+  "lod": [
+   "AARBECHT1"
+  ]
+ },
+ "c-aarbecht-1": {
+  "text": "schaffen",
+  "lod": [
+   "SCHAFFEN3"
+  ]
+ },
+ "c-aarbecht-2": {
+  "text": "de Beruff",
+  "lod": [
+   "BERUFF1"
+  ]
+ },
+ "c-aarbecht-7": {
+  "text": "de Chef / d'Cheffin",
+  "lod": [
+   "CHEF1",
+   "CHEFFIN1"
+  ]
+ },
+ "c-aarbecht-8": {
+  "text": "de Kolleeg / d'Kolleegin",
+  "lod": [
+   "KOLLEEG1",
+   "KOLLEEGIN1"
+  ]
+ },
+ "c-aarbecht-9": {
+  "text": "de Büro",
+  "lod": [
+   "BURO1"
+  ]
+ },
+ "c-aarbecht-10": {
+  "text": "d'Firma",
+  "lod": [
+   "FIRMA1"
+  ]
+ },
+ "c-aarbecht-11": {
+  "text": "verdéngen",
+  "lod": [
+   "VERDENGEN1"
+  ]
+ },
+ "c-aarbecht-12": {
+  "text": "d'Pai",
+  "lod": [
+   "PAI1"
+  ]
+ },
+ "c-aarbecht-13": {
+  "text": "den Aarbechtskontrakt",
+  "lod": [
+   "AARBECHTSKONTRAKT1"
+  ]
+ },
+ "c-aarbecht-14": {
+  "text": "de Congé",
+  "lod": [
+   "CONGE1"
+  ]
+ },
+ "c-aarbecht-16": {
+  "text": "d'Pensioun",
+  "lod": [
+   "PENSIOUN1"
+  ]
+ },
+ "c-zaeit-0": {
+  "text": "Méindeg",
+  "lod": [
+   "MEINDEG1"
+  ]
+ },
+ "c-zaeit-1": {
+  "text": "Dënschdeg",
+  "lod": [
+   "DENSCHDEG1"
+  ]
+ },
+ "c-zaeit-2": {
+  "text": "Mëttwoch",
+  "lod": [
+   "METTWOCH1"
+  ]
+ },
+ "c-zaeit-3": {
+  "text": "Donneschdeg",
+  "lod": [
+   "DONNESCHDEG1"
+  ]
+ },
+ "c-zaeit-4": {
+  "text": "Freideg",
+  "lod": [
+   "FREIDEG1"
+  ]
+ },
+ "c-zaeit-5": {
+  "text": "Samschdeg",
+  "lod": [
+   "SAMSCHDEG1"
+  ]
+ },
+ "c-zaeit-6": {
+  "text": "Sonndeg",
+  "lod": [
+   "SONNDEG1"
+  ]
+ },
+ "c-zaeit-7": {
+  "text": "de Weekend",
+  "lod": [
+   "WEEKEND1"
+  ]
+ },
+ "c-zaeit-8": {
+  "text": "haut",
+  "lod": [
+   "HAUT1"
+  ]
+ },
+ "c-zaeit-9": {
+  "text": "gëschter",
+  "lod": [
+   "GESCHTER1"
+  ]
+ },
+ "c-zaeit-10": {
+  "text": "muer",
+  "lod": [
+   "MUER1"
+  ]
+ },
+ "c-zaeit-11": {
+  "text": "moies",
+  "lod": [
+   "MOIES1"
+  ]
+ },
+ "c-zaeit-12": {
+  "text": "mëttes",
+  "lod": [
+   "METTES1"
+  ]
+ },
+ "c-zaeit-13": {
+  "text": "owes",
+  "lod": [
+   "OWES1"
+  ]
+ },
+ "c-zaeit-14": {
+  "text": "nuets",
+  "lod": [
+   "NUETS1"
+  ]
+ },
+ "c-zaeit-15": {
+  "text": "d'Woch",
+  "lod": [
+   "WOCH1"
+  ]
+ },
+ "c-zaeit-16": {
+  "text": "de Mount",
+  "lod": [
+   "MOUNT1"
+  ]
+ },
+ "c-zaeit-17": {
+  "text": "d'Joer",
+  "lod": [
+   "JOER1"
+  ]
+ },
+ "c-zaeit-23": {
+  "text": "wéini?",
+  "lod": [
+   "WEINI1"
+  ]
+ },
+ "c-zaeit-24": {
+  "text": "ëmmer / dacks / heiansdo / ni",
+  "lod": [
+   "EMMER1",
+   "DACKS1",
+   "HEIANSDO1",
+   "NI1"
+  ]
+ },
+ "c-zaeit-25": {
+  "text": "opstoen",
+  "lod": [
+   "OPSTOEN2"
+  ]
+ },
+ "c-zaeit-26": {
+  "text": "botzen",
+  "lod": [
+   "BOTZEN1"
+  ]
+ },
+ "c-zaeit-27": {
+  "text": "akafen",
+  "lod": [
+   "AKAFEN1"
+  ]
+ },
+ "c-zaeit-28": {
+  "text": "schlofen",
+  "lod": [
+   "SCHLOFEN1"
+  ]
+ },
+ "c-zuelen-0": {
+  "text": "eent",
+  "lod": [
+   "EENT1"
+  ]
+ },
+ "c-zuelen-1": {
+  "text": "zwee",
+  "lod": [
+   "ZWEE2"
+  ]
+ },
+ "c-zuelen-2": {
+  "text": "dräi",
+  "lod": [
+   "DRAI1"
+  ]
+ },
+ "c-zuelen-3": {
+  "text": "véier",
+  "lod": [
+   "VEIER1"
+  ]
+ },
+ "c-zuelen-4": {
+  "text": "fënnef",
+  "lod": [
+   "FENNEF1"
+  ]
+ },
+ "c-zuelen-5": {
+  "text": "sechs",
+  "lod": [
+   "SECHS1"
+  ]
+ },
+ "c-zuelen-6": {
+  "text": "siwen",
+  "lod": [
+   "SIWEN1"
+  ]
+ },
+ "c-zuelen-7": {
+  "text": "aacht",
+  "lod": [
+   "AACHT1"
+  ]
+ },
+ "c-zuelen-8": {
+  "text": "néng",
+  "lod": [
+   "NENG1"
+  ]
+ },
+ "c-zuelen-9": {
+  "text": "zéng",
+  "lod": [
+   "ZENG1"
+  ]
+ },
+ "c-zuelen-10": {
+  "text": "eelef",
+  "lod": [
+   "EELEF1"
+  ]
+ },
+ "c-zuelen-11": {
+  "text": "zwielef",
+  "lod": [
+   "ZWIELEF1"
+  ]
+ },
+ "c-zuelen-12": {
+  "text": "dräizéng",
+  "lod": [
+   "DRAIZENG1"
+  ]
+ },
+ "c-zuelen-13": {
+  "text": "fofzéng",
+  "lod": [
+   "FOFZENG1"
+  ]
+ },
+ "c-zuelen-14": {
+  "text": "siechzéng",
+  "lod": [
+   "SIECHZENG1"
+  ]
+ },
+ "c-zuelen-15": {
+  "text": "zwanzeg",
+  "lod": [
+   "ZWANZEG1"
+  ]
+ },
+ "c-zuelen-16": {
+  "text": "drësseg",
+  "lod": [
+   "DRESSEG1"
+  ]
+ },
+ "c-zuelen-17": {
+  "text": "véierzeg",
+  "lod": [
+   "VEIERZEG1"
+  ]
+ },
+ "c-zuelen-18": {
+  "text": "fofzeg",
+  "lod": [
+   "FOFZEG1"
+  ]
+ },
+ "c-zuelen-19": {
+  "text": "sechzeg",
+  "lod": [
+   "SECHZEG1"
+  ]
+ },
+ "c-zuelen-20": {
+  "text": "siwwenzeg",
+  "lod": [
+   "SIWWENZEG1"
+  ]
+ },
+ "c-zuelen-21": {
+  "text": "achtzeg",
+  "lod": [
+   "ACHTZEG1"
+  ]
+ },
+ "c-zuelen-22": {
+  "text": "nonzeg",
+  "lod": [
+   "NONZEG1"
+  ]
+ },
+ "c-zuelen-23": {
+  "text": "honnert",
+  "lod": [
+   "HONNERT1"
+  ]
+ },
+ "c-zuelen-24": {
+  "text": "dausend",
+  "lod": [
+   "DAUSEND1"
+  ]
+ },
+ "c-iessen-0": {
+  "text": "d'Brout",
+  "lod": [
+   "BROUT1"
+  ]
+ },
+ "c-iessen-1": {
+  "text": "de Botter",
+  "lod": [
+   "BOTTER1"
+  ]
+ },
+ "c-iessen-2": {
+  "text": "de Kéis",
+  "lod": [
+   "KEIS1"
+  ]
+ },
+ "c-iessen-3": {
+  "text": "d'Fleesch",
+  "lod": [
+   "FLEESCH1"
+  ]
+ },
+ "c-iessen-4": {
+  "text": "de Fësch",
+  "lod": [
+   "FESCH1"
+  ]
+ },
+ "c-iessen-5": {
+  "text": "d'Geméis",
+  "lod": [
+   "GEMEIS1"
+  ]
+ },
+ "c-iessen-6": {
+  "text": "d'Uebst",
+  "lod": [
+   "UEBST1"
+  ]
+ },
+ "c-iessen-7": {
+  "text": "den Apel",
+  "lod": [
+   "APEL1"
+  ]
+ },
+ "c-iessen-8": {
+  "text": "d'Gromper",
+  "lod": [
+   "GROMPER1"
+  ]
+ },
+ "c-iessen-9": {
+  "text": "d'Zalot",
+  "lod": [
+   "ZALOT1"
+  ]
+ },
+ "c-iessen-10": {
+  "text": "d'Zopp",
+  "lod": [
+   "ZOPP1"
+  ]
+ },
+ "c-iessen-11": {
+  "text": "de Kuch",
+  "lod": [
+   "KUCH1"
+  ]
+ },
+ "c-iessen-12": {
+  "text": "d'Mëllech",
+  "lod": [
+   "MELLECH1"
+  ]
+ },
+ "c-iessen-13": {
+  "text": "de Kaffi",
+  "lod": [
+   "KAFFI1"
+  ]
+ },
+ "c-iessen-14": {
+  "text": "den Téi",
+  "lod": [
+   "TEI1"
+  ]
+ },
+ "c-iessen-15": {
+  "text": "d'Waasser",
+  "lod": [
+   "WAASSER2"
+  ]
+ },
+ "c-iessen-16": {
+  "text": "de Wäin",
+  "lod": [
+   "WAIN1"
+  ]
+ },
+ "c-iessen-17": {
+  "text": "de Béier",
+  "lod": [
+   "BEIER1"
+  ]
+ },
+ "c-iessen-22": {
+  "text": "deier / bëlleg",
+  "lod": [
+   "DEIER2",
+   "BELLEG1"
+  ]
+ },
+ "c-iessen-23": {
+  "text": "de Supermarché",
+  "lod": [
+   "SUPERMARCHE1"
+  ]
+ },
+ "c-iessen-24": {
+  "text": "d'Bäckerei",
+  "lod": [
+   "BACKEREI1"
+  ]
+ },
+ "c-gesondheet-0": {
+  "text": "den Dokter",
+  "lod": [
+   "DOKTER1"
+  ]
+ },
+ "c-gesondheet-1": {
+  "text": "den Zänndokter",
+  "lod": [
+   "ZANNDOKTER1"
+  ]
+ },
+ "c-gesondheet-2": {
+  "text": "d'Apdikt",
+  "lod": [
+   "APDIKT1"
+  ]
+ },
+ "c-gesondheet-3": {
+  "text": "d'Spidol",
+  "lod": [
+   "SPIDOL1"
+  ]
+ },
+ "c-gesondheet-4": {
+  "text": "krank",
+  "lod": [
+   "KRANK1"
+  ]
+ },
+ "c-gesondheet-5": {
+  "text": "gesond",
+  "lod": [
+   "GESOND1"
+  ]
+ },
+ "c-gesondheet-10": {
+  "text": "Féiwer",
+  "lod": [
+   "FEIWER1"
+  ]
+ },
+ "c-gesondheet-11": {
+  "text": "d'Medikament",
+  "lod": [
+   "MEDIKAMENT1"
+  ]
+ },
+ "c-fraizaeit-0": {
+  "text": "d'Fräizäit",
+  "lod": [
+   "FRAIZAIT1"
+  ]
+ },
+ "c-fraizaeit-1": {
+  "text": "liesen",
+  "lod": [
+   "LIESEN1"
+  ]
+ },
+ "c-fraizaeit-2": {
+  "text": "schwammen",
+  "lod": [
+   "SCHWAMMEN1"
+  ]
+ },
+ "c-fraizaeit-5": {
+  "text": "kachen",
+  "lod": [
+   "KACHEN3"
+  ]
+ },
+ "c-fraizaeit-10": {
+  "text": "reesen",
+  "lod": [
+   "REESEN1"
+  ]
+ },
+ "c-fraizaeit-11": {
+  "text": "d'Vakanz",
+  "lod": [
+   "VAKANZ1"
+  ]
+ },
+ "c-verkeier-0": {
+  "text": "de Bus",
+  "lod": [
+   "BUS1"
+  ]
+ },
+ "c-verkeier-1": {
+  "text": "den Zuch",
+  "lod": [
+   "ZUCH1"
+  ]
+ },
+ "c-verkeier-2": {
+  "text": "den Tram",
+  "lod": [
+   "TRAM1"
+  ]
+ },
+ "c-verkeier-3": {
+  "text": "den Auto",
+  "lod": [
+   "AUTO1"
+  ]
+ },
+ "c-verkeier-4": {
+  "text": "de Vëlo",
+  "lod": [
+   "VELO1"
+  ]
+ },
+ "c-verkeier-5": {
+  "text": "d'Gare",
+  "lod": [
+   "GARE1"
+  ]
+ },
+ "c-verkeier-6": {
+  "text": "den Arrêt",
+  "lod": [
+   "ARRET1"
+  ]
+ },
+ "c-verkeier-7": {
+  "text": "de Fluchhafen",
+  "lod": [
+   "FLUCHHAFEN1"
+  ]
+ },
+ "c-verkeier-8": {
+  "text": "riets",
+  "lod": [
+   "RIETS2"
+  ]
+ },
+ "c-verkeier-9": {
+  "text": "lénks",
+  "lod": [
+   "LENKS2"
+  ]
+ },
+ "c-verkeier-10": {
+  "text": "riichtaus",
+  "lod": [
+   "RIICHTAUS1"
+  ]
+ },
+ "c-verkeier-11": {
+  "text": "no / wäit",
+  "lod": [
+   "NO1",
+   "WAIT2"
+  ]
+ },
+ "c-wieder-0": {
+  "text": "d'Wieder",
+  "lod": [
+   "WIEDER1"
+  ]
+ },
+ "c-wieder-6": {
+  "text": "de Wand",
+  "lod": [
+   "WAND1"
+  ]
+ },
+ "c-wieder-7": {
+  "text": "de Reen",
+  "lod": [
+   "REEN1"
+  ]
+ },
+ "c-wieder-8": {
+  "text": "d'Fréijoer",
+  "lod": [
+   "FREIJOER1"
+  ]
+ },
+ "c-wieder-9": {
+  "text": "de Summer",
+  "lod": [
+   "SUMMER1"
+  ]
+ },
+ "c-wieder-10": {
+  "text": "den Hierscht",
+  "lod": [
+   "HIERSCHT1"
+  ]
+ },
+ "c-wieder-11": {
+  "text": "de Wanter",
+  "lod": [
+   "WANTER1"
+  ]
+ },
+ "c-bild-1": {
+  "text": "Lénks / Riets",
+  "lod": [
+   "LENKS2",
+   "RIETS2"
+  ]
+ },
+ "c-bild-10": {
+  "text": "rout / blo / giel / gréng",
+  "lod": [
+   "ROUT1",
+   "BLO1",
+   "GIEL1",
+   "GRENG1"
+  ]
+ },
+ "c-bild-11": {
+  "text": "schwaarz / wäiss / gro / brong",
+  "lod": [
+   "SCHWAARZ1",
+   "WAISS1",
+   "GRO1",
+   "BRONG1"
+  ]
+ },
+ "c-land-0": {
+  "text": "Lëtzebuerg",
+  "lod": [
+   "LETZEBUERG1"
+  ]
+ },
+ "c-land-1": {
+  "text": "Lëtzebuergesch",
+  "lod": [
+   "LETZEBUERGESCH2"
+  ]
+ },
+ "c-land-2": {
+  "text": "e Lëtzebuerger / eng Lëtzebuergerin",
+  "lod": [
+   "LETZEBUERGER1",
+   "LETZEBUERGERIN1"
+  ]
+ },
+ "c-land-3": {
+  "text": "d'Nationalitéit",
+  "lod": [
+   "NATIONALITEIT1"
+  ]
+ },
+ "c-land-4": {
+  "text": "de Grand-Duc",
+  "lod": [
+   "GRANDDUC1"
+  ]
+ },
+ "c-land-5": {
+  "text": "d'Chamber",
+  "lod": [
+   "CHAMBER1"
+  ]
+ },
+ "c-land-6": {
+  "text": "d'Regierung",
+  "lod": [
+   "REGIERUNG1"
+  ]
+ },
+ "c-land-8": {
+  "text": "den Nationalfeierdag",
+  "lod": [
+   "NATIONALFEIERDAG1"
+  ]
+ },
+ "c-land-9": {
+  "text": "d'Schueberfouer",
+  "lod": [
+   "SCHUEBERFOUER1"
+  ]
+ },
+ "c-land-10": {
+  "text": "d'Éislek",
+  "lod": [
+   "EISLEK1"
+  ]
+ },
+ "c-land-11": {
+  "text": "d'Minett",
+  "lod": [
+   "MINETT1"
+  ]
+ },
+ "c-land-12": {
+  "text": "d'Musel",
+  "lod": [
+   "MUSEL1"
+  ]
+ }
+}
