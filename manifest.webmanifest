@@ -1,7 +1,7 @@
 {
-  "name": "Sproochentest Trainer – Luxemburgisch lernen",
-  "short_name": "Sproochentest",
-  "description": "Luxemburgisch lernen für den Sproochentest (Staatsbürgerschaft): Sprechen A2, Hörverstehen B1.",
+  "name": "Moien Lëtzebuerg – Sprache & Landeskunde für die Staatsbürgerschaft",
+  "short_name": "Moien Lëtz.",
+  "description": "Vorbereitung auf die luxemburgische Staatsbürgerschaft: Sproochentest (Sprechen A2, Hörverstehen B1) und Vivre ensemble.",
   "lang": "de",
   "start_url": "./",
   "scope": "./",

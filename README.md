@@ -1,11 +1,10 @@
-# Sproochentest Trainer 🇱🇺
+# Moien Lëtzebuerg 🇱🇺
 
-Eine kleine Web-App zum Luxemburgischlernen. Sie ist gezielt auf den **Sproochentest** für die
-luxemburgische Staatsbürgerschaft ausgerichtet:
+Eine kleine Web-App zur Vorbereitung auf die **luxemburgische Staatsbürgerschaft**:
 
-- **Mündlicher Ausdruck:** Niveau **A2**
-- **Hörverstehen:** Niveau **B1**
-- Lesen und Schreiben werden nicht geprüft
+- **Sproochentest** (Schwerpunkt): mündlicher Ausdruck auf Niveau **A2**, Hörverstehen auf Niveau **B1**.
+  Lesen und Schreiben werden nicht geprüft.
+- **Vivre ensemble au Grand-Duché**: Übungsfragen zur Landeskunde.
 
 ## Funktionen
 

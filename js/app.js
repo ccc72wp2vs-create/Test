@@ -176,11 +176,11 @@
     const known = cards.filter(learned).length;
     const seen = cards.filter((c) => !isNew(c)).length;
     const pct = Math.round((known / cards.length) * 100);
-    render("Sproochentest Trainer", `
+    render("Moien Lëtzebuerg", `
       <div class="card">
         <h2>Moien${activeProfile().name ? ", " + esc(activeProfile().name) : ""}! 👋</h2>
-        <p class="muted">Dein Ziel: der <b>Sproochentest</b> für die luxemburgische Staatsbürgerschaft –
-        <b>Sprechen auf Niveau A2</b> und <b>Hörverstehen auf Niveau B1</b>.</p>
+        <p class="muted">Dein Ziel: die luxemburgische Staatsbürgerschaft. Dafür übst du hier den <b>Sproochentest</b>
+        (Sprechen A2, Hörverstehen B1) und die Landeskunde für <b>„Vivre ensemble“</b>.</p>
         <div class="stats">
           <div><b>${streak()}</b><small>Tage in Folge</small></div>
           <div><b>${due}</b><small>fällige Karten</small></div>
@@ -217,7 +217,7 @@
     render("Willkommen", `
       <div class="card">
         <h2>Moien! 👋</h2>
-        <p>Mit dieser App lernst du Luxemburgisch für den <b>Sproochentest</b> – genau das, was du für die Staatsbürgerschaft brauchst.</p>
+        <p><b>Moien Lëtzebuerg</b> bereitet dich auf die luxemburgische Staatsbürgerschaft vor: Luxemburgisch für den <b>Sproochentest</b> und Landeskunde für <b>„Vivre ensemble“</b>.</p>
         <h3>Erstelle dein Profil</h3>
         <form id="nameform">
           <input type="text" id="myname" maxlength="20" placeholder="Wie heißt du?" aria-label="Dein Name" required>
@@ -690,7 +690,7 @@
       <div class="card"><h3>🎓 Was du für die Staatsbürgerschaft brauchst</h3>
         <p>Für die Einbürgerung (<i>naturalisation</i>) brauchst du u. a.:</p>
         <ol style="padding-left:20px">
-          <li>den bestandenen <b>Sproochentest</b> (Luxemburgisch-Sprachtest) – <b>dafür ist diese App</b>,</li>
+          <li>den bestandenen <b>Sproochentest</b> (Luxemburgisch-Sprachtest) – <b>der Schwerpunkt dieser App</b>,</li>
           <li>den Kurs bzw. die Prüfung <b>„Vivre ensemble au Grand-Duché de Luxembourg“</b> (Landeskunde, Geschichte, Institutionen – wird nicht auf Luxemburgisch geprüft). <a href="#/vivre">Zum Übungsquiz</a></li>
         </ol>
       </div>
@@ -768,7 +768,7 @@
     document.getElementById("exp").onclick = () => {
       const a = document.createElement("a");
       a.href = URL.createObjectURL(new Blob([JSON.stringify(state)], { type: "application/json" }));
-      a.download = `sproochentest-fortschritt-${today()}.json`;
+      a.download = `moien-letzebuerg-fortschritt-${today()}.json`;
       a.click();
     };
     document.getElementById("imp").onchange = async (e) => {
@@ -1269,7 +1269,7 @@ ${sents.map((s) => `<p class="s"><span class="lb">${esc(s.lb)}</span><br><span c
           <p class="muted">Wörter mit „LOD ✓“ stimmen in der Schreibweise mit dem offiziellen Wörterbuch LOD.lu überein und müssen nicht geprüft werden.</p>
           <button class="btn" id="print" style="width:100%">🖨️ Drucken / als PDF speichern</button></div>
         <div class="checklist">
-          <h2 class="printonly">Sproochentest Trainer – Prüfliste</h2>
+          <h2 class="printonly">Moien Lëtzebuerg – Prüfliste</h2>
           <p class="printonly">Bitte Fehler direkt im Text korrigieren und die Zeile ankreuzen. Merci villmools!</p>
           <h2>1. Vokabeln und Sätze</h2>
           ${D.topics.map((t) => `<h3>${esc(t.title)} – ${esc(t.de)}</h3><table>${t.words.map((w, i) =>
