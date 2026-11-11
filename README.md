@@ -13,11 +13,14 @@ luxemburgische Staatsbürgerschaft ausgerichtet:
 |---|---|
 | 🃏 **Karteikarten** | ca. 270 Wörter und Sätze in 13 Prüfungsthemen (Vorstellen, Familie, Wohnen, Arbeit, Alltag, Zahlen, Essen, Gesundheit, Freizeit, Verkehr, Wetter, Bildbeschreibung, Luxemburg). Mit Wiederholungssystem (Leitner-Boxen), das fällige Karten automatisch wieder vorlegt. Richtung umschaltbar (LB→DE / DE→LB). |
 | ✅ **Quiz** | Multiple Choice in beide Richtungen und ein Schreibmodus (Akzentfehler werden verziehen) |
-| 🎙️ **Sprechen** | Typische Prüfungsfragen pro Thema, vier Bilder zur Bildbeschreibung, Aufnahmefunktion mit Timer und A2-Musterantworten mit Übersetzung |
+| 🎙️ **Sprechen** | Typische Prüfungsfragen pro Thema, zehn Bilder zur Bildbeschreibung, Aufnahmefunktion mit Timer und A2-Musterantworten mit Übersetzung |
 | ⭐ **Meine Vorstellung** | Eigene Daten eintragen (Alter, Herkunft, Wohnort, Familie, Arbeit, Sprachen, Hobbys) – die App erstellt daraus die persönliche Vorstellung auf Luxemburgisch mit Übersetzung. Mit Auswendig-Modus, Druck/PDF und Export als Datei |
 | 👂 **Verstehen** | 15 Hörtexte mit Multiple-Choice-Fragen: 5 kurze Alltagsdialoge (A2) und 10 längere Texte auf Prüfungsniveau B1 (Radio, Durchsagen, Telefonate, Gespräche) |
 | 🗣️ **Echte Stimmen** | Lückentext zum Hören mit Beispielsätzen, die Muttersprachler für LOD.lu eingesprochen haben |
 | 🧩 **Satzbau** | Wörter in die richtige Reihenfolge bringen: aus dem Deutschen übersetzen, nach Gehör bauen oder die eigene Vorstellung üben |
+| 📅 **Wochenplan** | Prüfungstermin eintragen: Countdown, passendes Karten-Tempo und vier Aufgaben pro Tag zum Abhaken |
+| 🔤 **Verben** | Die 30 wichtigsten Verben in Gegenwart und Perfekt, als Tabelle und als Quiz (Formen aus den LOD-Tabellen) |
+| 🇱🇺 **Vivre ensemble** | 52 inoffizielle Übungsfragen zu Geografie, Geschichte, Staat, Europa, Gesellschaft und Kultur (Stand 2026) |
 | 📝 **Prüfliste** | Alle luxemburgischen Texte der App auf einer druckbaren Seite, zum Gegenlesen durch eine Lehrkraft |
 | ⏱️ **Prüfungssimulation** | Kompletter Durchlauf: 3 B1-Hörtexte, die höchstens zweimal abgespielt werden, danach Gespräch und Bildbeschreibung mit Aufnahme; Auswertung mit Lösungen, Musterantworten und Verlauf |
 | 💬 **Rückfragen** | Typische Nachfragen der Prüfer, passend zu den eigenen Angaben, mit Audio, Übersetzung und Satzanfang |
@@ -50,6 +53,7 @@ Die App funktioniert dann wie eine normale App, auch offline.
   [`audio/lod-quellen.json`](audio/lod-quellen.json).
 - **Echte Stimmen (`audio/x-*.mp3`, `js/stemmen.js`):** Beispielsätze mit Aufnahmen aus LOD.lu, geholt mit
   `python3 tools/fetch_lod_sentences.py`.
+- **Verben (`js/verben.js`):** Konjugationstabellen aus LOD.lu, geholt mit `python3 tools/fetch_lod_verbs.py`.
 - **Sätze, Musterantworten, Hörtexte:** computererzeugt mit [Piper](https://github.com/OHF-Voice/piper1-gpl) und der
   luxemburgischen Stimme *MaryLux* (Datensatz [marylux-data](https://github.com/marytts/marylux-data), CC BY-NC-SA 4.0,
   also nur für nicht-kommerzielle Nutzung). Nicht fehlerfrei; im Zweifel gilt LOD.lu.

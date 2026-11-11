@@ -5,6 +5,8 @@
   const ME = window.LUX_ME;
   const TRAIN = window.LUX_TRAIN;
   const VOICES = window.LUX_VOICES || []; // echte Aufnahmen von LOD.lu
+  const VERBS = window.LUX_VERBS || [];   // Konjugation aus den LOD-Tabellen
+  const VIVRE = window.LUX_VIVRE || [];
   const $view = document.getElementById("view");
   const $title = document.getElementById("page-title");
   const STORE_KEY = "sproochentest-v1";
@@ -28,7 +30,7 @@
   // Speicherplatz, damit vorhandener Fortschritt erhalten bleibt.
   const PROFILES_KEY = "sproochentest-profiles";
   const storeKey = (id) => (id === "p1" ? STORE_KEY : `${STORE_KEY}:${id}`);
-  const emptyState = () => ({ cards: {}, days: [], quizBest: {}, reversed: false, miss: {}, sims: [] });
+  const emptyState = () => ({ cards: {}, days: [], quizBest: {}, reversed: false, miss: {}, sims: [], done: {}, examDate: "" });
   function loadProfiles() {
     try {
       const p = JSON.parse(localStorage.getItem(PROFILES_KEY));
@@ -61,9 +63,17 @@
     state = load();
   }
   const today = () => new Date().toISOString().slice(0, 10);
-  function markActive() {
+  // Merkt den Lerntag und, falls angegeben, welche Aufgabe des Tagesplans erledigt wurde.
+  function markActive(kind) {
     const d = today();
-    if (!state.days.includes(d)) { state.days.push(d); state.days = state.days.slice(-400); save(); }
+    if (!state.days.includes(d)) { state.days.push(d); state.days = state.days.slice(-400); }
+    if (kind) {
+      const t = state.done[d] || (state.done[d] = {});
+      t[kind] = true;
+      if (kind === "sim") { t.heieren = true; t.schwatzen = true; }
+      Object.keys(state.done).sort().slice(0, -30).forEach((k) => delete state.done[k]); // nur die letzten 30 Tage behalten
+    }
+    save();
   }
   function streak(s = state) {
     const set = new Set(s.days);
@@ -118,6 +128,48 @@
     return keys;
   }
 
+  // ---------- Wochenplan ----------
+  const daysLeft = () => (state.examDate ? Math.ceil((new Date(state.examDate + "T00:00:00") - new Date(today() + "T00:00:00")) / DAY) : null);
+  // So viele neue Karten pro Tag, dass bis eine Woche vor der Prüfung alles einmal gesehen ist (zwischen 5 und 25)
+  function newPerDay() {
+    const left = daysLeft(), unseen = cards.filter(isNew).length;
+    if (left === null || left <= 7) return left === null ? NEW_PER_SESSION : 25;
+    return Math.max(5, Math.min(25, Math.ceil(unseen / (left - 7))));
+  }
+  function todayPlan() {
+    const wd = new Date().getDay(); // 0 = Sonntag
+    const doy = Math.floor(Date.now() / DAY);
+    const b1 = D.dialogues.map((d, i) => i).filter((i) => D.dialogues[i].level === "B1");
+    const talk = D.speaking[doy % D.speaking.length];
+    const listen = [
+      ["Prüfungssimulation", "#/simulation"], ["B1-Hörtext: " + D.dialogues[b1[doy % b1.length]].title, "#/verstehen/" + b1[doy % b1.length]], ["Echte Stimmen", "#/stemmen"],
+      ["Zahlen & Uhrzeit", "#/zuelen"], ["B1-Hörtext: " + D.dialogues[b1[doy % b1.length]].title, "#/verstehen/" + b1[doy % b1.length]], ["Echte Stimmen", "#/stemmen"], ["Zahlen & Uhrzeit", "#/zuelen"]
+    ][wd];
+    const extra = [["Rückfragen üben", "#/ich/froen"], ["Satzbau", "#/satzbau"], ["Verben", "#/verben"], ["Quiz", "#/quiz"], ["Satzbau", "#/satzbau"], ["Verben", "#/verben"], ["Quiz", "#/quiz"]][wd];
+    const due = cards.filter(isDue).length, fresh = Math.min(newPerDay(), cards.filter(isNew).length);
+    return [
+      { k: "karten", ico: "🃏", t: `Karten: ${due} wiederholen, ${fresh} neue`, href: "#/lernen/heute" },
+      { k: wd === 0 ? "sim" : "heieren", ico: "👂", t: listen[0], href: listen[1] },
+      { k: "schwatzen", ico: "🎙️", t: `Sprechen: ${talk.topic}`, href: "#/sprechen/" + (doy % D.speaking.length) },
+      { k: wd === 0 ? "schwatzen" : "uebung", ico: "🧩", t: extra[0], href: extra[1] }
+    ];
+  }
+  function planCard() {
+    const left = daysLeft(), done = state.done[today()] || {}, plan = todayPlan();
+    const n = plan.filter((x) => done[x.k]).length;
+    const week = Array.from({ length: 7 }, (_, i) => { const d = new Date(Date.now() - (6 - i) * DAY); const key = d.toISOString().slice(0, 10);
+      return `<span class="day${state.days.includes(key) ? " on" : ""}${key === today() ? " now" : ""}">${"SMDMDFS"[d.getUTCDay()]}</span>`; }).join("");
+    const head = left === null
+      ? `<form id="examform" class="row" style="align-items:flex-end"><label class="field" style="margin:0"><span>Wann ist deine Prüfung?</span><input type="date" id="examdate" min="${today()}"></label><button class="btn" type="submit" style="flex:0 0 auto">Speichern</button></form>
+         <p class="muted" style="margin-top:6px">Mit Termin rechnet die App aus, wie viele neue Karten du pro Tag brauchst.</p>`
+      : `<p style="margin-bottom:6px"><b>${left > 1 ? `Noch ${left} Tage bis zur Prüfung` : left === 1 ? "Morgen ist deine Prüfung – viel Erfolg! 🍀" : left === 0 ? "Heute ist deine Prüfung – vill Gléck! 🍀" : "Dein Prüfungstermin ist vorbei."}</b>
+           <a href="#/profil" class="muted" style="font-size:.85rem"> ändern</a></p>
+         ${left > 7 ? `<p class="muted">Tempo: ${newPerDay()} neue Karten pro Tag, dann hast du eine Woche vor der Prüfung alles gesehen.</p>` : left >= 0 ? `<p class="muted">Letzte Woche: wiederholen, Simulation machen, deine Vorstellung laut üben.</p>` : ""}`;
+    return `<div class="card"><h2>Heute dran <small class="muted" style="font-weight:400">${n} von ${plan.length}</small></h2>
+      ${plan.map((x) => `<a class="task${done[x.k] ? " ok" : ""}" href="${x.href}"><span>${done[x.k] ? "✅" : x.ico}</span><b>${esc(x.t)}</b><i>›</i></a>`).join("")}
+      <div class="week">${week}</div>${head}</div>`;
+  }
+
   // ---------- Startseite ----------
   function viewHome() {
     const due = cards.filter(isDue).length;
@@ -138,16 +190,7 @@
         <p class="muted">${pct}% des Wortschatzes sicher · ${seen} von ${cards.length} Karten gesehen</p>
         <a class="btn" style="width:100%" href="#/lernen/heute">${due ? `Jetzt ${due} ${due === 1 ? "Karte" : "Karten"} wiederholen` : "Tägliche Lerneinheit starten"}</a>
       </div>
-      <h2>Dein Lernplan</h2>
-      <div class="card">
-        <ol style="margin:0;padding-left:20px">
-          <li><b>Täglich 10–15 Min. Karten</b> – der Wortschatz ist die Basis.</li>
-          <li><b>Grammatik</b> einmal durchlesen: sinn/hunn, Perfekt, n-Regel.</li>
-          <li><b>Sprechen</b>: Fragen laut beantworten, dich aufnehmen, mit Musterantwort vergleichen.</li>
-          <li><b>Verstehen</b>: B1-Texte anhören und Fragen beantworten – dazu täglich luxemburgisches Radio hören.</li>
-          <li><b>Prüfungssimulation</b>: einmal pro Woche einen kompletten Durchlauf machen.</li>
-        </ol>
-      </div>
+      ${planCard()}
       <div class="grid">
         <a class="tile" href="#/lernen"><div class="ico">🃏</div><b>Karteikarten</b><small>Wortschatz nach Themen</small></a>
         <a class="tile" href="#/quiz"><div class="ico">✅</div><b>Quiz</b><small>Wissen testen</small></a>
@@ -159,8 +202,12 @@
         <a class="tile" href="#/satzbau"><div class="ico">🧩</div><b>Satzbau</b><small>Sätze zusammensetzen</small></a>
         <a class="tile" href="#/zuelen"><div class="ico">🔢</div><b>Zahlen & Uhrzeit</b><small>Hörtraining</small></a>
         <a class="tile" href="#/simulation"><div class="ico">⏱️</div><b>Prüfungssimulation</b><small>${state.sims.length ? `Zuletzt: Hören ${state.sims[state.sims.length - 1].r}/${state.sims[state.sims.length - 1].t}` : "Kompletter Durchlauf"}</small></a>
+        <a class="tile" href="#/verben"><div class="ico">🔤</div><b>Verben</b><small>Gegenwart & Perfekt</small></a>
+        <a class="tile" href="#/vivre"><div class="ico">🇱🇺</div><b>Vivre ensemble</b><small>Landeskunde-Quiz</small></a>
         <a class="tile" href="#/pruefung"><div class="ico">🎓</div><b>Die Prüfung</b><small>Ablauf & Tipps</small></a>
       </div>`);
+    const ef = document.getElementById("examform");
+    if (ef) ef.onsubmit = (e) => { e.preventDefault(); const v = document.getElementById("examdate").value; if (v) { state.examDate = v; save(); route(); } };
   }
 
   // ---------- Profile ----------
@@ -204,6 +251,10 @@
           <div><b>${known}</b><small>sicher gelernt</small></div>
         </div>
         <p class="muted" style="margin-top:10px">${state.days.length} Lerntage insgesamt</p>
+        <form id="examform2" class="row" style="align-items:flex-end;margin-bottom:10px">
+          <label class="field" style="margin:0"><span>Prüfungstermin</span><input type="date" id="examdate2" value="${esc(state.examDate || "")}"></label>
+          <button class="btn secondary" type="submit" style="flex:0 0 auto">Speichern</button>
+        </form>
         <form id="renameform" class="row">
           <input type="text" id="myname" maxlength="20" value="${esc(me.name)}" style="flex:2;margin:0" aria-label="Dein Name">
           <button class="btn secondary" type="submit">Name ändern</button>
@@ -212,6 +263,7 @@
       <a class="tile star" style="margin-bottom:12px" href="#/ich"><b>⭐ Meine Vorstellung</b><small>${state.me ? "Persönlichen Text ansehen oder Daten ändern" : "Alter, Arbeit, Familie eintragen und persönlichen Text erstellen"}</small></a>
       <p class="muted">Dein Profil und dein Fortschritt liegen nur auf diesem Gerät. Unter <a href="#/mehr">Mehr</a> kannst du den Fortschritt sichern, z. B. bevor du das Handy wechselst.</p>
       ${others ? `<h2>Weitere Profile auf diesem Gerät</h2>${others}` : ""}`);
+    document.getElementById("examform2").onsubmit = (e) => { e.preventDefault(); state.examDate = document.getElementById("examdate2").value || ""; save(); go("#/"); };
     document.getElementById("renameform").onsubmit = (e) => {
       e.preventDefault();
       const name = cleanName(document.getElementById("myname").value);
@@ -252,7 +304,10 @@
         <a class="btn secondary" href="#/schwer">🔥 Schwierige Wörter (${hardCards().length})</a>
         <a class="btn secondary" href="#/zuelen">🔢 Zahlen & Uhrzeit</a>
       </div>
-      <a class="btn secondary" style="width:100%;margin-bottom:12px" href="#/satzbau">🧩 Satzbau üben</a>
+      <div class="row" style="margin-bottom:12px">
+        <a class="btn secondary" href="#/satzbau">🧩 Satzbau</a>
+        <a class="btn secondary" href="#/verben">🔤 Verben</a>
+      </div>
       <label class="card" style="display:flex;gap:10px;align-items:center">
         <input type="checkbox" id="rev" ${state.reversed ? "checked" : ""}>
         <span>Richtung umkehren: Deutsch → Lëtzebuergesch<br><small class="muted">Schwieriger, aber besser fürs Sprechen</small></span>
@@ -295,7 +350,7 @@
     if (topicId === "schwer") return hardCards().slice(0, 20);
     const pool = topicId === "heute" ? cards : cards.filter((c) => c.topic === topicId);
     const due = shuffle(pool.filter(isDue));
-    const fresh = pool.filter(isNew).slice(0, NEW_PER_SESSION); // neue Karten in Themenreihenfolge
+    const fresh = pool.filter(isNew).slice(0, topicId === "heute" ? newPerDay() : NEW_PER_SESSION); // neue Karten in Themenreihenfolge
     let q = due.concat(fresh);
     if (!q.length && topicId !== "heute") q = shuffle(pool).slice(0, 15); // freies Üben
     return q;
@@ -317,7 +372,7 @@
 
     function next() {
       if (!queue.length) {
-        markActive();
+        markActive("karten");
         return render(title, `<div class="card"><h2>Gutt gemaach! 👏</h2>
           <p>${total} Karten bearbeitet, ${right} beim ersten Mal gewusst.</p>
           <div class="row"><a class="btn" href="#/">Start</a><a class="btn secondary" href="#/quiz">Zum Quiz</a></div></div>`);
@@ -410,7 +465,7 @@
 
     function ask() {
       if (i >= qs.length) {
-        markActive();
+        markActive("uebung");
         const best = Math.max(score, state.quizBest[key] || 0);
         state.quizBest[key] = best; save();
         render("Quiz", `<div class="card"><h2>${score >= 8 ? "Super! 🎉" : score >= 5 ? "Gutt! 👍" : "Weider üben! 💪"}</h2>
@@ -528,7 +583,7 @@
         btn.innerHTML = "● Neu aufnehmen";
         const url = URL.createObjectURL(new Blob(chunks, { type: rec.mimeType || type || "audio/webm" }));
         if (out.isConnected) out.innerHTML = `<audio controls src="${url}"></audio><p class="muted">Hör dir zu: Verstehst du dich selbst? Hast du ganze Sätze benutzt?</p>`;
-        markActive();
+        markActive("schwatzen");
         if (onDone) onDone(url);
       };
       rec.start();
@@ -616,7 +671,7 @@
         answered++;
         if (+b.dataset.o === q.a) right++;
         if (answered === d.questions.length) {
-          markActive();
+          markActive("heieren");
           document.getElementById("res").innerHTML = `<div class="feedback ${right === answered ? "ok" : "no"}">${right} von ${answered} richtig.</div>`;
         }
       };
@@ -636,7 +691,7 @@
         <p>Für die Einbürgerung (<i>naturalisation</i>) brauchst du u. a.:</p>
         <ol style="padding-left:20px">
           <li>den bestandenen <b>Sproochentest</b> (Luxemburgisch-Sprachtest) – <b>dafür ist diese App</b>,</li>
-          <li>den Kurs bzw. die Prüfung <b>„Vivre ensemble au Grand-Duché de Luxembourg“</b> (Landeskunde, Geschichte, Institutionen – wird nicht auf Luxemburgisch geprüft).</li>
+          <li>den Kurs bzw. die Prüfung <b>„Vivre ensemble au Grand-Duché de Luxembourg“</b> (Landeskunde, Geschichte, Institutionen – wird nicht auf Luxemburgisch geprüft). <a href="#/vivre">Zum Übungsquiz</a></li>
         </ol>
       </div>
       <div class="card"><h3>📋 Aufbau des Sproochentest</h3>
@@ -678,6 +733,8 @@
         <a class="tile" href="#/schwer"><div class="ico">🔥</div><b>Schwierige Wörter</b><small>${hardCards().length} gesammelt</small></a>
         <a class="tile" href="#/stemmen"><div class="ico">🗣️</div><b>Echte Stimmen</b><small>Sätze von Muttersprachlern</small></a>
         <a class="tile" href="#/satzbau"><div class="ico">🧩</div><b>Satzbau</b><small>Sätze zusammensetzen</small></a>
+        <a class="tile" href="#/verben"><div class="ico">🔤</div><b>Verben</b><small>Gegenwart & Perfekt</small></a>
+        <a class="tile" href="#/vivre"><div class="ico">🇱🇺</div><b>Vivre ensemble</b><small>Landeskunde-Quiz</small></a>
         <a class="tile" href="#/pruefliste"><div class="ico">📝</div><b>Prüfliste</b><small>Alle Texte zum Gegenlesen</small></a>
         <a class="tile" href="#/pruefung"><div class="ico">🎓</div><b>Die Prüfung</b><small>Ablauf, Tipps, Links</small></a>
         <a class="tile" href="#/profil"><div class="ico">👤</div><b>Mein Profil</b><small>${esc(activeProfile().name)}</small></a>
@@ -917,7 +974,7 @@ ${sents.map((s) => `<p class="s"><span class="lb">${esc(s.lb)}</span><br><span c
     }
     function ask(autoplay) {
       if (i >= qs.length) {
-        markActive();
+        markActive("heieren");
         const key = "zuelen/" + set.id;
         state.quizBest[key] = Math.max(score, state.quizBest[key] || 0); save();
         render(set.title, `<div class="card"><h2>${score >= 8 ? "Super! 🎉" : score >= 5 ? "Gutt! 👍" : "Weider üben! 💪"}</h2>
@@ -1052,7 +1109,7 @@ ${sents.map((s) => `<p class="s"><span class="lb">${esc(s.lb)}</span><br><span c
       const pct = Math.round((right / total) * 100);
       state.sims.push({ d: today(), r: right, t: total });
       state.sims = state.sims.slice(-20);
-      save(); markActive();
+      save(); markActive("sim");
       const s = D.speaking[talkIdx], img = D.speaking[imgTopic].images[imgIdx];
       const check = ["Ich habe auf alle Fragen geantwortet.", "Ich habe ganze Sätze benutzt.", "Ich habe ohne lange Pausen gesprochen.", "Ich habe auch die Vergangenheit benutzt (Ech hunn … / Ech sinn …).", "Beim Bild habe ich Ort, Personen, Tätigkeiten und Wetter genannt."];
       render("Simulation · Ergebnis", `
@@ -1086,7 +1143,7 @@ ${sents.map((s) => `<p class="s"><span class="lb">${esc(s.lb)}</span><br><span c
     let i = 0, score = 0;
     function ask(autoplay) {
       if (i >= qs.length) {
-        markActive();
+        markActive("heieren");
         state.quizBest.stemmen = Math.max(score, state.quizBest.stemmen || 0); save();
         render("Echte Stimmen", `<div class="card"><h2>${score >= 8 ? "Super! 🎉" : score >= 5 ? "Gutt! 👍" : "Weider üben! 💪"}</h2>
           <p>${score} von ${qs.length} richtig. Bestwert: ${state.quizBest.stemmen}/10</p>
@@ -1154,7 +1211,7 @@ ${sents.map((s) => `<p class="s"><span class="lb">${esc(s.lb)}</span><br><span c
     let i = 0, score = 0;
     function ask(autoplay) {
       if (i >= qs.length) {
-        markActive();
+        markActive("uebung");
         render("Satzbau", `<div class="card"><h2>${score >= qs.length - 1 ? "Super! 🎉" : score >= qs.length / 2 ? "Gutt! 👍" : "Weider üben! 💪"}</h2>
           <p>${score} von ${qs.length} Sätzen auf Anhieb richtig.</p>
           <div class="row"><a class="btn" href="#/satzbau/${mode}" id="again">Nochmal</a><a class="btn secondary" href="#/satzbau">Andere Übung</a></div></div>`);
@@ -1239,6 +1296,138 @@ ${sents.map((s) => `<p class="s"><span class="lb">${esc(s.lb)}</span><br><span c
     fetch("audio/lod-quellen.json").then((r) => (r.ok ? r.json() : null)).then((lod) => { if (lod && location.hash === "#/pruefliste") draw(lod); }).catch(() => {});
   }
 
+  // ---------- Verben ----------
+  const PERSONS = ["ech", "du", "hien / si", "mir", "dir", "si (Plural)"];
+  const noPerfect = (v) => ["wëllen", "kënnen", "mussen", "brauchen"].includes(v.inf);
+  const nRule = (word, next) => (/^[aeiouäëéöüyndtzh]/i.test(next) ? word : word.replace(/nn?$/, ""));
+
+  function viewVerbsMenu() {
+    render("Verben", `
+      <div class="card"><p>Die 30 wichtigsten Verben für die Prüfung. Alle Formen stammen aus den Tabellen von LOD.lu.</p>
+        <div class="row"><a class="btn" href="#/verben/elo">Gegenwart üben</a><a class="btn" href="#/verben/perfekt">Perfekt üben</a></div></div>
+      <div class="card"><h3>Alle Verben</h3><ul class="wordlist">${VERBS.map((v, i) => `<li><div><a href="#/verben/${i}"><b>${esc(v.inf)}</b></a></div><span>${esc(v.de)}</span></li>`).join("")}</ul></div>`);
+  }
+
+  function viewVerb(i) {
+    const v = VERBS[i];
+    if (!v) return go("#/verben");
+    render(v.inf, `
+      <div class="card"><h2>${esc(v.inf)} <small class="muted" style="font-weight:400">${esc(v.de)}</small></h2>
+        <table><tr><th></th><th>Gegenwart</th>${noPerfect(v) ? "" : "<th>Perfekt</th>"}</tr>
+        ${PERSONS.map((p, k) => `<tr><td>${p}</td><td><b>${esc(v.pres[k])}</b></td>${noPerfect(v) ? "" : `<td>${esc(v.perf[k])}</td>`}</tr>`).join("")}</table>
+        ${noPerfect(v) ? `<p class="muted">Bei diesem Verb benutzt man für die Vergangenheit meist das Präteritum.</p>` : `<p class="muted">Perfekt mit <b>${esc(v.aux)}</b>, Partizip: <b>${esc(v.pp)}</b></p>`}
+        <p class="muted">Quelle: <a href="https://lod.lu/artikel/${esc(v.lod)}" target="_blank" rel="noopener">LOD.lu</a></p></div>
+      <div class="row"><a class="btn secondary" href="#/verben/${(i + VERBS.length - 1) % VERBS.length}">← Zurück</a><a class="btn secondary" href="#/verben">Alle</a><a class="btn secondary" href="#/verben/${(i + 1) % VERBS.length}">Weiter →</a></div>`);
+  }
+
+  function viewVerbQuiz(mode) {
+    const perfect = mode === "perfekt";
+    const pool = VERBS.filter((v) => !perfect || !noPerfect(v));
+    const sinn = VERBS.find((v) => v.inf === "sinn"), hunn = VERBS.find((v) => v.inf === "hunn");
+    if (pool.length < 5 || !sinn || !hunn) return go("#/verben");
+    const qs = shuffle(pool).slice(0, 10).map((v) => ({ v, p: Math.floor(Math.random() * 6) }));
+    let i = 0, score = 0;
+    function ask() {
+      if (i >= qs.length) {
+        markActive("uebung");
+        const key = "verben/" + mode;
+        state.quizBest[key] = Math.max(score, state.quizBest[key] || 0); save();
+        render("Verben", `<div class="card"><h2>${score >= 8 ? "Super! 🎉" : score >= 5 ? "Gutt! 👍" : "Weider üben! 💪"}</h2>
+          <p>${score} von ${qs.length} richtig. Bestwert: ${state.quizBest[key]}/10</p>
+          <div class="row"><a class="btn" href="#/verben/${mode}" id="again">Nochmal</a><a class="btn secondary" href="#/verben">Zur Übersicht</a></div></div>`);
+        document.getElementById("again").onclick = (e) => { e.preventDefault(); route(); };
+        return;
+      }
+      const { v, p } = qs[i];
+      let right, opts;
+      if (perfect) {
+        right = v.perf[p];
+        const other = (v.aux === "sinn" ? hunn : sinn).pres[p];
+        opts = [right, `${nRule(other, v.pp)} ${v.pp}`, `${nRule((v.aux === "sinn" ? sinn : hunn).pres[p], v.inf)} ${v.inf}`];
+      } else {
+        right = v.pres[p];
+        opts = [right, ...shuffle([...new Set(v.pres)].filter((f) => f !== right)).slice(0, 3)];
+        if (opts.length < 3) opts.push(v.inf === right ? v.pp : v.inf);
+      }
+      opts = [...new Set(opts)];
+      if (opts.length < 3) opts.push(perfect ? `${right.split(" ")[0]} ${v.pres[2]}` : v.pp); // z. B. bei "gesinn": Partizip = Infinitiv
+      opts = shuffle([...new Set(opts)]);
+      render(perfect ? "Verben · Perfekt" : "Verben · Gegenwart", `<div class="bar"><i style="width:${(i / qs.length) * 100}%"></i></div>
+        <p class="muted">Aufgabe ${i + 1} / ${qs.length} · ${score} richtig</p>
+        <div class="card"><div class="lang">${esc(v.inf)} = ${esc(v.de)} · ${perfect ? "Perfekt" : "Gegenwart"}</div>
+          <h2>${PERSONS[p]} _____</h2>
+          ${opts.map((o) => `<button class="opt" data-o="${esc(o)}">${esc(o)}</button>`).join("")}
+          <div id="fb"></div></div>`);
+      $view.querySelectorAll(".opt").forEach((b) => {
+        b.onclick = () => {
+          const ok = b.dataset.o === right;
+          if (ok) score++;
+          $view.querySelectorAll(".opt").forEach((x) => {
+            x.disabled = true;
+            if (x.dataset.o === right) x.classList.add("right"); else if (x === b) x.classList.add("wrong");
+          });
+          document.getElementById("fb").innerHTML = `<div class="row" style="align-items:center"><a class="btn secondary" href="#/verben/${VERBS.indexOf(v)}">Tabelle</a><button class="btn" id="nx">Weiter</button></div>`;
+          document.getElementById("nx").onclick = () => { i++; ask(); };
+        };
+      });
+    }
+    ask();
+  }
+
+  // ---------- Vivre ensemble ----------
+  function viewVivreMenu() {
+    const cats = [...new Set(VIVRE.map((q) => q.c))];
+    render("Vivre ensemble", `
+      <div class="card"><h2>Vivre ensemble au Grand-Duché 🇱🇺</h2>
+        <p>Für die Einbürgerung brauchst du neben dem Sproochentest auch den Kurs oder die Prüfung „Vivre ensemble“ über
+        Geschichte, Institutionen, Grundrechte und Alltag in Luxemburg.</p>
+        <p class="muted">Diese ${VIVRE.length} Fragen sind inoffizielles Übungsmaterial (Stand 2026) und ersetzen die offiziellen Kursunterlagen nicht.
+        Zahlen und Personen können sich ändern.</p>
+        <a class="btn" style="width:100%" href="#/vivre/all">Gemischtes Quiz (10 Fragen)</a></div>
+      <div class="grid">${cats.map((c) => `<a class="tile" href="#/vivre/${encodeURIComponent(c)}"><b>${esc(c)}</b>
+        <small>${VIVRE.filter((q) => q.c === c).length} Fragen${state.quizBest["vivre/" + c] !== undefined ? ` · Bestwert ${state.quizBest["vivre/" + c]}` : ""}</small></a>`).join("")}</div>`);
+  }
+
+  function viewVivre(cat) {
+    cat = decodeURIComponent(cat);
+    const pool = cat === "all" ? VIVRE : VIVRE.filter((q) => q.c === cat);
+    if (!pool.length) return go("#/vivre");
+    const qs = shuffle(pool).slice(0, 10);
+    let i = 0, score = 0;
+    function ask() {
+      if (i >= qs.length) {
+        markActive();
+        const key = "vivre/" + cat;
+        state.quizBest[key] = Math.max(score, state.quizBest[key] || 0); save();
+        render("Vivre ensemble", `<div class="card"><h2>${score >= qs.length * 0.8 ? "Super! 🎉" : score >= qs.length / 2 ? "Gutt! 👍" : "Weider üben! 💪"}</h2>
+          <p>${score} von ${qs.length} richtig.</p>
+          <div class="row"><a class="btn" href="#/vivre/${encodeURIComponent(cat)}" id="again">Nochmal</a><a class="btn secondary" href="#/vivre">Übersicht</a></div></div>`);
+        document.getElementById("again").onclick = (e) => { e.preventDefault(); route(); };
+        return;
+      }
+      const q = qs[i];
+      const order = shuffle(q.o.map((t, k) => k));
+      render("Vivre ensemble", `<div class="bar"><i style="width:${(i / qs.length) * 100}%"></i></div>
+        <p class="muted">Frage ${i + 1} / ${qs.length} · ${score} richtig</p>
+        <div class="card"><div class="lang">${esc(q.c)}</div><h2>${esc(q.q)}</h2>
+          ${order.map((k) => `<button class="opt" data-k="${k}">${esc(q.o[k])}</button>`).join("")}
+          <div id="fb"></div></div>`);
+      $view.querySelectorAll(".opt").forEach((b) => {
+        b.onclick = () => {
+          const ok = +b.dataset.k === q.a;
+          if (ok) score++;
+          $view.querySelectorAll(".opt").forEach((x) => {
+            x.disabled = true;
+            if (+x.dataset.k === q.a) x.classList.add("right"); else if (x === b) x.classList.add("wrong");
+          });
+          document.getElementById("fb").innerHTML = `<div class="feedback ${ok ? "ok" : "no"}">${esc(q.i)}</div><button class="btn" id="nx" style="width:100%">Weiter</button>`;
+          document.getElementById("nx").onclick = () => { i++; ask(); };
+        };
+      });
+    }
+    ask();
+  }
+
   // ---------- Router ----------
   function go(hash) { if (location.hash === hash) route(); else location.hash = hash; }
   function route() {
@@ -1246,7 +1435,7 @@ ${sents.map((s) => `<p class="s"><span class="lb">${esc(s.lb)}</span><br><span c
     stopAudio();
     const parts = location.hash.replace(/^#\/?/, "").split("/").filter(Boolean);
     const [a, b, c] = parts;
-    const tab = { lernen: "lernen", liste: "lernen", quiz: "quiz", sprechen: "sprechen", verstehen: "mehr", grammatik: "mehr", pruefung: "mehr", mehr: "mehr", profil: "mehr", ich: "sprechen", schwer: "lernen", zuelen: "lernen", simulation: "mehr", stemmen: "mehr", satzbau: "lernen", pruefliste: "mehr" }[a] || "home";
+    const tab = { lernen: "lernen", liste: "lernen", quiz: "quiz", sprechen: "sprechen", verstehen: "mehr", grammatik: "mehr", pruefung: "mehr", mehr: "mehr", profil: "mehr", ich: "sprechen", schwer: "lernen", zuelen: "lernen", simulation: "mehr", stemmen: "mehr", satzbau: "lernen", pruefliste: "mehr", verben: "lernen", vivre: "mehr" }[a] || "home";
     const who = document.getElementById("who");
     who.textContent = "👤 " + (activeProfile().name || "Profil");
     document.querySelectorAll(".tabs a").forEach((x) => x.classList.toggle("active", x.dataset.tab === tab));
@@ -1270,6 +1459,8 @@ ${sents.map((s) => `<p class="s"><span class="lb">${esc(s.lb)}</span><br><span c
       case "stemmen": return viewVoices();
       case "satzbau": return b ? viewBuild(b) : viewBuildMenu();
       case "pruefliste": return viewChecklist();
+      case "verben": return !b ? viewVerbsMenu() : /^\d+$/.test(b) ? viewVerb(+b) : viewVerbQuiz(b);
+      case "vivre": return b ? viewVivre(b) : viewVivreMenu();
       default: return viewHome();
     }
   }

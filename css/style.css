@@ -211,3 +211,14 @@ a { color: var(--accent); }
   .checklist tr { break-inside: avoid; }
   .box-badge { border: 1px solid #999; }
 }
+/* Tagesplan */
+.task { display: flex; align-items: center; gap: 10px; padding: 11px 12px; margin-bottom: 8px; border-radius: 10px; border: 1.5px solid var(--line); text-decoration: none; color: var(--text); }
+.task b { flex: 1; font-weight: 600; }
+.task i { color: var(--muted); font-style: normal; font-size: 1.2rem; }
+.task.ok { opacity: .6; }
+.task.ok b { text-decoration: line-through; font-weight: 400; }
+.week { display: flex; gap: 6px; margin: 12px 0; }
+.week .day { flex: 1; text-align: center; padding: 6px 0; border-radius: 8px; background: var(--bg); color: var(--muted); font-size: .8rem; font-weight: 600; }
+.week .day.on { background: var(--accent); color: #fff; }
+.week .day.now { outline: 2px solid var(--text); outline-offset: 1px; }
+.field input[type=date] { width: 100%; font: inherit; padding: 10px 12px; border-radius: 10px; margin: 0; border: 1.5px solid var(--line); background: var(--card); color: var(--text); }

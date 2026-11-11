@@ -534,6 +534,36 @@ Mir sinn an d'Vakanz gaangen. – Wir sind in den Urlaub gefahren.</p>
           src: "img/arret.svg", alt: "Bushaltestelle im Regen: ein Bus kommt, drei Personen warten, eine Frau hat einen Regenschirm",
           model: "Op dem Bild gesinn ech en Arrêt an der Stad. Dräi Leit waarden op de Bus. Et reent. Eng Fra huet e roude Prabbeli. E Mann kuckt op säin Handy. Riets steet e Kand mat engem Rucksak. Lénks kënnt de Bus. Ech mengen, d'Leit fueren op d'Aarbecht an d'Kand geet an d'Schoul. Ech fueren och all Dag mam Bus.",
           de: "Auf dem Bild sehe ich eine Haltestelle in der Stadt. Drei Leute warten auf den Bus. Es regnet. Eine Frau hat einen roten Regenschirm. Ein Mann schaut auf sein Handy. Rechts steht ein Kind mit einem Rucksack. Links kommt der Bus. Ich glaube, die Leute fahren zur Arbeit und das Kind geht zur Schule. Ich fahre auch jeden Tag mit dem Bus."
+        },
+        {
+          src: "img/dokter.svg", alt: "Wartezimmer beim Arzt: eine Frau mit Zeitung und ein Kind sitzen, die Ärztin steht an der Tür",
+          model: "Op dem Bild si mir beim Dokter. Lénks sëtzen eng Fra an e Kand op Still a waarden. D'Fra liest eng Zeitung. Riets steet d'Doktesch virun der Dier. Si huet e wäisse Kittel un. Un der Mauer hänkt eng Auer, et ass zéng Auer. Nieft der Dier steet eng Planz. Ech mengen, d'Kand ass krank. Ech ginn net gär bei den Dokter, mee heiansdo muss et sinn.",
+          de: "Auf dem Bild sind wir beim Arzt. Links sitzen eine Frau und ein Kind auf Stühlen und warten. Die Frau liest eine Zeitung. Rechts steht die Ärztin vor der Tür. Sie hat einen weißen Kittel an. An der Wand hängt eine Uhr, es ist zehn Uhr. Neben der Tür steht eine Pflanze. Ich glaube, das Kind ist krank. Ich gehe nicht gern zum Arzt, aber manchmal muss es sein."
+        },
+        {
+          src: "img/buro.svg", alt: "Büro: eine Frau arbeitet am Computer, ein Mann steht mit einer Tasse daneben",
+          model: "Op dem Bild gesinn ech e Büro. Eng Fra sëtzt um Schreifdësch a schafft um Computer. Riets steet e Mann mat enger Taass Kaffi. Ech mengen, si schwätzen iwwer d'Aarbecht. Lénks ass eng grouss Fënster, do gesäit een d'Stad. Riets steet e Regal mat villen Dossieren. Déi zwee si wahrscheinlech Kolleegen. Ech schaffen och an engem Büro.",
+          de: "Auf dem Bild sehe ich ein Büro. Eine Frau sitzt am Schreibtisch und arbeitet am Computer. Rechts steht ein Mann mit einer Tasse Kaffee. Ich glaube, sie sprechen über die Arbeit. Links ist ein großes Fenster, dort sieht man die Stadt. Rechts steht ein Regal mit vielen Ordnern. Die zwei sind wahrscheinlich Kollegen. Ich arbeite auch in einem Büro."
+        },
+        {
+          src: "img/restaurant.svg", alt: "Restaurant: ein Mann und eine Frau am Tisch, ein Kellner bringt das Essen",
+          model: "Op dem Bild gesinn ech e Restaurant. E Mann an eng Fra sëtzen um Dësch. Um Dësch stinn zwee Glieser an eng Fläsch Waasser. Riets kënnt de Garçon a bréngt d'Iessen. Lénks hänkt e Bild un der Mauer. D'Luucht ass un, ech mengen, et ass Owend. D'Leit si frou. Ech ginn och gär mat menger Famill an de Restaurant.",
+          de: "Auf dem Bild sehe ich ein Restaurant. Ein Mann und eine Frau sitzen am Tisch. Auf dem Tisch stehen zwei Gläser und eine Flasche Wasser. Rechts kommt der Kellner und bringt das Essen. Links hängt ein Bild an der Wand. Das Licht ist an, ich glaube, es ist Abend. Die Leute sind fröhlich. Ich gehe auch gern mit meiner Familie ins Restaurant."
+        },
+        {
+          src: "img/supermarche.svg", alt: "Supermarkt: eine Frau mit Einkaufswagen, ein Mann bezahlt an der Kasse",
+          model: "Op dem Bild gesinn ech e Supermarché. Lénks ass eng Fra mat engem Caddie. Am Caddie leien Uebst, Brout a Mëllech. Riets sëtzt eng Verkeeferin un der Keess. E Mann bezilt mat der Kaart. Am Hannergrond gesinn ech e Regal mat ville Produiten. Ech ginn all Samschdeg akafen, meeschtens mat menger Famill.",
+          de: "Auf dem Bild sehe ich einen Supermarkt. Links ist eine Frau mit einem Einkaufswagen. Im Wagen liegen Obst, Brot und Milch. Rechts sitzt eine Verkäuferin an der Kasse. Ein Mann bezahlt mit Karte. Im Hintergrund sehe ich ein Regal mit vielen Produkten. Ich gehe jeden Samstag einkaufen, meistens mit meiner Familie."
+        },
+        {
+          src: "img/schoul.svg", alt: "Schulklasse: die Lehrerin an der Tafel, drei Kinder an ihren Tischen, ein Kind meldet sich",
+          model: "Op dem Bild gesinn ech eng Schoulklass. Lénks steet d'Joffer virun der Tafel a schreift. Op der Tafel steet „Moien“. Dräi Kanner sëtzen an der Klass. E Kand hieft d'Hand, well et d'Äntwert weess. Duerch d'Fënster gesäit een e Bam. Ech mengen, d'Kanner léieren rechnen. Ech sinn als Kand och gär an d'Schoul gaangen.",
+          de: "Auf dem Bild sehe ich eine Schulklasse. Links steht die Lehrerin vor der Tafel und schreibt. An der Tafel steht „Moien“. Drei Kinder sitzen in der Klasse. Ein Kind hebt die Hand, weil es die Antwort weiß. Durch das Fenster sieht man einen Baum. Ich glaube, die Kinder lernen rechnen. Ich bin als Kind auch gern zur Schule gegangen."
+        },
+        {
+          src: "img/kichen.svg", alt: "Küche: ein Mann kocht am Herd, eine Frau schneidet Gemüse, ein Kind deckt den Tisch",
+          model: "Op dem Bild gesinn ech eng Kichen. E Mann steet um Uewen a kacht eng Zopp. Nieft him schneit eng Fra Geméis. Riets deckt e Kand den Dësch. Lénks steet e grousse Frigo. Ech mengen, d'Famill kacht zesummen d'Mëttegiessen. Bei eis doheem kachen ech meeschtens, a meng Kanner hëllefe mir.",
+          de: "Auf dem Bild sehe ich eine Küche. Ein Mann steht am Herd und kocht eine Suppe. Neben ihm schneidet eine Frau Gemüse. Rechts deckt ein Kind den Tisch. Links steht ein großer Kühlschrank. Ich glaube, die Familie kocht zusammen das Mittagessen. Bei uns zu Hause koche meistens ich, und meine Kinder helfen mir."
         }
       ]
     },
