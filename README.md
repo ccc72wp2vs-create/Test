@@ -19,7 +19,7 @@ Eine kleine Web-App zur Vorbereitung auf die **luxemburgische Staatsbürgerschaf
 | 🧩 **Satzbau** | Wörter in die richtige Reihenfolge bringen: aus dem Deutschen übersetzen, nach Gehör bauen oder die eigene Vorstellung üben |
 | 📅 **Wochenplan** | Prüfungstermin eintragen: Countdown, passendes Karten-Tempo und vier Aufgaben pro Tag zum Abhaken |
 | 🔤 **Verben** | Die 30 wichtigsten Verben in Gegenwart und Perfekt, als Tabelle und als Quiz (Formen aus den LOD-Tabellen) |
-| 🇱🇺 **Vivre ensemble** | 52 inoffizielle Übungsfragen zu Geografie, Geschichte, Staat, Europa, Gesellschaft und Kultur (Stand 2026) |
+| 🇱🇺 **Vivre ensemble** | 100 inoffizielle Übungsfragen, aufgebaut nach den drei offiziellen Prüfungsfächern (Grundrechte, Institutionen, Geschichte & Europa), plus Zusatzwissen. Prüfungssimulation mit 40 Fragen (10/20/10) in 60 Minuten, bestanden ab 28 |
 | 📝 **Prüfliste** | Alle luxemburgischen Texte der App auf einer druckbaren Seite, zum Gegenlesen durch eine Lehrkraft |
 | ⏱️ **Prüfungssimulation** | Kompletter Durchlauf: 3 B1-Hörtexte, die höchstens zweimal abgespielt werden, danach Gespräch und Bildbeschreibung mit Aufnahme; Auswertung mit Lösungen, Musterantworten und Verlauf |
 | 💬 **Rückfragen** | Typische Nachfragen der Prüfer, passend zu den eigenen Angaben, mit Audio, Übersetzung und Satzanfang |
