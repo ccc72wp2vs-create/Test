@@ -364,3 +364,7 @@ audio { width: 100%; margin-top: 10px; }
 .toast .pstamp { width: 48px; height: 48px; font-size: 1.2rem; flex: none; } .toast b { display: block; font-family: var(--display); } .toast small { color: var(--muted); }
 @keyframes toast { 0% { transform: translate(-50%, -140%); } 8%, 90% { transform: translate(-50%, 0); } 100% { transform: translate(-50%, -160%); } }
 @media print { .toast { display: none; } }
+/* Kachel-Symbol mit Sprachrichtung: Flagge → Flagge nebeneinander */
+.tile .ico.pair { width: auto; display: inline-flex; align-items: center; gap: 5px; padding: 0 10px; font-size: 1.15rem; font-weight: 800; white-space: nowrap; }
+.tile .ico.pair .ic { margin: 0; vertical-align: 0; }
+.welcome-art .lion { z-index: 1; }

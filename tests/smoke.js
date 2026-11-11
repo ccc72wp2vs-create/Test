@@ -64,7 +64,7 @@ function checkData() {
     const emoji = [];
     for (const r of routes) {
       await go(r);
-      const left = await p.evaluate(() => [...document.querySelectorAll("#view *:not(option)")].filter((el) => !el.closest(".checklist")).flatMap((el) => [...el.childNodes].filter((n) => n.nodeType === 3).map((n) => n.nodeValue)).join(" ").match(/[\u{1F300}-\u{1FAFF}]/gu));
+      const left = await p.evaluate(() => [...document.querySelectorAll("#view *:not(option)")].filter((el) => !el.closest(".checklist")).flatMap((el) => [...el.childNodes].filter((n) => n.nodeType === 3).map((n) => n.nodeValue)).join(" ").match(/[\u{1F300}-\u{1FAFF}\u{2300}-\u{23FF}]/gu));
       if (left) emoji.push(r + ":" + left.join(""));
     }
     check(`${routes.length} Seiten laden ohne Fehler`, !errors.length, errors.slice(0, 3).join(" | "));

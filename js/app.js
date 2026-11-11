@@ -494,9 +494,9 @@
         </select>
         <h3>Modus</h3>
         <div class="grid">
-          <button class="tile" data-mode="lb-de"><div class="ico">🇱🇺→🇩🇪</div><b>Verstehen</b><small>Was bedeutet das?</small></button>
-          <button class="tile" data-mode="de-lb"><div class="ico">🇩🇪→🇱🇺</div><b>Wiedererkennen</b><small>Wie sagt man das?</small></button>
-          <button class="tile" data-mode="type"><div class="ico">⌨️</div><b>Schreiben</b><small>Selbst eintippen</small></button>
+          <button class="tile" data-mode="lb-de"><div class="ico pair">🇱🇺→🇩🇪</div><b>Verstehen</b><small>Was bedeutet das?</small></button>
+          <button class="tile" data-mode="de-lb"><div class="ico pair">🇩🇪→🇱🇺</div><b>Wiedererkennen</b><small>Wie sagt man das?</small></button>
+          <button class="tile" data-mode="type"><div class="ico">✏️</div><b>Schreiben</b><small>Selbst eintippen</small></button>
         </div>
       </div>
       <p class="muted">Ein Quiz hat 10 Fragen. Rechtschreibfehler bei Akzenten (é, ë, ä) werden beim Schreiben verziehen.</p>`);
@@ -1249,7 +1249,7 @@ ${sents.map((s) => `<p class="s"><span class="lb">${esc(s.lb)}</span><br><span c
       <div class="card"><p>Tippe die Wörter in der richtigen Reihenfolge an. So übst du den Satzbau, den du beim Sprechen brauchst –
       vor allem die Stellung des Verbs.</p></div>
       <div class="grid">
-        <a class="tile" href="#/satzbau/de"><div class="ico">🇩🇪→🇱🇺</div><b>Übersetzen</b><small>Deutscher Satz → auf Luxemburgisch bauen (${n.de} Sätze)</small></a>
+        <a class="tile" href="#/satzbau/de"><div class="ico pair">🇩🇪→🇱🇺</div><b>Übersetzen</b><small>Deutscher Satz → auf Luxemburgisch bauen (${n.de} Sätze)</small></a>
         ${n.lauschteren ? `<a class="tile" href="#/satzbau/lauschteren"><div class="ico">👂</div><b>Hören & bauen</b><small>Echte Aufnahme hören und Satz zusammensetzen (${n.lauschteren} Sätze)</small></a>` : ""}
         <a class="tile" href="${n.ech ? "#/satzbau/ech" : "#/ich"}"><div class="ico">⭐</div><b>Meine Vorstellung</b><small>${n.ech ? `Deine eigenen Sätze bauen (${n.ech})` : "Erst eigene Daten eintragen"}</small></a>
       </div>`);

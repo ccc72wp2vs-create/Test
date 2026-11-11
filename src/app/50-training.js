@@ -249,7 +249,7 @@
       <div class="card"><p>Tippe die Wörter in der richtigen Reihenfolge an. So übst du den Satzbau, den du beim Sprechen brauchst –
       vor allem die Stellung des Verbs.</p></div>
       <div class="grid">
-        <a class="tile" href="#/satzbau/de"><div class="ico">🇩🇪→🇱🇺</div><b>Übersetzen</b><small>Deutscher Satz → auf Luxemburgisch bauen (${n.de} Sätze)</small></a>
+        <a class="tile" href="#/satzbau/de"><div class="ico pair">🇩🇪→🇱🇺</div><b>Übersetzen</b><small>Deutscher Satz → auf Luxemburgisch bauen (${n.de} Sätze)</small></a>
         ${n.lauschteren ? `<a class="tile" href="#/satzbau/lauschteren"><div class="ico">👂</div><b>Hören & bauen</b><small>Echte Aufnahme hören und Satz zusammensetzen (${n.lauschteren} Sätze)</small></a>` : ""}
         <a class="tile" href="${n.ech ? "#/satzbau/ech" : "#/ich"}"><div class="ico">⭐</div><b>Meine Vorstellung</b><small>${n.ech ? `Deine eigenen Sätze bauen (${n.ech})` : "Erst eigene Daten eintragen"}</small></a>
       </div>`);

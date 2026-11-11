@@ -173,9 +173,9 @@
         </select>
         <h3>Modus</h3>
         <div class="grid">
-          <button class="tile" data-mode="lb-de"><div class="ico">🇱🇺→🇩🇪</div><b>Verstehen</b><small>Was bedeutet das?</small></button>
-          <button class="tile" data-mode="de-lb"><div class="ico">🇩🇪→🇱🇺</div><b>Wiedererkennen</b><small>Wie sagt man das?</small></button>
-          <button class="tile" data-mode="type"><div class="ico">⌨️</div><b>Schreiben</b><small>Selbst eintippen</small></button>
+          <button class="tile" data-mode="lb-de"><div class="ico pair">🇱🇺→🇩🇪</div><b>Verstehen</b><small>Was bedeutet das?</small></button>
+          <button class="tile" data-mode="de-lb"><div class="ico pair">🇩🇪→🇱🇺</div><b>Wiedererkennen</b><small>Wie sagt man das?</small></button>
+          <button class="tile" data-mode="type"><div class="ico">✏️</div><b>Schreiben</b><small>Selbst eintippen</small></button>
         </div>
       </div>
       <p class="muted">Ein Quiz hat 10 Fragen. Rechtschreibfehler bei Akzenten (é, ë, ä) werden beim Schreiben verziehen.</p>`);
