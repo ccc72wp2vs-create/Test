@@ -190,3 +190,7 @@ a { color: var(--accent); }
   .card { border: 0; padding: 0; }
   .sent.hide .lb { filter: none; }
 }
+/* Simulation & Zahlen-Training */
+.opt.sel { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, var(--card)); font-weight: 600; }
+.grid.two { grid-template-columns: 1fr 1fr; }
+.opt.big { text-align: center; font-size: 1.25rem; font-weight: 700; padding: 18px 8px; margin: 0; }

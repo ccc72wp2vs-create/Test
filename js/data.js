@@ -623,5 +623,212 @@ Mir sinn an d'Vakanz gaangen. – Wir sind in den Urlaub gefahren.</p>
         { q: "Wéini soll d'Persoun erëmkommen?", options: ["Freideg mëttes", "Méindeg moies", "Sonndes"], a: 1 }
       ]
     }
+    ,
+    // ----- Niveau B1: längere Texte wie im Hörteil der Prüfung -----
+    {
+      title: "Verkéiersinfo um Radio", level: "B1",
+      text: [
+        "An elo d'Verkéiersinformatiounen.",
+        "Op der Autobunn A6 a Richtung Stad gouf et haut de Moien en Accident tëscht zwee Autoen.",
+        "Et gouf kee blesséiert, mee eng Spuer ass gespaart.",
+        "Dir musst mat engem Stau vu fënnef Kilometer rechnen, an Dir verléiert ongeféier eng hallef Stonn.",
+        "Wann Dir kënnt, huelt den Zuch oder fuert iwwer d'Nationalstrooss.",
+        "D'Police mengt, datt d'Autobunn géint néng Auer nees fräi ass."
+      ],
+      questions: [
+        { q: "Wat ass op der A6 geschitt?", options: ["En Accident tëscht zwee Autoen", "Aarbechten op der Strooss", "E Bus ass stoe bliwwen"], a: 0 },
+        { q: "Wéi vill Zäit verléiert een ongeféier?", options: ["fënnef Minutten", "eng hallef Stonn", "eng Stonn"], a: 1 },
+        { q: "Wat gëtt recommandéiert?", options: ["Doheem ze bleiwen", "Méi spéit ze fueren", "Den Zuch ze huelen"], a: 2 },
+        { q: "Wéini ass d'Autobunn nees fräi?", options: ["géint 9 Auer", "géint 5 Auer", "eréischt muer"], a: 0 }
+      ]
+    },
+    {
+      title: "Message um Répondeur", level: "B1",
+      text: [
+        "Moien Sandra, hei ass de Paul vum Büro.",
+        "Ech ruffen un wéinst eiser Reunioun vu muer.",
+        "De Chef ass leider krank, dofir kënne mir eis net um zéng Auer gesinn.",
+        "Mir maachen d'Reunioun elo en Donneschdeg um zwou Auer mëttes, am grousse Sall um éischte Stack.",
+        "Bréng wann ech gelift d'Dokumenter vum Projet mat.",
+        "Wann s du net kanns kommen, ruff mech bis Mëttwoch owes un.",
+        "Merci a bis geschwënn!"
+      ],
+      questions: [
+        { q: "Firwat gëtt d'Reunioun verluecht?", options: ["De Sall ass net fräi.", "De Chef ass krank.", "De Paul ass an der Vakanz."], a: 1 },
+        { q: "Wéini ass déi nei Reunioun?", options: ["Donneschdeg um 14 Auer", "Mëttwoch um 10 Auer", "Donneschdeg um 10 Auer"], a: 0 },
+        { q: "Wat soll d'Sandra matbréngen?", options: ["Hire Computer", "Kaffi fir jiddereen", "D'Dokumenter vum Projet"], a: 2 },
+        { q: "Bis wéini soll si uruffen, wann si net ka kommen?", options: ["bis Mëttwoch owes", "bis Donneschdeg moies", "bis haut den Owend"], a: 0 }
+      ]
+    },
+    {
+      title: "Annonce am Supermarché", level: "B1",
+      text: [
+        "Léif Clienten, wëllkomm an Ärem Supermarché.",
+        "Haut hu mir eng speziell Offer fir Iech: All Uebst a Geméis aus der Regioun kascht zwanzeg Prozent manner.",
+        "Bei eisem Metzler kritt Dir bei all Akaf vun iwwer zéng Euro eng Zopp gratis.",
+        "Mir erënneren Iech och drun, datt eise Buttek haut ausnamsweis schonn um sechs Auer zoumécht, well muer Feierdag ass.",
+        "Muer ass de Buttek de ganzen Dag zou.",
+        "Mir wënschen Iech e schéinen Dag."
+      ],
+      questions: [
+        { q: "Wat ass haut méi bëlleg?", options: ["Fleesch", "Uebst a Geméis aus der Regioun", "Brout a Kuch"], a: 1 },
+        { q: "Wat kritt een beim Metzler gratis?", options: ["eng Zopp", "e Kaffi", "eng Zalot"], a: 0 },
+        { q: "Wéini mécht de Buttek haut zou?", options: ["um 8 Auer", "um 10 Auer", "um 6 Auer"], a: 2 },
+        { q: "Firwat mécht de Buttek haut méi fréi zou?", options: ["Muer ass Feierdag.", "Et gëtt am Buttek geschafft.", "Et ass Sonndeg."], a: 0 }
+      ]
+    },
+    {
+      title: "Eng Wunneng sichen", level: "B1",
+      text: [
+        "A: Agence Immo Lux, gudde Moien.",
+        "B: Moien, ech hunn Är Annonce fir d'Appartement zu Bartreng gesinn. Ass et nach fräi?",
+        "A: Jo, et ass nach fräi. Et huet zwee Schlofzëmmer, eng grouss Stuff an e Balcon. Et läit um drëtte Stack an et gëtt e Lift.",
+        "B: Wéi héich ass de Loyer?",
+        "A: Dausend aachthonnert Euro de Mount, ouni Chargen. D'Charge sinn zweehonnert Euro.",
+        "B: Ass eng Garage dobäi?",
+        "A: Nee, mee et gëtt eng Parkplaz virum Haus.",
+        "B: Kann ech d'Wunneng kucke kommen?",
+        "A: Jo, zum Beispill e Samschdeg de Moien um eelef Auer.",
+        "B: Dat passt mir gutt. Bis e Samschdeg!"
+      ],
+      questions: [
+        { q: "Wéi vill Schlofzëmmer huet d'Appartement?", options: ["eent", "zwee", "dräi"], a: 1 },
+        { q: "Wéi héich ass de Loyer ouni Chargen?", options: ["1.800 Euro", "1.200 Euro", "2.000 Euro"], a: 0 },
+        { q: "Wat gëtt et NET?", options: ["e Balcon", "e Lift", "eng Garage"], a: 2 },
+        { q: "Wéini ass d'Visite?", options: ["Samschdeg um 11 Auer", "Sonndeg um 11 Auer", "Samschdeg um 14 Auer"], a: 0 }
+      ]
+    },
+    {
+      title: "Wat ass lass um Weekend?", level: "B1",
+      text: [
+        "A wat ass dëse Weekend lass?",
+        "E Freideg den Owend spillt eng Lëtzebuerger Band e Concert an der Rockhal zu Esch. D'Tickete kaschte fënnefanzwanzeg Euro.",
+        "E Samschdeg ass vun néng bis fënnef Auer e grousse Floumaart am Zentrum vun Diddeleng. Den Entrée ass gratis.",
+        "An e Sonndeg kënnen d'Kanner am Park vu Miersch d'Déiere vum Bauerenhaff kucken.",
+        "Wann et reent, fält dat Fest aus."
+      ],
+      questions: [
+        { q: "Wat ass e Freideg den Owend?", options: ["e Floumaart", "e Concert", "e Film"], a: 1 },
+        { q: "Wat kascht en Ticket fir de Concert?", options: ["25 Euro", "15 Euro", "näischt"], a: 0 },
+        { q: "Wou ass de Floumaart?", options: ["zu Esch", "zu Miersch", "zu Diddeleng"], a: 2 },
+        { q: "Wat geschitt, wann et e Sonndeg reent?", options: ["D'Fest fält aus.", "D'Fest ass an enger Hal.", "D'Fest fänkt méi spéit un."], a: 0 }
+      ]
+    },
+    {
+      title: "Eng Invitatioun", level: "B1",
+      text: [
+        "A: Moien Här Weber! Wéi geet et Iech?",
+        "B: Moien Madame Santos! Gutt, merci. An Iech?",
+        "A: Och gutt. Sot, mir maachen den nächste Samschdeg e klengt Fest am Gaart, well mäi Mann fofzeg Joer al gëtt. Hutt Dir Loscht ze kommen?",
+        "B: Dat ass awer léif! Um wéi vill Auer fänkt et un?",
+        "A: Um siwen Auer owes. Mir grillen, an et gëtt och Zalot a Kuch.",
+        "B: Soll ech eppes matbréngen?",
+        "A: Wann Dir wëllt, eng Fläsch Wäin. Awer kee Cadeau, wann ech gelift!",
+        "B: Ganz gär. Meng Fra ka leider net kommen, si schafft dee Weekend am Spidol.",
+        "A: Dat ass schued. Dann bis e Samschdeg!"
+      ],
+      questions: [
+        { q: "Firwat gëtt et e Fest?", options: ["De Mann vun der Madame Santos gëtt 50.", "D'Famill huet en neit Haus.", "Et ass Nationalfeierdag."], a: 0 },
+        { q: "Wéini fänkt d'Fest un?", options: ["um 17 Auer", "um 19 Auer", "um 12 Auer"], a: 1 },
+        { q: "Wat kann den Här Weber matbréngen?", options: ["e Cadeau", "e Kuch", "eng Fläsch Wäin"], a: 2 },
+        { q: "Firwat kënnt d'Fra vum Här Weber net?", options: ["Si muss schaffen.", "Si ass krank.", "Si ass an der Vakanz."], a: 0 }
+      ]
+    },
+    {
+      title: "En Dësch reservéieren", level: "B1",
+      text: [
+        "A: Restaurant Bei der Bréck, gudden Owend.",
+        "B: Gudden Owend. Ech géif gär en Dësch reservéieren, fir e Freideg den Owend.",
+        "A: Fir wéi vill Leit?",
+        "B: Mir si sechs Persounen, véier Erwuessener an zwee Kanner.",
+        "A: Um wéi vill Auer wëllt Dir kommen?",
+        "B: Um hallwer aacht, wann dat geet.",
+        "A: Um hallwer aacht si mir leider voll. Ech kann Iech en Dësch um aacht Auer ginn, oder schonn um siwen Auer.",
+        "B: Dann huele mir siwen Auer, dat ass besser fir d'Kanner.",
+        "A: Ganz gutt. Op wéi en Numm?",
+        "B: Op den Numm Müller.",
+        "A: Merci, Här Müller. Bis e Freideg!"
+      ],
+      questions: [
+        { q: "Fir wéi vill Leit gëtt reservéiert?", options: ["fir véier", "fir sechs", "fir aacht"], a: 1 },
+        { q: "Firwat geet et net um hallwer aacht?", options: ["De Restaurant ass voll.", "De Restaurant ass zou.", "Dat ass ze spéit fir d'Kichen."], a: 0 },
+        { q: "Um wéi vill Auer kommen si?", options: ["um 19:30 Auer", "um 20 Auer", "um 19 Auer"], a: 2 },
+        { q: "Firwat hëlt den Här Müller déi Zäit?", options: ["Dat ass besser fir d'Kanner.", "Hie muss laang schaffen.", "Dat ass méi bëlleg."], a: 0 }
+      ]
+    },
+    {
+      title: "Eng nei Kolleegin", level: "B1",
+      text: [
+        "Moien alleguer! Ech sinn déi nei Kolleegin an der Comptabilitéit.",
+        "Ech heesche Maria an ech kommen aus Italien, mee ech wunne scho zënter zwielef Joer zu Lëtzebuerg.",
+        "Virdrun hunn ech aacht Joer bei enger Bank an der Stad geschafft.",
+        "Ech schwätzen Italieenesch, Franséisch an Englesch, a mäi Lëtzebuergesch gëtt all Dag besser.",
+        "Ech si bestuet an ech hunn eng Duechter, déi an de Lycée geet.",
+        "A menger Fräizäit ginn ech gär schwammen.",
+        "Ech freeë mech op d'Zesummenaarbecht mat iech!"
+      ],
+      questions: [
+        { q: "Wou schafft d'Maria elo?", options: ["bei enger Bank", "an der Comptabilitéit", "an engem Lycée"], a: 1 },
+        { q: "Zënter wéini wunnt si zu Lëtzebuerg?", options: ["zënter 12 Joer", "zënter 8 Joer", "zënter 2 Joer"], a: 0 },
+        { q: "Wéi eng Sprooch huet si NET genannt?", options: ["Franséisch", "Englesch", "Däitsch"], a: 2 },
+        { q: "Wat mécht si gär an hirer Fräizäit?", options: ["schwammen", "liesen", "kachen"], a: 0 }
+      ]
+    },
+    {
+      title: "Message vun der Schoul", level: "B1",
+      text: [
+        "Léif Elteren, hei ass d'Madame Klein, d'Joffer vun Ärem Kand.",
+        "Ech wëll Iech drun erënneren, datt mir en Dënschdeg mat der Klass an de Bësch ginn.",
+        "D'Kanner brauche fest Schong, e Reemantel an eppes fir z'iessen an ze drénken.",
+        "Mir fueren um hallwer néng mam Bus fort a si géint véier Auer nees zréck an der Schoul.",
+        "Wann d'Wieder ze schlecht ass, bleiwe mir an der Schoul a kucken e Film.",
+        "Den Ausfluch kascht fënnef Euro. Merci!"
+      ],
+      questions: [
+        { q: "Wouhi geet d'Klass en Dënschdeg?", options: ["an de Kino", "an de Bësch", "an d'Schwämm"], a: 1 },
+        { q: "Wat brauchen d'Kanner?", options: ["fest Schong", "e Buch", "e Ball"], a: 0 },
+        { q: "Wéini sinn d'Kanner nees an der Schoul?", options: ["um hallwer néng", "géint 12 Auer", "géint 16 Auer"], a: 2 },
+        { q: "Wat geschitt, wann d'Wieder schlecht ass?", options: ["Si kucken e Film an der Schoul.", "D'Kanner bleiwen doheem.", "Den Ausfluch ass eng Woch méi spéit."], a: 0 }
+      ]
+    },
+    {
+      title: "Informatioun vun der Gemeng", level: "B1",
+      text: [
+        "Eng Informatioun vun der Gemeng:",
+        "Wéinst Aarbechten ass d'Schwämm vum éischte bis de fofzéngte Mäerz zou.",
+        "D'Bibliothéik bleift op, mee si huet nei Zäiten: vu Méindeg bis Freideg vun zwou bis sechs Auer, a samschdes de Moien.",
+        "Ausserdeem gëtt den Offall an der nächster Woch net en Dënschdeg, mee eréischt e Mëttwoch ofgeholl.",
+        "Méi Informatioune fannt Dir um Internetsite vun der Gemeng oder um Telefon."
+      ],
+      questions: [
+        { q: "Firwat ass d'Schwämm zou?", options: ["wéinst der Vakanz", "wéinst Aarbechten", "well et ze kal ass"], a: 1 },
+        { q: "Bis wéini ass d'Schwämm zou?", options: ["bis de 15. Mäerz", "bis den 1. Mäerz", "de ganze Mount Mäerz"], a: 0 },
+        { q: "Wéini ass d'Bibliothéik samschdes op?", options: ["de ganzen Dag", "guer net", "de Moien"], a: 2 },
+        { q: "Wéini gëtt den Offall an der nächster Woch ofgeholl?", options: ["e Mëttwoch", "en Dënschdeg", "e Freideg"], a: 0 }
+      ]
+    }
+  ],
+
+  // Rückfragen der Prüfer zur persönlichen Vorstellung. "when" sagt, zu welchen Angaben die Frage passt.
+  followups: [
+    { id: "nat", when: "always", q: "Firwat wëllt Dir d'Lëtzebuerger Nationalitéit kréien?", de: "Warum möchten Sie die luxemburgische Staatsangehörigkeit bekommen?", start: "Ech wëll d'Nationalitéit kréien, well …" },
+    { id: "gefalen", when: "always", q: "Wéi gefält et Iech zu Lëtzebuerg?", de: "Wie gefällt es Ihnen in Luxemburg?", start: "Et gefält mir gutt, well …" },
+    { id: "weekend", when: "always", q: "Wat maacht Dir normalerweis um Weekend?", de: "Was machen Sie normalerweise am Wochenende?", start: "Um Weekend ginn ech dacks …" },
+    { id: "gescht", when: "always", q: "Wat hutt Dir gëschter gemaach?", de: "Was haben Sie gestern gemacht?", start: "Gëschter hunn ech …" },
+    { id: "geleiert", when: "always", q: "Wou hutt Dir Lëtzebuergesch geléiert?", de: "Wo haben Sie Luxemburgisch gelernt?", start: "Ech hunn Lëtzebuergesch an engem Cours geléiert, an …" },
+    { id: "komm", when: "country", q: "Firwat sidd Dir op Lëtzebuerg komm?", de: "Warum sind Sie nach Luxemburg gekommen?", start: "Ech sinn op Lëtzebuerg komm, well …" },
+    { id: "zreck", when: "country", q: "Fuert Dir dacks zréck an Äert Heemechtsland?", de: "Fahren Sie oft zurück in Ihr Heimatland?", start: "Ech fueren eemol d'Joer …" },
+    { id: "kanneral", when: "kids", q: "Wéi al sinn Är Kanner?", de: "Wie alt sind Ihre Kinder?", start: "Mäi Jong ass … Joer al, a meng Duechter ass …" },
+    { id: "kannerschoul", when: "kids", q: "Ginn Är Kanner hei an d'Schoul?", de: "Gehen Ihre Kinder hier zur Schule?", start: "Jo, meng Kanner ginn zu … an d'Schoul." },
+    { id: "kannersprooch", when: "kids", q: "Wéi eng Sprooch schwätzt Dir doheem mat de Kanner?", de: "Welche Sprache sprechen Sie zu Hause mit den Kindern?", start: "Doheem schwätze mir …" },
+    { id: "partner", when: "partner", q: "Wat schafft Äre Mann oder Är Fra?", de: "Was arbeitet Ihr Mann oder Ihre Frau?", start: "Mäi Mann schafft als … / Meng Fra schafft als …" },
+    { id: "aarbechtwat", when: "work", q: "Wat maacht Dir genau op der Aarbecht?", de: "Was machen Sie genau bei der Arbeit?", start: "Op der Aarbecht muss ech …" },
+    { id: "aarbechtwei", when: "work", q: "Wéi kommt Dir op d'Aarbecht?", de: "Wie kommen Sie zur Arbeit?", start: "Ech fuere mam Bus op d'Aarbecht." },
+    { id: "aarbechtsprooch", when: "work", q: "Wéi eng Sprooche schwätzt Dir op der Aarbecht?", de: "Welche Sprachen sprechen Sie bei der Arbeit?", start: "Op der Aarbecht schwätzen ech …" },
+    { id: "aarbechtzenter", when: "work", q: "Zënter wéini schafft Dir do?", de: "Seit wann arbeiten Sie dort?", start: "Ech schaffen zënter … Joer do." },
+    { id: "gemeng", when: "town", q: "Wat gefält Iech an Ärer Gemeng?", de: "Was gefällt Ihnen in Ihrer Gemeinde?", start: "Meng Gemeng gefält mir, well …" },
+    { id: "wunneng", when: "town", q: "Beschreift Är Wunneng, wann ech gelift.", de: "Beschreiben Sie bitte Ihre Wohnung.", start: "Meng Wunneng huet … Zëmmeren, an …" },
+    { id: "hobby", when: "hobbies", q: "Wat maacht Dir am léifsten an Ärer Fräizäit?", de: "Was machen Sie am liebsten in Ihrer Freizeit?", start: "Am léifsten … , well …" },
+    { id: "sproochdoheem", when: "langs", q: "Wéi eng Sprooch schwätzt Dir doheem?", de: "Welche Sprache sprechen Sie zu Hause?", start: "Doheem schwätzen ech …" }
   ]
 };

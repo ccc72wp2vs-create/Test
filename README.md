@@ -15,7 +15,11 @@ luxemburgische Staatsbürgerschaft ausgerichtet:
 | ✅ **Quiz** | Multiple Choice in beide Richtungen und ein Schreibmodus (Akzentfehler werden verziehen) |
 | 🎙️ **Sprechen** | Typische Prüfungsfragen pro Thema, vier Bilder zur Bildbeschreibung, Aufnahmefunktion mit Timer und A2-Musterantworten mit Übersetzung |
 | ⭐ **Meine Vorstellung** | Eigene Daten eintragen (Alter, Herkunft, Wohnort, Familie, Arbeit, Sprachen, Hobbys) – die App erstellt daraus die persönliche Vorstellung auf Luxemburgisch mit Übersetzung. Mit Auswendig-Modus, Druck/PDF und Export als Datei |
-| 👂 **Verstehen** | Kurze Dialoge und Durchsagen (Arzt, Bäckerei, Bahnhof, Wetter, Gemeinde) zum Anhören, mit Multiple-Choice-Fragen |
+| 👂 **Verstehen** | 15 Hörtexte mit Multiple-Choice-Fragen: 5 kurze Alltagsdialoge (A2) und 10 längere Texte auf Prüfungsniveau B1 (Radio, Durchsagen, Telefonate, Gespräche) |
+| ⏱️ **Prüfungssimulation** | Kompletter Durchlauf: 3 B1-Hörtexte, die höchstens zweimal abgespielt werden, danach Gespräch und Bildbeschreibung mit Aufnahme; Auswertung mit Lösungen, Musterantworten und Verlauf |
+| 💬 **Rückfragen** | Typische Nachfragen der Prüfer, passend zu den eigenen Angaben, mit Audio, Übersetzung und Satzanfang |
+| 🔢 **Zahlen & Uhrzeit** | Hörtraining für Zahlen 1–100, Uhrzeiten, Preise und Jahreszahlen mit verwechselbaren Antworten |
+| 🔥 **Schwierige Wörter** | Sammelt automatisch die Wörter, die man oft falsch hatte, zum gezielten Üben |
 | 🔊 **Aussprache** | Alle Vokabeln, Beispielsätze, Prüferfragen, Musterantworten und Dialoge lassen sich anhören (auch offline) |
 | 📐 **Grammatik** | Nur das Nötige: Artikel, n-Regel, sinn/hunn, Perfekt, Modalverben, Possessivpronomen, Satzbau |
 | 🎓 **Prüfung** | Ablauf, Tipps und Links (INL, LOD.lu, RTL, Guichet.lu) |
@@ -56,7 +60,7 @@ Danach in `sw.js` die Versionsnummer von `AUDIO` erhöhen, damit Geräte die neu
 ## Inhalte erweitern
 
 Alle Lerninhalte stehen in [`js/data.js`](js/data.js): Vokabeln (`topics`), Grammatik (`grammar`),
-Sprechfragen (`speaking`) und Verstehenstexte (`dialogues`). Neue Einträge erscheinen automatisch in der App.
+Sprechfragen (`speaking`), Hörtexte (`dialogues`) und Rückfragen (`followups`). Das Zahlen-Training entsteht in [`js/train.js`](js/train.js), die persönliche Vorstellung in [`js/me.js`](js/me.js). Neue Einträge erscheinen automatisch in der App.
 
 > Hinweis: Termine, Gebühren und Bestehensgrenzen des Sproochentest bitte immer aktuell beim
 > [INL](https://www.inll.lu) bzw. auf [Guichet.lu](https://guichet.public.lu) prüfen.

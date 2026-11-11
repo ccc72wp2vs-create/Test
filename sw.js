@@ -1,5 +1,5 @@
 // Service Worker: macht die App offline nutzbar.
-const CACHE = "sproochentest-v7";
+const CACHE = "sproochentest-v8";
 const AUDIO = "sproochentest-audio-v2"; // bleibt bei App-Updates erhalten
 const FILES = [
   "./",
@@ -7,6 +7,7 @@ const FILES = [
   "css/style.css",
   "js/data.js",
   "js/me.js",
+  "js/train.js",
   "js/app.js",
   "manifest.webmanifest",
   "img/maart.svg",

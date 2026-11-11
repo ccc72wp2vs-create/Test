@@ -3,6 +3,7 @@
 
   const D = window.LUX_DATA;
   const ME = window.LUX_ME;
+  const TRAIN = window.LUX_TRAIN;
   const $view = document.getElementById("view");
   const $title = document.getElementById("page-title");
   const STORE_KEY = "sproochentest-v1";
@@ -26,7 +27,7 @@
   // Speicherplatz, damit vorhandener Fortschritt erhalten bleibt.
   const PROFILES_KEY = "sproochentest-profiles";
   const storeKey = (id) => (id === "p1" ? STORE_KEY : `${STORE_KEY}:${id}`);
-  const emptyState = () => ({ cards: {}, days: [], quizBest: {}, reversed: false });
+  const emptyState = () => ({ cards: {}, days: [], quizBest: {}, reversed: false, miss: {}, sims: [] });
   function loadProfiles() {
     try {
       const p = JSON.parse(localStorage.getItem(PROFILES_KEY));
@@ -110,6 +111,8 @@
       if (s.images) s.images.forEach((im, k) => keys.push(`sm-${i}-${k}`)); else keys.push(`sm-${i}`);
     });
     D.dialogues.forEach((d, i) => keys.push(`d-${i}`));
+    D.followups.forEach((f) => keys.push(`fq-${f.id}`));
+    TRAIN.sets.forEach((s) => s.items.forEach((it) => keys.push(it.key)));
     return keys;
   }
 
@@ -139,7 +142,8 @@
           <li><b>Täglich 10–15 Min. Karten</b> – der Wortschatz ist die Basis.</li>
           <li><b>Grammatik</b> einmal durchlesen: sinn/hunn, Perfekt, n-Regel.</li>
           <li><b>Sprechen</b>: Fragen laut beantworten, dich aufnehmen, mit Musterantwort vergleichen.</li>
-          <li><b>Verstehen</b>: Dialoge lesen und Fragen beantworten – dazu täglich luxemburgisches Radio hören.</li>
+          <li><b>Verstehen</b>: B1-Texte anhören und Fragen beantworten – dazu täglich luxemburgisches Radio hören.</li>
+          <li><b>Prüfungssimulation</b>: einmal pro Woche einen kompletten Durchlauf machen.</li>
         </ol>
       </div>
       <div class="grid">
@@ -149,6 +153,8 @@
         <a class="tile" href="#/ich"><div class="ico">⭐</div><b>Meine Vorstellung</b><small>Persönlicher Text</small></a>
         <a class="tile" href="#/verstehen"><div class="ico">👂</div><b>Verstehen</b><small>Dialoge & Fragen</small></a>
         <a class="tile" href="#/grammatik"><div class="ico">📐</div><b>Grammatik</b><small>Das Nötigste für A2</small></a>
+        <a class="tile" href="#/zuelen"><div class="ico">🔢</div><b>Zahlen & Uhrzeit</b><small>Hörtraining</small></a>
+        <a class="tile" href="#/simulation"><div class="ico">⏱️</div><b>Prüfungssimulation</b><small>${state.sims.length ? `Zuletzt: Hören ${state.sims[state.sims.length - 1].r}/${state.sims[state.sims.length - 1].t}` : "Kompletter Durchlauf"}</small></a>
         <a class="tile" href="#/pruefung"><div class="ico">🎓</div><b>Die Prüfung</b><small>Ablauf & Tipps</small></a>
       </div>`);
   }
@@ -238,12 +244,29 @@
     }).join("");
     render("Karteikarten", `
       <a class="btn" style="width:100%;margin-bottom:12px" href="#/lernen/heute">▶︎ Tägliche Lerneinheit (alle Themen)</a>
+      <div class="row" style="margin-bottom:12px">
+        <a class="btn secondary" href="#/schwer">🔥 Schwierige Wörter (${hardCards().length})</a>
+        <a class="btn secondary" href="#/zuelen">🔢 Zahlen & Uhrzeit</a>
+      </div>
       <label class="card" style="display:flex;gap:10px;align-items:center">
         <input type="checkbox" id="rev" ${state.reversed ? "checked" : ""}>
         <span>Richtung umkehren: Deutsch → Lëtzebuergesch<br><small class="muted">Schwieriger, aber besser fürs Sprechen</small></span>
       </label>
       <div class="grid">${tiles}</div>`);
     document.getElementById("rev").onchange = (e) => { state.reversed = e.target.checked; save(); };
+  }
+
+  function viewHard() {
+    const hard = hardCards();
+    if (!hard.length) {
+      return render("Schwierige Wörter", `<div class="card"><h2>Noch nichts gesammelt 👍</h2>
+        <p>Hier landen automatisch die Wörter, die du bei den Karteikarten mit „Nochmal“ markierst oder im Quiz falsch beantwortest.</p>
+        <a class="btn" href="#/lernen">Zu den Karteikarten</a></div>`);
+    }
+    render("Schwierige Wörter", `
+      <p class="muted">Diese Wörter hattest du am häufigsten falsch. Jedes „Gewusst“ in der Übung senkt den Zähler; bei null verschwindet das Wort aus der Liste.</p>
+      <a class="btn" style="width:100%;margin-bottom:12px" href="#/lernen/schwer">▶︎ Diese Wörter üben (${Math.min(hard.length, 20)})</a>
+      <div class="card"><ul class="wordlist">${hard.map((c) => `<li><div>${audioBtn(`c-${c.id}`)} <b>${esc(c.lb)}</b> <span class="box-badge">${state.miss[c.id]}× falsch</span></div><span>${esc(c.de)}</span></li>`).join("")}</ul></div>`);
   }
 
   function viewList(topicId) {
@@ -259,7 +282,12 @@
   }
 
   // ---------- Lernen: Karteikarten-Sitzung ----------
+  // Fehlerzähler pro Karte: steigt bei "Nochmal" und falschen Quiz-Antworten, sinkt beim Üben
+  function missed(c) { state.miss[c.id] = (state.miss[c.id] || 0) + 1; save(); }
+  const hardCards = () => cards.filter((c) => state.miss[c.id] > 0).sort((x, y) => state.miss[y.id] - state.miss[x.id]);
+
   function buildQueue(topicId) {
+    if (topicId === "schwer") return hardCards().slice(0, 20);
     const pool = topicId === "heute" ? cards : cards.filter((c) => c.topic === topicId);
     const due = shuffle(pool.filter(isDue));
     const fresh = pool.filter(isNew).slice(0, NEW_PER_SESSION); // neue Karten in Themenreihenfolge
@@ -270,8 +298,8 @@
 
   function viewFlash(topicId) {
     const t = topicById[topicId];
-    if (topicId !== "heute" && !t) return go("#/lernen");
-    const title = t ? t.title : "Tägliche Lerneinheit";
+    if (topicId !== "heute" && topicId !== "schwer" && !t) return go("#/lernen");
+    const title = t ? t.title : topicId === "schwer" ? "Schwierige Wörter" : "Tägliche Lerneinheit";
     const queue = buildQueue(topicId);
     let done = 0, right = 0;
     const total = queue.length;
@@ -331,7 +359,9 @@
         s.due = Date.now() + INTERVALS[s.box] * DAY - 3600000; // 1h Puffer, damit "morgen" wirklich morgen fällig ist
         delete s.firstTry;
         done++;
+        if (topicId === "schwer" && state.miss[c.id]) { state.miss[c.id]--; if (!state.miss[c.id]) delete state.miss[c.id]; }
       } else {
+        state.miss[c.id] = (state.miss[c.id] || 0) + 1;
         s.box = 0;
         s.due = 0;
         s.firstTry = false;
@@ -397,7 +427,7 @@
         inp.focus();
         const finish = (given) => {
           const ok = given !== null && normalize(given) === normalize(c.lb);
-          if (ok) score++;
+          if (ok) score++; else missed(c);
           document.getElementById("f").hidden = true;
           document.getElementById("fb").innerHTML = `<div class="feedback ${ok ? "ok" : "no"}">${ok ? "✓ Richtig!" : "✗ Richtig wäre:"} <b>${esc(c.lb)}</b></div>
             <div class="row" style="align-items:center">${audioBtn(`c-${c.id}`, "Anhören")}<button class="btn" id="nx">Weiter</button></div>`;
@@ -421,7 +451,7 @@
       $view.querySelectorAll(".opt").forEach((b) => {
         b.onclick = () => {
           const ok = b.dataset.id === c.id;
-          if (ok) score++;
+          if (ok) score++; else missed(c);
           $view.querySelectorAll(".opt").forEach((x) => {
             x.disabled = true;
             if (x.dataset.id === c.id) x.classList.add("right");
@@ -455,6 +485,54 @@
     activeRec = null;
   }
 
+  // Aufnahme mit Timer in ein Element einbauen. onDone(url) wird nach jeder Aufnahme aufgerufen.
+  function mountRecorder(box, onDone) {
+    const canRec = !!(navigator.mediaDevices && window.MediaRecorder);
+    box.innerHTML = `<div class="timer">0:00</div>
+      <div class="row"><button type="button" class="btn ${canRec ? "red" : ""}">${canRec ? "● Aufnehmen" : "▶︎ Timer starten"}</button></div>
+      <div class="recplay"></div>${canRec ? "" : `<p class="muted">Aufnahme wird von diesem Browser nicht unterstützt.</p>`}`;
+    const tm = box.querySelector(".timer"), btn = box.querySelector("button"), out = box.querySelector(".recplay");
+    const startTimer = () => {
+      const t0 = Date.now();
+      tm.textContent = "0:00";
+      activeTimer = setInterval(() => {
+        const sec = Math.floor((Date.now() - t0) / 1000);
+        tm.textContent = `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")}`;
+      }, 250);
+    };
+    if (!canRec) {
+      btn.onclick = () => {
+        if (activeTimer) { stopMedia(); btn.textContent = "▶︎ Timer starten"; }
+        else { startTimer(); btn.textContent = "■ Stopp"; }
+      };
+      return;
+    }
+    btn.onclick = async () => {
+      if (activeRec) { stopMedia(); return; }
+      stopAudio();
+      let stream;
+      try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
+      catch (e) { out.innerHTML = `<p class="feedback no">Kein Mikrofonzugriff. Bitte in den Einstellungen erlauben.</p>`; return; }
+      const type = ["audio/mp4", "audio/webm", "audio/ogg"].find((t) => MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(t));
+      const rec = new MediaRecorder(stream, type ? { mimeType: type } : undefined);
+      const chunks = [];
+      rec.ondataavailable = (e) => e.data.size && chunks.push(e.data);
+      rec.onstop = () => {
+        stream.getTracks().forEach((t) => t.stop());
+        if (activeTimer) { clearInterval(activeTimer); activeTimer = null; }
+        btn.innerHTML = "● Neu aufnehmen";
+        const url = URL.createObjectURL(new Blob(chunks, { type: rec.mimeType || type || "audio/webm" }));
+        if (out.isConnected) out.innerHTML = `<audio controls src="${url}"></audio><p class="muted">Hör dir zu: Verstehst du dich selbst? Hast du ganze Sätze benutzt?</p>`;
+        markActive();
+        if (onDone) onDone(url);
+      };
+      rec.start();
+      activeRec = rec;
+      startTimer();
+      btn.innerHTML = `<span class="rec-dot"></span> Stopp`;
+    };
+  }
+
   function viewSpeak(idx, imgIdx) {
     const s = D.speaking[idx];
     if (!s) return go("#/sprechen");
@@ -466,7 +544,6 @@
     }
     const model = img ? img.model : s.model;
     const modelDe = img ? img.de : s.de;
-    const canRec = !!(navigator.mediaDevices && window.MediaRecorder);
     render(s.topic, `
       ${img ? `<div class="card"><h3>Beschreibe dieses Bild</h3>
         <img class="scene" src="${img.src}" alt="${esc(img.alt)}">
@@ -478,12 +555,7 @@
       <div class="card">
         <h3>Deine Antwort</h3>
         <p class="muted">Sprich 1–2 Minuten frei. Kurze, einfache Sätze reichen für A2!</p>
-        <div class="timer" id="tm">0:00</div>
-        <div class="row">
-          ${canRec ? `<button class="btn red" id="rec">● Aufnehmen</button>` : `<button class="btn" id="tbtn">▶︎ Timer starten</button>`}
-        </div>
-        <div id="play"></div>
-        ${canRec ? "" : `<p class="muted">Aufnahme wird von diesem Browser nicht unterstützt.</p>`}
+        <div id="recbox"></div>
       </div>
       ${idx === 0 ? (mySentences().length
         ? `<details class="card"><summary>⭐ Meine persönliche Vorstellung anzeigen</summary><p><b>${esc(mySentences().map((x) => x.lb).join(" "))}</b></p><a href="#/ich">Zum Lernmodus</a></details>`
@@ -496,49 +568,7 @@
       <div class="row"><a class="btn secondary" href="#/sprechen">Alle Themen</a>
       <a class="btn secondary" href="#/sprechen/${(idx + 1) % D.speaking.length}">Nächstes Thema →</a></div>`);
 
-    const tm = document.getElementById("tm");
-    const startTimer = () => {
-      const t0 = Date.now();
-      tm.textContent = "0:00";
-      activeTimer = setInterval(() => {
-        const sec = Math.floor((Date.now() - t0) / 1000);
-        tm.textContent = `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")}`;
-      }, 250);
-    };
-
-    if (!canRec) {
-      const b = document.getElementById("tbtn");
-      b.onclick = () => {
-        if (activeTimer) { stopMedia(); b.textContent = "▶︎ Timer starten"; }
-        else { startTimer(); b.textContent = "■ Stopp"; }
-      };
-      return;
-    }
-
-    const btn = document.getElementById("rec");
-    btn.onclick = async () => {
-      if (activeRec) { stopMedia(); return; }
-      let stream;
-      try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
-      catch (e) { document.getElementById("play").innerHTML = `<p class="feedback no">Kein Mikrofonzugriff. Bitte in den Einstellungen erlauben.</p>`; return; }
-      const type = ["audio/mp4", "audio/webm", "audio/ogg"].find((t) => MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(t));
-      const rec = new MediaRecorder(stream, type ? { mimeType: type } : undefined);
-      const chunks = [];
-      rec.ondataavailable = (e) => e.data.size && chunks.push(e.data);
-      rec.onstop = () => {
-        stream.getTracks().forEach((t) => t.stop());
-        if (activeTimer) { clearInterval(activeTimer); activeTimer = null; }
-        btn.innerHTML = "● Neu aufnehmen";
-        const url = URL.createObjectURL(new Blob(chunks, { type: rec.mimeType || type || "audio/webm" }));
-        const p = document.getElementById("play");
-        if (p) p.innerHTML = `<audio controls src="${url}"></audio><p class="muted">Hör dir zu: Verstehst du dich selbst? Hast du ganze Sätze benutzt?</p>`;
-        markActive();
-      };
-      rec.start();
-      activeRec = rec;
-      startTimer();
-      btn.innerHTML = `<span class="rec-dot"></span> Stopp`;
-    };
+    mountRecorder(document.getElementById("recbox"));
   }
 
   // ---------- Verstehen ----------
@@ -547,7 +577,8 @@
       <div class="card"><p>Der Hörteil ist auf <b>Niveau B1</b> – also etwas schwerer als der Sprechteil.
       Typisch sind kurze Gespräche, Durchsagen und Radiomeldungen mit Multiple-Choice-Fragen.</p>
       <p class="muted">Tipp: Lies zuerst die Fragen, dann höre den Text. Die Stimme hier ist computererzeugt – höre zusätzlich täglich RTL Radio oder Radio 100,7, um dich an echte Sprecher zu gewöhnen.</p></div>
-      ${D.dialogues.map((d, i) => `<a class="tile" style="margin-bottom:8px" href="#/verstehen/${i}"><b>${esc(d.title)}</b><small>${d.questions.length} Fragen</small></a>`).join("")}`);
+      <a class="btn red" style="width:100%;margin-bottom:12px" href="#/simulation">🎓 Prüfungssimulation starten</a>
+      ${D.dialogues.map((d, i) => `<a class="tile" style="margin-bottom:8px" href="#/verstehen/${i}"><b>${esc(d.title)}</b> <span class="box-badge">${d.level || "A2"}</span><small>${d.questions.length} Fragen</small></a>`).join("")}`);
   }
 
   function viewDialog(idx) {
@@ -636,6 +667,9 @@
       <div class="grid">
         <a class="tile" href="#/verstehen"><div class="ico">👂</div><b>Verstehen</b><small>Dialoge & Fragen</small></a>
         <a class="tile" href="#/grammatik"><div class="ico">📐</div><b>Grammatik</b><small>Das Nötigste für A2</small></a>
+        <a class="tile" href="#/simulation"><div class="ico">⏱️</div><b>Prüfungssimulation</b><small>Kompletter Durchlauf</small></a>
+        <a class="tile" href="#/zuelen"><div class="ico">🔢</div><b>Zahlen & Uhrzeit</b><small>Hörtraining</small></a>
+        <a class="tile" href="#/schwer"><div class="ico">🔥</div><b>Schwierige Wörter</b><small>${hardCards().length} gesammelt</small></a>
         <a class="tile" href="#/pruefung"><div class="ico">🎓</div><b>Die Prüfung</b><small>Ablauf, Tipps, Links</small></a>
         <a class="tile" href="#/profil"><div class="ico">👤</div><b>Mein Profil</b><small>${esc(activeProfile().name)}</small></a>
       </div>
@@ -648,7 +682,7 @@
         </div>
       </div>
       <div class="card"><h3>Aussprache offline</h3>
-        <p class="muted">Die Audiodateien (ca. 4 MB) werden beim ersten Anhören gespeichert. Hier kannst du alle auf einmal laden, damit die Aussprache auch ohne Internet funktioniert.</p>
+        <p class="muted">Die Audiodateien (ca. 8 MB) werden beim ersten Anhören gespeichert. Hier kannst du alle auf einmal laden, damit die Aussprache auch ohne Internet funktioniert.</p>
         <button class="btn secondary" id="dl" style="width:100%">Alle Audios herunterladen</button>
       </div>
       <p class="muted">Einzelne Wörter hörst du als <b>echte Aufnahmen</b> aus dem <a href="https://lod.lu" target="_blank" rel="noopener">Lëtzebuerger Online Dictionnaire (LOD.lu)</a> des Zenter fir d'Lëtzebuerger Sprooch (CC0).
@@ -718,6 +752,7 @@
           <a class="btn secondary" href="#/ich/daten">✏️ Daten ändern</a>
           <a class="btn secondary" href="#/sprechen/0">🎙️ Aufnehmen</a>
         </div>
+        <a class="btn red" style="width:100%;margin-top:8px" href="#/ich/froen">💬 Rückfragen der Prüfer üben</a>
       </div>
       <p class="muted noprint">Der Text wird automatisch aus geprüften Bausteinen zusammengesetzt. Lass ihn trotzdem einmal von einer Lehrkraft oder einem Muttersprachler gegenlesen – und ergänze dort, was dich besonders macht. Für diesen Text gibt es keine Aussprache-Aufnahme; die einzelnen Wörter kannst du auf LOD.lu anhören.</p>`);
     document.getElementById("hide").onchange = (e) => { state.meHide = e.target.checked; save(); route(); };
@@ -812,6 +847,225 @@ ${sents.map((s) => `<p class="s"><span class="lb">${esc(s.lb)}</span><br><span c
     };
   }
 
+  // ---------- Rückfragen zur Vorstellung ----------
+  function myFollowups() {
+    const d = state.me || {};
+    const has = {
+      always: true, country: !!(d.country || d.countryOther), kids: d.kids !== "none" && !!(+d.sons || +d.daughters || d.kids === "yes"),
+      partner: ["bestuet", "partner", "partnerin"].includes(d.status), work: d.work === "schaffen", town: !!(d.town || d.home),
+      hobbies: (d.hobbies || []).length > 0, langs: !!d.mother || (d.langs || []).length > 0
+    };
+    return D.followups.filter((f) => has[f.when]);
+  }
+
+  function viewFollowups(id) {
+    const list = myFollowups();
+    const f = list.find((x) => x.id === id) || list[Math.floor(Math.random() * list.length)];
+    const next = list[(list.indexOf(f) + 1) % list.length];
+    render("Rückfragen", `
+      <p class="muted">Nach deiner Vorstellung haken die Prüfer nach. ${state.me ? "Die Fragen passen zu deinen Angaben." : `Trag unter <a href="#/ich/daten">Meine Daten</a> deine Angaben ein, dann kommen passende Fragen dazu.`}</p>
+      <div class="card">
+        <div class="lang">Frage ${list.indexOf(f) + 1} von ${list.length}</div>
+        <h2>${esc(f.q)} ${audioBtn(`fq-${f.id}`)}</h2>
+        <details><summary>Übersetzung & Satzanfang</summary>
+          <p class="muted" style="margin-top:8px">${esc(f.de)}</p>
+          <p class="ex">${esc(f.start)}</p></details>
+      </div>
+      <div class="card"><h3>Deine Antwort</h3>
+        <p class="muted">Antworte in zwei bis drei ganzen Sätzen.</p>
+        <div id="recbox"></div></div>
+      <div class="row"><a class="btn secondary" href="#/ich">Meine Vorstellung</a>
+        <a class="btn" href="#/ich/froen/${next.id}">Nächste Frage →</a></div>
+      <details class="card" style="margin-top:12px"><summary>Alle ${list.length} Fragen</summary>
+        <ul class="wordlist">${list.map((x) => `<li><div>${audioBtn(`fq-${x.id}`)} <a href="#/ich/froen/${x.id}"><b>${esc(x.q)}</b></a></div></li>`).join("")}</ul></details>`);
+    mountRecorder(document.getElementById("recbox"));
+  }
+
+  // ---------- Zahlen, Uhrzeiten, Preise ----------
+  function viewNumbersMenu() {
+    render("Zahlen & Uhrzeit", `
+      <div class="card"><p>Im Hörteil kommen ständig Zahlen, Uhrzeiten und Preise vor – und genau danach wird gefragt.
+      Hier hörst du eine Angabe und wählst die richtige aus.</p>
+      <p class="muted">Achtung: Wie im Deutschen kommt die Einerstelle zuerst – „fënnefandrësseg“ ist 35, nicht 53.</p></div>
+      <div class="grid">${TRAIN.sets.map((s) => `<a class="tile" href="#/zuelen/${s.id}"><div class="ico">${s.icon}</div><b>${esc(s.title)}</b>
+        <small>${state.quizBest["zuelen/" + s.id] !== undefined ? `Bestwert ${state.quizBest["zuelen/" + s.id]}/10` : `${s.items.length} Aufgaben`}</small></a>`).join("")}</div>`);
+  }
+
+  function viewNumbers(setId) {
+    const set = TRAIN.sets.find((s) => s.id === setId);
+    if (!set) return go("#/zuelen");
+    const qs = shuffle(set.items).slice(0, 10);
+    let i = 0, score = 0;
+    // Verwechselbare Antworten: Zahlendreher und Nachbarn
+    function options(it) {
+      const others = set.items.filter((x) => x.show !== it.show);
+      const flip = others.find((x) => x.show.replace(/\D/g, "") === it.show.replace(/\D/g, "").split("").reverse().join(""));
+      const near = others.slice().sort((x, y) => Math.abs(x.val - it.val) - Math.abs(y.val - it.val)).slice(0, 8);
+      const picked = [];
+      if (flip) picked.push(flip);
+      shuffle(near).forEach((x) => { if (picked.length < 3 && !picked.includes(x)) picked.push(x); });
+      return shuffle([it, ...picked]);
+    }
+    function ask(autoplay) {
+      if (i >= qs.length) {
+        markActive();
+        const key = "zuelen/" + set.id;
+        state.quizBest[key] = Math.max(score, state.quizBest[key] || 0); save();
+        render(set.title, `<div class="card"><h2>${score >= 8 ? "Super! 🎉" : score >= 5 ? "Gutt! 👍" : "Weider üben! 💪"}</h2>
+          <p>${score} von ${qs.length} richtig. Bestwert: ${state.quizBest[key]}/10</p>
+          <div class="row"><a class="btn" href="#/zuelen/${set.id}" id="again">Nochmal</a><a class="btn secondary" href="#/zuelen">Andere Übung</a></div></div>`);
+        document.getElementById("again").onclick = (e) => { e.preventDefault(); route(); };
+        return;
+      }
+      const it = qs[i];
+      render(set.title, `<div class="bar"><i style="width:${(i / qs.length) * 100}%"></i></div>
+        <p class="muted">Aufgabe ${i + 1} / ${qs.length} · ${score} richtig</p>
+        <div class="card" style="text-align:center"><div class="lang">Was hörst du?</div>
+          <p>${audioBtn(it.key, "Anhören")}</p>
+          <div class="grid two">${options(it).map((o) => `<button class="opt big" data-k="${o.key}">${esc(o.show)}</button>`).join("")}</div>
+          <div id="fb"></div></div>`);
+      const snd = $view.querySelector(".snd");
+      if (autoplay) play(it.key, snd);
+      $view.querySelectorAll(".opt").forEach((b) => {
+        b.onclick = () => {
+          const ok = b.dataset.k === it.key;
+          if (ok) score++;
+          $view.querySelectorAll(".opt").forEach((x) => {
+            x.disabled = true;
+            if (x.dataset.k === it.key) x.classList.add("right"); else if (x === b) x.classList.add("wrong");
+          });
+          document.getElementById("fb").innerHTML = `<p style="margin-top:8px"><b>${esc(it.lb)}</b></p><button class="btn" id="nx" style="width:100%">Weiter</button>`;
+          document.getElementById("nx").onclick = () => { i++; ask(true); };
+        };
+      });
+    }
+    ask(false);
+  }
+
+  // ---------- Prüfungssimulation ----------
+  function viewSim() {
+    const b1 = D.dialogues.map((d, i) => i).filter((i) => D.dialogues[i].level === "B1");
+    const texts = shuffle(b1).slice(0, 3);
+    const imgTopic = D.speaking.findIndex((s) => s.images);
+    const talkIdx = shuffle(D.speaking.map((s, i) => i).filter((i) => i !== imgTopic))[0];
+    const imgIdx = Math.floor(Math.random() * D.speaking[imgTopic].images.length);
+    const answers = texts.map((t) => D.dialogues[t].questions.map(() => -1));
+    const recs = {};
+
+    function intro() {
+      render("Prüfungssimulation", `
+        <div class="card"><h2>Prüfungssimulation 🎓</h2>
+          <p>Ein kompletter Durchlauf wie am Prüfungstag, ca. 15 Minuten:</p>
+          <ol style="padding-left:20px">
+            <li><b>Hörverstehen:</b> 3 Texte auf Niveau B1. Jeden Text kannst du <b>höchstens zweimal</b> hören, mitlesen geht nicht.</li>
+            <li><b>Sprechen:</b> Fragen zu einem Alltagsthema und eine Bildbeschreibung. Du nimmst dich auf und bewertest dich danach selbst.</li>
+          </ol>
+          <p class="muted">Such dir einen ruhigen Ort und beantworte alles ohne Hilfe. Das ist eine Übung – Ablauf, Dauer und Bewertung der echten Prüfung legt das INL fest.</p>
+          <button class="btn red" id="go" style="width:100%">Simulation starten</button>
+        </div>
+        ${state.sims.length ? `<div class="card"><h3>Bisherige Durchläufe</h3><ul class="wordlist">${state.sims.slice().reverse().map((s) =>
+          `<li><div>${esc(s.d.split("-").reverse().join("."))}</div><span>Hören ${s.r}/${s.t} · ${Math.round((s.r / s.t) * 100)} %</span></li>`).join("")}</ul></div>` : ""}`);
+      document.getElementById("go").onclick = () => listen(0);
+    }
+
+    function listen(n) {
+      const di = texts[n], d = D.dialogues[di];
+      let left = 2, playing = false;
+      render("Simulation · Hören", `
+        <div class="bar"><i style="width:${(n / 5) * 100}%"></i></div>
+        <p class="muted">Teil 1 · Text ${n + 1} von ${texts.length}</p>
+        <div class="card"><p class="muted">Lies zuerst die Fragen. Dann höre den Text.</p>
+          <button class="btn" id="pl" style="width:100%">▶︎ Text anhören (noch 2×)</button></div>
+        ${d.questions.map((q, qi) => `<div class="card"><h3>${qi + 1}. ${esc(q.q)}</h3>
+          ${q.options.map((o, oi) => `<button class="opt" data-q="${qi}" data-o="${oi}">${esc(o)}</button>`).join("")}</div>`).join("")}
+        <button class="btn" id="nx" style="width:100%">${n + 1 < texts.length ? "Nächster Text →" : "Weiter zum Sprechen →"}</button>`);
+      const pl = document.getElementById("pl");
+      const label = () => { pl.textContent = left ? `▶︎ Text anhören (noch ${left}×)` : "Text wurde zweimal gehört"; pl.disabled = !left; };
+      pl.onclick = () => {
+        if (playing || !left) return;
+        stopAudio();
+        playing = true; left--;
+        pl.disabled = true; pl.textContent = "🔊 Text läuft …";
+        player.src = `audio/d-${di}.mp3`;
+        const done = () => { playing = false; player.removeEventListener("ended", done); player.removeEventListener("error", done); if (pl.isConnected) label(); };
+        player.addEventListener("ended", done); player.addEventListener("error", done);
+        player.play().catch(done);
+      };
+      $view.querySelectorAll(".opt").forEach((b) => {
+        b.onclick = () => {
+          $view.querySelectorAll(`.opt[data-q="${b.dataset.q}"]`).forEach((x) => x.classList.toggle("sel", x === b));
+          answers[n][+b.dataset.q] = +b.dataset.o;
+        };
+      });
+      document.getElementById("nx").onclick = () => { stopAudio(); n + 1 < texts.length ? listen(n + 1) : talk(); };
+    }
+
+    function talk() {
+      const s = D.speaking[talkIdx];
+      render("Simulation · Sprechen", `
+        <div class="bar"><i style="width:60%"></i></div>
+        <p class="muted">Teil 2 · Gespräch zum Thema „${esc(s.topic)}“</p>
+        <div class="card"><h3>Fragen der Prüfer</h3>
+          <p class="muted">Höre die Fragen an und beantworte alle nacheinander in einer Aufnahme (1–2 Minuten).</p>
+          <ul style="padding-left:20px;margin:0">${s.questions.map((q, j) => `<li style="margin-bottom:6px"><b>${esc(q)}</b> ${audioBtn(`sq-${talkIdx}-${j}`)}</li>`).join("")}</ul></div>
+        <div class="card"><h3>Deine Antwort</h3><div id="recbox"></div></div>
+        <button class="btn" id="nx" style="width:100%">Weiter zur Bildbeschreibung →</button>`);
+      mountRecorder(document.getElementById("recbox"), (url) => { recs.talk = url; });
+      document.getElementById("nx").onclick = () => { stopMedia(); stopAudio(); picture(); };
+    }
+
+    function picture() {
+      const img = D.speaking[imgTopic].images[imgIdx];
+      render("Simulation · Sprechen", `
+        <div class="bar"><i style="width:80%"></i></div>
+        <p class="muted">Teil 2 · Bildbeschreibung</p>
+        <div class="card"><h3>Beschreibe dieses Bild</h3>
+          <img class="scene" src="${img.src}" alt="${esc(img.alt)}">
+          <p class="muted">Was siehst du? Was machen die Leute? Wie ist das Wetter? Machst du das auch? (ca. 1 Minute)</p>
+          <div id="recbox"></div></div>
+        <button class="btn red" id="nx" style="width:100%">Simulation beenden und auswerten</button>`);
+      mountRecorder(document.getElementById("recbox"), (url) => { recs.pic = url; });
+      document.getElementById("nx").onclick = () => { stopMedia(); result(); };
+    }
+
+    function result() {
+      let right = 0, total = 0;
+      const blocks = texts.map((di, n) => {
+        const d = D.dialogues[di];
+        const rows = d.questions.map((q, qi) => {
+          const ok = answers[n][qi] === q.a; total++; if (ok) right++;
+          return `<li><div>${ok ? "✅" : "❌"} ${esc(q.q)}${ok ? "" : `<br><small class="muted">Richtig: ${esc(q.options[q.a])}${answers[n][qi] >= 0 ? ` · deine Antwort: ${esc(q.options[answers[n][qi]])}` : " · nicht beantwortet"}</small>`}</div></li>`;
+        }).join("");
+        return `<div class="card"><h3>${esc(d.title)}</h3><ul class="wordlist">${rows}</ul>
+          <details style="margin-top:8px"><summary>Text nachlesen und nochmal hören</summary>
+            <div style="margin:8px 0">${d.text.map((l) => `<p class="dialog-line">${esc(l)}</p>`).join("")}</div>${audioBtn(`d-${di}`, "Anhören")}</details></div>`;
+      }).join("");
+      const pct = Math.round((right / total) * 100);
+      state.sims.push({ d: today(), r: right, t: total });
+      state.sims = state.sims.slice(-20);
+      save(); markActive();
+      const s = D.speaking[talkIdx], img = D.speaking[imgTopic].images[imgIdx];
+      const check = ["Ich habe auf alle Fragen geantwortet.", "Ich habe ganze Sätze benutzt.", "Ich habe ohne lange Pausen gesprochen.", "Ich habe auch die Vergangenheit benutzt (Ech hunn … / Ech sinn …).", "Beim Bild habe ich Ort, Personen, Tätigkeiten und Wetter genannt."];
+      render("Simulation · Ergebnis", `
+        <div class="card"><h2>Hörverstehen: ${right} von ${total} (${pct} %)</h2>
+          <div class="bar"><i style="width:${pct}%"></i></div>
+          <p>${pct >= 75 ? "Sehr gut – auf diesem Niveau bist du für den Hörteil gut vorbereitet. 🎉" : pct >= 50 ? "Solide Basis. Übe weiter mit den B1-Texten und dem Zahlen-Training." : "Der Hörteil braucht noch Übung: täglich einen B1-Text hören und zusätzlich Radio."}</p>
+          <p class="muted">Die offizielle Bestehensgrenze legt das INL fest – nimm den Wert als Orientierung.</p></div>
+        ${blocks}
+        <div class="card"><h2>Sprechen: Selbsteinschätzung</h2>
+          ${recs.talk ? `<p><b>Gespräch „${esc(s.topic)}“</b></p><audio controls src="${recs.talk}"></audio>` : `<p class="muted">Gespräch: keine Aufnahme.</p>`}
+          <details style="margin:8px 0 14px"><summary>Musterantwort vergleichen</summary><p style="margin-top:8px"><b>${esc(s.model)}</b></p>${audioBtn(`sm-${talkIdx}`, "Anhören")}<p class="muted" style="margin-top:8px">${esc(s.de)}</p></details>
+          ${recs.pic ? `<p><b>Bildbeschreibung</b></p><audio controls src="${recs.pic}"></audio>` : `<p class="muted">Bildbeschreibung: keine Aufnahme.</p>`}
+          <details style="margin:8px 0 14px"><summary>Musterantwort vergleichen</summary><p style="margin-top:8px"><b>${esc(img.model)}</b></p>${audioBtn(`sm-${imgTopic}-${imgIdx}`, "Anhören")}<p class="muted" style="margin-top:8px">${esc(img.de)}</p></details>
+          <h3>Hör dir deine Aufnahmen an und hake ab:</h3>
+          ${check.map((c) => `<label style="display:flex;gap:10px;margin-bottom:8px"><input type="checkbox"><span>${c}</span></label>`).join("")}
+        </div>
+        <div class="row"><a class="btn" href="#/simulation" id="again">Neue Simulation</a><a class="btn secondary" href="#/">Start</a></div>`);
+      document.getElementById("again").onclick = (e) => { e.preventDefault(); route(); };
+    }
+    intro();
+  }
+
   // ---------- Router ----------
   function go(hash) { if (location.hash === hash) route(); else location.hash = hash; }
   function route() {
@@ -819,7 +1073,7 @@ ${sents.map((s) => `<p class="s"><span class="lb">${esc(s.lb)}</span><br><span c
     stopAudio();
     const parts = location.hash.replace(/^#\/?/, "").split("/").filter(Boolean);
     const [a, b, c] = parts;
-    const tab = { lernen: "lernen", liste: "lernen", quiz: "quiz", sprechen: "sprechen", verstehen: "mehr", grammatik: "mehr", pruefung: "mehr", mehr: "mehr", profil: "mehr", ich: "sprechen" }[a] || "home";
+    const tab = { lernen: "lernen", liste: "lernen", quiz: "quiz", sprechen: "sprechen", verstehen: "mehr", grammatik: "mehr", pruefung: "mehr", mehr: "mehr", profil: "mehr", ich: "sprechen", schwer: "lernen", zuelen: "lernen", simulation: "mehr" }[a] || "home";
     const who = document.getElementById("who");
     who.textContent = "👤 " + (activeProfile().name || "Profil");
     document.querySelectorAll(".tabs a").forEach((x) => x.classList.toggle("active", x.dataset.tab === tab));
@@ -836,7 +1090,10 @@ ${sents.map((s) => `<p class="s"><span class="lb">${esc(s.lb)}</span><br><span c
       case "pruefung": return viewExam();
       case "mehr": return viewMore();
       case "profil": return viewProfile();
-      case "ich": return b === "daten" ? viewMeForm() : viewMe();
+      case "ich": return b === "daten" ? viewMeForm() : b === "froen" ? viewFollowups(c) : viewMe();
+      case "schwer": return viewHard();
+      case "zuelen": return b ? viewNumbers(b) : viewNumbersMenu();
+      case "simulation": return viewSim();
       default: return viewHome();
     }
   }

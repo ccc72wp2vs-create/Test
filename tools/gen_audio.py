@@ -20,6 +20,7 @@ SPOKEN = {
     "18 Grad": "uechtzéng Grad",
     "14 Grad": "véierzéng Grad",
     "Dr. Weber": "Dokter Weber",
+    "A6": "A sechs",
 }
 
 def spoken(text):
@@ -30,8 +31,10 @@ def spoken(text):
     return re.sub(r"\s+", " ", text).strip()
 
 def items():
-    js = "global.window={};require(process.argv[1]);console.log(JSON.stringify(window.LUX_DATA))"
-    d = json.loads(subprocess.check_output(["node", "-e", js, os.path.join(ROOT, "js", "data.js")]))
+    js = ("global.window={};['data','me','train'].forEach(f=>require(process.argv[1]+'/'+f+'.js'));"
+          "console.log(JSON.stringify({d:window.LUX_DATA,t:window.LUX_TRAIN}))")
+    both = json.loads(subprocess.check_output(["node", "-e", js, os.path.join(ROOT, "js")]))
+    d = both["d"]
     for t in d["topics"]:
         for i, w in enumerate(t["words"]):
             yield f"c-{t['id']}-{i}", [w[0]]
@@ -47,6 +50,11 @@ def items():
             yield f"sm-{i}", [s["model"]]
     for i, dl in enumerate(d["dialogues"]):
         yield f"d-{i}", dl["text"]
+    for f in d["followups"]:
+        yield f"fq-{f['id']}", [f["q"]]
+    for st in both["t"]["sets"]:                    # Zahlen, Uhrzeiten, Preise, Jahre
+        for it in st["items"]:
+            yield it["key"], [it["lb"]]
 
 def main():
     voice = PiperVoice.load(sys.argv[1])
