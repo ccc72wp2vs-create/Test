@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 260" role="img" aria-label="Maart">
+
+<rect width="400" height="260" fill="#bfe3f7"/><circle cx="345" cy="45" r="24" fill="#ffd23f"/><g fill="#fff"><circle cx="60" cy="40" r="14"/><circle cx="76" cy="34" r="17"/><circle cx="94" cy="40" r="14"/></g>
+<rect x="20" y="80" width="80" height="70" fill="#f3e2c0"/><path d="M15 80 L60 52 L105 80 z" fill="#b5533c"/><rect x="36" y="94" width="14" height="16" fill="#cfe8f7"/><rect x="68" y="94" width="14" height="16" fill="#cfe8f7"/><rect x="110" y="65" width="70" height="85" fill="#e9d2d2"/><path d="M105 65 L145 37 L185 65 z" fill="#7a4a3a"/><rect x="124" y="79" width="14" height="16" fill="#cfe8f7"/><rect x="152" y="79" width="14" height="16" fill="#cfe8f7"/><rect x="190" y="85" width="90" height="65" fill="#dfe8d0"/><path d="M185 85 L235 57 L285 85 z" fill="#b5533c"/><rect x="208" y="99" width="14" height="16" fill="#cfe8f7"/><rect x="244" y="99" width="14" height="16" fill="#cfe8f7"/>
+<rect y="150" width="400" height="110" fill="#c9c2b4"/>
+<!-- Stand -->
+<rect x="250" y="120" width="6" height="90" fill="#7a5230"/><rect x="374" y="120" width="6" height="90" fill="#7a5230"/>
+<path d="M240 98 h150 v26 h-150 z" fill="#fff"/>
+<rect x="240" y="98" width="30" height="26" fill="#ed2939"/><rect x="300" y="98" width="30" height="26" fill="#ed2939"/><rect x="360" y="98" width="30" height="26" fill="#ed2939"/>
+<g>
+  <rect x="335.64" y="176.92000000000002" width="7.862399999999999" height="28.08" fill="#34495e"/>
+  <rect x="346.4976" y="176.92000000000002" width="7.862399999999999" height="28.08" fill="#34495e"/>
+  <rect x="335.64" y="147.28000000000003" width="18.72" height="31.64" rx="4.68" fill="#2e7d5b"/>
+  <circle cx="345" cy="135.58" r="8.58" fill="#f2c9a0"/>
+  <path d="M336.42 135.58 a8.58 8.58 0 0 1 17.16 0 z" fill="#333"/>
+</g>
+<rect x="250" y="180" width="130" height="48" fill="#a8743f"/>
+<rect x="256" y="168" width="38" height="14" fill="#8a5a2b"/><circle cx="262" cy="166" r="5" fill="#e23b3b"/><circle cx="271" cy="166" r="5" fill="#e23b3b"/><circle cx="280" cy="166" r="5" fill="#e23b3b"/><circle cx="289" cy="166" r="5" fill="#e23b3b"/>
+<rect x="298" y="168" width="38" height="14" fill="#8a5a2b"/><circle cx="304" cy="166" r="5" fill="#f39c12"/><circle cx="313" cy="166" r="5" fill="#f39c12"/><circle cx="322" cy="166" r="5" fill="#f39c12"/><circle cx="331" cy="166" r="5" fill="#f39c12"/>
+<rect x="340" y="168" width="38" height="14" fill="#8a5a2b"/><circle cx="346" cy="166" r="5" fill="#4caf50"/><circle cx="355" cy="166" r="5" fill="#4caf50"/><circle cx="364" cy="166" r="5" fill="#4caf50"/><circle cx="373" cy="166" r="5" fill="#4caf50"/>
+<!-- Fra mat Kuerf -->
+<g>
+  <rect x="183" y="199" width="10.08" height="36" fill="#34495e"/>
+  <rect x="196.92" y="199" width="10.08" height="36" fill="#34495e"/>
+  <rect x="183" y="161" width="24" height="40" rx="6" fill="#c2185b"/>
+  <circle cx="195" cy="146" r="11" fill="#f2c9a0"/>
+  <path d="M184 146 a11 11 0 0 1 22 0 z" fill="#2b1b12"/>
+</g>
+<path d="M212 196 h26 l-4 20 h-18 z" fill="#c8964b"/><path d="M214 196 q11 -18 22 0" fill="none" stroke="#8a5a2b" stroke-width="3"/>
+<circle cx="220" cy="195" r="5" fill="#e23b3b"/><circle cx="230" cy="195" r="5" fill="#4caf50"/>
+<!-- Mann mat Kand -->
+<g>
+  <rect x="62.4" y="202.2" width="10.584" height="37.8" fill="#34495e"/>
+  <rect x="77.016" y="202.2" width="10.584" height="37.8" fill="#34495e"/>
+  <rect x="62.4" y="162.29999999999998" width="25.2" height="41.9" rx="6.3" fill="#1e63a8"/>
+  <circle cx="75" cy="146.55" r="11.55" fill="#f2c9a0"/>
+  <path d="M63.45 146.55 a11.55 11.55 0 0 1 23.1 0 z" fill="#555"/>
+</g><g>
+  <rect x="107.56" y="217.68" width="6.249599999999999" height="22.32" fill="#34495e"/>
+  <rect x="116.1904" y="217.68" width="6.249599999999999" height="22.32" fill="#34495e"/>
+  <rect x="107.56" y="194.12" width="14.879999999999999" height="25.56" rx="3.7199999999999998" fill="#f2a900"/>
+  <circle cx="115" cy="184.82" r="6.82" fill="#f2c9a0"/>
+  <path d="M108.18 184.82 a6.82 6.82 0 0 1 13.64 0 z" fill="#7a4a1e"/>
+</g>
+</svg>

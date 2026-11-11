@@ -513,9 +513,29 @@ Mir sinn an d'Vakanz gaangen. – Wir sind in den Urlaub gefahren.</p>
     },
     {
       topic: "Bild beschreiwen",
-      questions: ["Wat gesitt Dir op dem Bild?", "Wat maachen d'Leit?", "Maacht Dir dat och?"],
-      model: "Op dem Bild gesinn ech e Maart. An der Mëtt steet eng Fra mat engem Kuerf. Si keeft Geméis an Uebst. Lénks ass e Mann mat engem Kand. Am Hannergrond gesinn ech Haiser. D'Wieder ass schéin, d'Sonn schéngt. Ech ginn och samschdes op de Maart.",
-      de: "Auf dem Bild sehe ich einen Markt. In der Mitte steht eine Frau mit einem Korb. Sie kauft Gemüse und Obst. Links ist ein Mann mit einem Kind. Im Hintergrund sehe ich Häuser. Das Wetter ist schön, die Sonne scheint. Ich gehe samstags auch auf den Markt."
+      questions: ["Wat gesitt Dir op dem Bild?", "Wat maachen d'Leit?", "Wéi ass d'Wieder?", "Maacht Dir dat och?"],
+      images: [
+        {
+          src: "img/maart.svg", alt: "Markt mit Stand, einer Frau mit Korb und einem Mann mit Kind",
+          model: "Op dem Bild gesinn ech e Maart. An der Mëtt steet eng Fra mat engem Kuerf. Si keeft Uebst a Geméis. Riets ass e Stand mat engem Verkeefer. Lénks ass e Mann mat engem Kand. Am Hannergrond gesinn ech Haiser. D'Wieder ass schéin, d'Sonn schéngt. Ech ginn och samschdes op de Maart.",
+          de: "Auf dem Bild sehe ich einen Markt. In der Mitte steht eine Frau mit einem Korb. Sie kauft Obst und Gemüse. Rechts ist ein Stand mit einem Verkäufer. Links ist ein Mann mit einem Kind. Im Hintergrund sehe ich Häuser. Das Wetter ist schön, die Sonne scheint. Ich gehe samstags auch auf den Markt."
+        },
+        {
+          src: "img/park.svg", alt: "Park mit einem Mann auf einer Bank, einem Kind mit Ball, einem Hund und einer Frau auf dem Fahrrad",
+          model: "Op dem Bild gesinn ech e Park. Lénks sëtzt e Mann op enger Bänk a liest d'Zeitung. An der Mëtt spillt e Kand mat engem Ball. Nieft dem Kand ass en Hond. Riets fiert eng Fra mam Vëlo. Am Hannergrond si Beem. D'Sonn schéngt, ech mengen, et ass Summer. Ech ginn um Weekend och gär an de Park.",
+          de: "Auf dem Bild sehe ich einen Park. Links sitzt ein Mann auf einer Bank und liest die Zeitung. In der Mitte spielt ein Kind mit einem Ball. Neben dem Kind ist ein Hund. Rechts fährt eine Frau Fahrrad. Im Hintergrund sind Bäume. Die Sonne scheint, ich glaube, es ist Sommer. Ich gehe am Wochenende auch gern in den Park."
+        },
+        {
+          src: "img/iessen.svg", alt: "Familie mit zwei Kindern beim Essen am Tisch, draußen regnet es",
+          model: "Op dem Bild gesinn ech eng Famill. Et sinn d'Elteren an zwee Kanner. Si sëtzen um Dësch an iessen zesummen. An der Mëtt vum Dësch steet eng Zalot. Lénks ass eng Fënster, dobaussen reent et. Riets hänkt eng Auer. Ech mengen, et ass Owend. Bei eis doheem iesse mir och all Owend zesummen.",
+          de: "Auf dem Bild sehe ich eine Familie. Es sind die Eltern und zwei Kinder. Sie sitzen am Tisch und essen zusammen. In der Mitte des Tisches steht ein Salat. Links ist ein Fenster, draußen regnet es. Rechts hängt eine Uhr. Ich glaube, es ist Abend. Bei uns zu Hause essen wir auch jeden Abend zusammen."
+        },
+        {
+          src: "img/arret.svg", alt: "Bushaltestelle im Regen: ein Bus kommt, drei Personen warten, eine Frau hat einen Regenschirm",
+          model: "Op dem Bild gesinn ech en Arrêt an der Stad. Dräi Leit waarden op de Bus. Et reent. Eng Fra huet e roude Prabbeli. E Mann kuckt op säin Handy. Riets steet e Kand mat engem Rucksak. Lénks kënnt de Bus. Ech mengen, d'Leit fueren op d'Aarbecht an d'Kand geet an d'Schoul. Ech fueren och all Dag mam Bus.",
+          de: "Auf dem Bild sehe ich eine Haltestelle in der Stadt. Drei Leute warten auf den Bus. Es regnet. Eine Frau hat einen roten Regenschirm. Ein Mann schaut auf sein Handy. Rechts steht ein Kind mit einem Rucksack. Links kommt der Bus. Ich glaube, die Leute fahren zur Arbeit und das Kind geht zur Schule. Ich fahre auch jeden Tag mit dem Bus."
+        }
+      ]
     },
     {
       topic: "Gesondheet",

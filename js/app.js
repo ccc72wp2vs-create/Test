@@ -331,7 +331,7 @@
       <div class="card"><p>Im Sprechteil unterhalten sich die Prüfer mit dir über <b>alltägliche Themen</b>
       und du beschreibst ein <b>Bild</b>. Übe so: Frage lesen → laut antworten (am besten aufnehmen) → mit der Musterantwort vergleichen.</p>
       <button class="btn red" style="width:100%" id="rnd">🎲 Zufällige Prüfungsfrage</button></div>
-      ${D.speaking.map((s, i) => `<a class="tile" style="margin-bottom:8px" href="#/sprechen/${i}"><b>${esc(s.topic)}</b><small>${s.questions.length} Fragen</small></a>`).join("")}`);
+      ${D.speaking.map((s, i) => `<a class="tile" style="margin-bottom:8px" href="#/sprechen/${i}"><b>${esc(s.topic)}</b><small>${s.images ? `${s.images.length} Bilder · ` : ""}${s.questions.length} Fragen</small></a>`).join("")}`);
     document.getElementById("rnd").onclick = () => go(`#/sprechen/${Math.floor(Math.random() * D.speaking.length)}`);
   }
 
@@ -342,11 +342,23 @@
     activeRec = null;
   }
 
-  function viewSpeak(idx) {
+  function viewSpeak(idx, imgIdx) {
     const s = D.speaking[idx];
     if (!s) return go("#/sprechen");
+    // Bildbeschreibung: ein Bild auswählen (zufällig, wenn keines in der Adresse steht)
+    let img = null;
+    if (s.images) {
+      if (!s.images[imgIdx]) imgIdx = Math.floor(Math.random() * s.images.length);
+      img = s.images[imgIdx];
+    }
+    const model = img ? img.model : s.model;
+    const modelDe = img ? img.de : s.de;
     const canRec = !!(navigator.mediaDevices && window.MediaRecorder);
     render(s.topic, `
+      ${img ? `<div class="card"><h3>Beschreibe dieses Bild</h3>
+        <img class="scene" src="${img.src}" alt="${esc(img.alt)}">
+        <a class="btn secondary" style="width:100%" href="#/sprechen/${idx}/${(imgIdx + 1) % s.images.length}">🔄 Anderes Bild (${imgIdx + 1}/${s.images.length})</a>
+      </div>` : ""}
       <div class="card"><h3>Fragen der Prüfer</h3>
         <ul style="padding-left:20px;margin:0">${s.questions.map((q) => `<li style="margin-bottom:6px"><b>${esc(q)}</b></li>`).join("")}</ul>
       </div>
@@ -361,9 +373,9 @@
         ${canRec ? "" : `<p class="muted">Aufnahme wird von diesem Browser nicht unterstützt.</p>`}
       </div>
       <details class="card"><summary>Musterantwort anzeigen</summary>
-        <p><b>${esc(s.model)}</b></p>
-        ${speakBtn(s.model)}
-        <p class="muted" style="margin-top:8px">${esc(s.de)}</p>
+        <p><b>${esc(model)}</b></p>
+        ${speakBtn(model)}
+        <p class="muted" style="margin-top:8px">${esc(modelDe)}</p>
       </details>
       <div class="row"><a class="btn secondary" href="#/sprechen">Alle Themen</a>
       <a class="btn secondary" href="#/sprechen/${(idx + 1) % D.speaking.length}">Nächstes Thema →</a></div>`);
@@ -554,7 +566,7 @@
       case "lernen": return b ? viewFlash(b) : viewTopics();
       case "liste": return viewList(b);
       case "quiz": return b ? viewQuiz(b, c || "all") : viewQuizMenu();
-      case "sprechen": return b !== undefined ? viewSpeak(+b) : viewSpeakList();
+      case "sprechen": return b !== undefined ? viewSpeak(+b, c === undefined ? -1 : +c) : viewSpeakList();
       case "verstehen": return b !== undefined ? viewDialog(+b) : viewDialogList();
       case "grammatik": return viewGrammar();
       case "pruefung": return viewExam();

@@ -13,7 +13,7 @@ luxemburgische Staatsbürgerschaft ausgerichtet:
 |---|---|
 | 🃏 **Karteikarten** | ca. 270 Wörter und Sätze in 13 Prüfungsthemen (Vorstellen, Familie, Wohnen, Arbeit, Alltag, Zahlen, Essen, Gesundheit, Freizeit, Verkehr, Wetter, Bildbeschreibung, Luxemburg). Mit Wiederholungssystem (Leitner-Boxen), das fällige Karten automatisch wieder vorlegt. Richtung umschaltbar (LB→DE / DE→LB). |
 | ✅ **Quiz** | Multiple Choice in beide Richtungen und ein Schreibmodus (Akzentfehler werden verziehen) |
-| 🎙️ **Sprechen** | Typische Prüfungsfragen pro Thema, Aufnahmefunktion mit Timer und eine A2-Musterantwort mit Übersetzung |
+| 🎙️ **Sprechen** | Typische Prüfungsfragen pro Thema, vier Bilder zur Bildbeschreibung, Aufnahmefunktion mit Timer und A2-Musterantworten mit Übersetzung |
 | 👂 **Verstehen** | Kurze Dialoge und Durchsagen (Arzt, Bäckerei, Bahnhof, Wetter, Gemeinde) mit Multiple-Choice-Fragen |
 | 📐 **Grammatik** | Nur das Nötige: Artikel, n-Regel, sinn/hunn, Perfekt, Modalverben, Possessivpronomen, Satzbau |
 | 🎓 **Prüfung** | Ablauf, Tipps und Links (INL, LOD.lu, RTL, Guichet.lu) |

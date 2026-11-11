@@ -138,3 +138,4 @@ details.card[open] summary { margin-bottom: 10px; }
 audio { width: 100%; margin-top: 8px; }
 .dialog-line { margin: 4px 0; }
 a { color: var(--accent); }
+.scene { display: block; width: 100%; height: auto; border-radius: 10px; border: 1px solid var(--line); margin-bottom: 10px; }

@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 260" role="img" aria-label="Famill um Dësch">
+
+<rect width="400" height="260" fill="#f6ead7"/><rect y="200" width="400" height="60" fill="#b98b5e"/>
+<!-- Fënster mat Reen -->
+<rect x="30" y="30" width="110" height="80" fill="#9fb9cc" stroke="#fff" stroke-width="6"/><line x1="85" y1="30" x2="85" y2="110" stroke="#fff" stroke-width="4"/>
+<line x1="40" y1="45" x2="37" y2="57" stroke="#5f84a2" stroke-width="2"/><line x1="55" y1="63" x2="52" y2="75" stroke="#5f84a2" stroke-width="2"/><line x1="70" y1="81" x2="67" y2="93" stroke="#5f84a2" stroke-width="2"/><line x1="98" y1="45" x2="95" y2="57" stroke="#5f84a2" stroke-width="2"/><line x1="112" y1="63" x2="109" y2="75" stroke="#5f84a2" stroke-width="2"/><line x1="126" y1="81" x2="123" y2="93" stroke="#5f84a2" stroke-width="2"/>
+<!-- Luucht, Auer -->
+<line x1="215" y1="0" x2="215" y2="35" stroke="#555" stroke-width="2"/><path d="M190 60 L240 60 L228 35 L202 35 z" fill="#f2a900"/>
+<circle cx="340" cy="60" r="22" fill="#fff" stroke="#444" stroke-width="3"/><line x1="340" y1="60" x2="340" y2="45" stroke="#444" stroke-width="3"/><line x1="340" y1="60" x2="328" y2="67" stroke="#444" stroke-width="3"/>
+<!-- Leit hannert dem Dësch -->
+<g>
+  <rect x="82.4" y="177.2" width="10.584" height="37.8" fill="#34495e"/>
+  <rect x="97.016" y="177.2" width="10.584" height="37.8" fill="#34495e"/>
+  <rect x="82.4" y="137.29999999999998" width="25.2" height="41.9" rx="6.3" fill="#1e63a8"/>
+  <circle cx="95" cy="121.55" r="11.55" fill="#f2c9a0"/>
+  <path d="M83.45 121.55 a11.55 11.55 0 0 1 23.1 0 z" fill="#444"/>
+</g><g>
+  <rect x="161.6" y="189.8" width="7.056" height="25.2" fill="#34495e"/>
+  <rect x="171.344" y="189.8" width="7.056" height="25.2" fill="#34495e"/>
+  <rect x="161.6" y="163.20000000000002" width="16.8" height="28.6" rx="4.2" fill="#e53935"/>
+  <circle cx="170" cy="152.7" r="7.7" fill="#f2c9a0"/>
+  <path d="M162.3 152.7 a7.7 7.7 0 0 1 15.4 0 z" fill="#7a4a1e"/>
+</g><g>
+  <rect x="237.56" y="192.68" width="6.249599999999999" height="22.32" fill="#34495e"/>
+  <rect x="246.1904" y="192.68" width="6.249599999999999" height="22.32" fill="#34495e"/>
+  <rect x="237.56" y="169.12" width="14.879999999999999" height="25.56" rx="3.7199999999999998" fill="#43a047"/>
+  <circle cx="245" cy="159.82" r="6.82" fill="#f2c9a0"/>
+  <path d="M238.18 159.82 a6.82 6.82 0 0 1 13.64 0 z" fill="#2b1b12"/>
+</g><g>
+  <rect x="308" y="179" width="10.08" height="36" fill="#34495e"/>
+  <rect x="321.92" y="179" width="10.08" height="36" fill="#34495e"/>
+  <rect x="308" y="141" width="24" height="40" rx="6" fill="#c2185b"/>
+  <circle cx="320" cy="126" r="11" fill="#f2c9a0"/>
+  <path d="M309 126 a11 11 0 0 1 22 0 z" fill="#6d3b1e"/>
+</g>
+<!-- Dësch -->
+<rect x="45" y="160" width="320" height="14" rx="4" fill="#8a5a2b"/><rect x="60" y="174" width="10" height="66" fill="#7a5230"/><rect x="340" y="174" width="10" height="66" fill="#7a5230"/>
+<ellipse cx="95" cy="158" rx="17" ry="5" fill="#fff" stroke="#bbb"/><ellipse cx="170" cy="158" rx="17" ry="5" fill="#fff" stroke="#bbb"/><ellipse cx="245" cy="158" rx="17" ry="5" fill="#fff" stroke="#bbb"/><ellipse cx="320" cy="158" rx="17" ry="5" fill="#fff" stroke="#bbb"/>
+<path d="M190 158 q17 -26 34 0 z" fill="#4caf50"/><rect x="186" y="155" width="42" height="6" rx="3" fill="#d9d9d9"/>
+<rect x="130" y="142" width="8" height="18" fill="#bfe3f7" stroke="#888"/><rect x="278" y="142" width="8" height="18" fill="#bfe3f7" stroke="#888"/>
+</svg>
