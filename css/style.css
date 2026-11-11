@@ -139,3 +139,13 @@ audio { width: 100%; margin-top: 8px; }
 .dialog-line { margin: 4px 0; }
 a { color: var(--accent); }
 .scene { display: block; width: 100%; height: auto; border-radius: 10px; border: 1px solid var(--line); margin-bottom: 10px; }
+.snd {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px; vertical-align: middle;
+  min-width: 40px; height: 40px; padding: 0 8px; border-radius: 20px; font: inherit; font-size: 1.05rem; font-weight: 600;
+  border: 1.5px solid var(--accent); background: transparent; color: var(--accent); cursor: pointer;
+}
+.snd.wide { padding: 0 16px; font-size: 1rem; }
+.snd.playing { background: var(--accent); color: #fff; }
+.flash .snd { margin-top: 12px; }
+.flash .ex .snd, .wordlist .snd, h2 .snd, li .snd { min-width: 34px; height: 34px; margin-top: 0; }
+.wordlist li > div { flex: 1; }

@@ -58,21 +58,34 @@
       .replace(/[.,!?…;:()"“”]/g, "").replace(/[’`]/g, "'").replace(/\s+/g, " ").trim();
   }
 
-  // Sprachausgabe nur, wenn das Gerät eine luxemburgische Stimme hat.
-  let lbVoice = null;
-  function findVoice() {
-    if (!("speechSynthesis" in window)) return;
-    lbVoice = speechSynthesis.getVoices().find((v) => /^lb/i.test(v.lang)) || null;
+  // Aussprache: vorab erzeugte Audiodateien (audio/<key>.mp3), siehe tools/gen_audio.py
+  const player = new Audio();
+  let playingBtn = null;
+  function stopAudio() {
+    player.pause();
+    if (playingBtn) { playingBtn.classList.remove("playing"); playingBtn = null; }
   }
-  if ("speechSynthesis" in window) { findVoice(); speechSynthesis.onvoiceschanged = findVoice; }
-  function speak(text) {
-    if (!lbVoice) return;
-    speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text.replace(/…/g, ""));
-    u.voice = lbVoice; u.lang = lbVoice.lang; u.rate = 0.9;
-    speechSynthesis.speak(u);
+  function play(key, btn) {
+    const same = playingBtn === btn;
+    stopAudio();
+    if (same) return; // zweiter Tipp = Stopp
+    player.src = `audio/${key}.mp3`;
+    playingBtn = btn;
+    btn.classList.add("playing");
+    player.play().catch(stopAudio);
   }
-  const speakBtn = (text) => lbVoice ? `<button class="btn secondary" data-speak="${esc(text)}" aria-label="Vorlesen">🔊</button>` : "";
+  player.onended = stopAudio;
+  const audioBtn = (key, label) => `<button type="button" class="snd${label ? " wide" : ""}" data-audio="${key}" aria-label="Aussprache anhören">🔊${label ? " " + label : ""}</button>`;
+  function audioKeys() {
+    const keys = [];
+    cards.forEach((c) => { keys.push(`c-${c.id}`); if (c.ex) keys.push(`e-${c.id}`); });
+    D.speaking.forEach((s, i) => {
+      s.questions.forEach((q, j) => keys.push(`sq-${i}-${j}`));
+      if (s.images) s.images.forEach((im, k) => keys.push(`sm-${i}-${k}`)); else keys.push(`sm-${i}`);
+    });
+    D.dialogues.forEach((d, i) => keys.push(`d-${i}`));
+    return keys;
+  }
 
   // ---------- Startseite ----------
   function viewHome() {
@@ -143,7 +156,7 @@
     if (!t) return go("#/lernen");
     const items = cards.filter((c) => c.topic === topicId).map((c) => {
       const s = state.cards[c.id];
-      return `<li><div><b>${esc(c.lb)}</b> ${s ? `<span class="box-badge">Box ${s.box}</span>` : ""}
+      return `<li><div>${audioBtn(`c-${c.id}`)} <b>${esc(c.lb)}</b> ${s ? `<span class="box-badge">Box ${s.box}</span>` : ""}
         ${c.ex ? `<br><small class="muted"><i>${esc(c.ex)}</i></small>` : ""}</div><span>${esc(c.de)}</span></li>`;
     }).join("");
     render(t.title, `<div class="card"><p class="muted">${esc(t.de)}</p><ul class="wordlist">${items}</ul></div>
@@ -191,18 +204,20 @@
         <div class="card flash" id="flash">
           <div class="lang">${rev ? "Deutsch" : "Lëtzebuergesch"}</div>
           <div class="front">${esc(front)}</div>
+          ${rev ? "" : audioBtn(`c-${c.id}`)}
           <div id="back" hidden>
             <div class="back">${esc(back)}</div>
-            ${c.ex ? `<div class="ex">${esc(c.ex)}</div>` : ""}
+            ${rev ? audioBtn(`c-${c.id}`) : ""}
+            ${c.ex ? `<div class="ex">${esc(c.ex)} ${audioBtn(`e-${c.id}`)}</div>` : ""}
           </div>
           <div class="hint" id="hint">Antippen zum Umdrehen</div>
         </div>
         <div class="row" id="answer" hidden>
           <button class="btn bad" id="no">✗ Nochmal</button>
-          ${speakBtn(c.lb)}
           <button class="btn good" id="yes">✓ Gewusst</button>
         </div>`);
-      const flip = () => {
+      const flip = (e) => {
+        if (e.target.closest("[data-audio]")) return; // Lautsprecher dreht die Karte nicht um
         document.getElementById("back").hidden = false;
         document.getElementById("hint").hidden = true;
         document.getElementById("answer").hidden = false;
@@ -290,7 +305,7 @@
           if (ok) score++;
           document.getElementById("f").hidden = true;
           document.getElementById("fb").innerHTML = `<div class="feedback ${ok ? "ok" : "no"}">${ok ? "✓ Richtig!" : "✗ Richtig wäre:"} <b>${esc(c.lb)}</b></div>
-            <div class="row">${speakBtn(c.lb)}<button class="btn" id="nx">Weiter</button></div>`;
+            <div class="row" style="align-items:center">${audioBtn(`c-${c.id}`, "Anhören")}<button class="btn" id="nx">Weiter</button></div>`;
           document.getElementById("nx").onclick = () => { i++; ask(); };
           document.getElementById("nx").focus();
         };
@@ -305,7 +320,7 @@
       const options = shuffle([c, ...distractors]);
       render("Quiz", `${head}
         <div class="card"><div class="lang">${toDe ? "Was bedeutet:" : "Wie sagt man auf Lëtzebuergesch:"}</div>
-        <h2>${esc(toDe ? c.lb : c.de)}</h2>
+        <h2>${esc(toDe ? c.lb : c.de)} ${toDe ? audioBtn(`c-${c.id}`) : ""}</h2>
         ${options.map((o) => `<button class="opt" data-id="${o.id}">${esc(o[field])}</button>`).join("")}
         <div id="fb"></div></div>`);
       $view.querySelectorAll(".opt").forEach((b) => {
@@ -317,7 +332,7 @@
             if (x.dataset.id === c.id) x.classList.add("right");
             else if (x === b) x.classList.add("wrong");
           });
-          document.getElementById("fb").innerHTML = `<div class="row">${speakBtn(c.lb)}<button class="btn" id="nx">Weiter</button></div>`;
+          document.getElementById("fb").innerHTML = `<div class="row" style="align-items:center">${toDe ? "" : audioBtn(`c-${c.id}`, "Anhören")}<button class="btn" id="nx">Weiter</button></div>`;
           document.getElementById("nx").onclick = () => { i++; ask(); };
         };
       });
@@ -330,8 +345,10 @@
     render("Sprechen üben", `
       <div class="card"><p>Im Sprechteil unterhalten sich die Prüfer mit dir über <b>alltägliche Themen</b>
       und du beschreibst ein <b>Bild</b>. Übe so: Frage lesen → laut antworten (am besten aufnehmen) → mit der Musterantwort vergleichen.</p>
-      <button class="btn red" style="width:100%" id="rnd">🎲 Zufällige Prüfungsfrage</button></div>
-      ${D.speaking.map((s, i) => `<a class="tile" style="margin-bottom:8px" href="#/sprechen/${i}"><b>${esc(s.topic)}</b><small>${s.images ? `${s.images.length} Bilder · ` : ""}${s.questions.length} Fragen</small></a>`).join("")}`);
+      <div class="row"><a class="btn" href="#/sprechen/${D.speaking.findIndex((s) => s.images)}">🖼️ Bild beschreiben</a>
+      <button class="btn red" id="rnd">🎲 Zufallsthema</button></div>
+      <p class="muted" style="margin:10px 0 0">Ein Bild gibt es nur bei „Bild beschreiwen“ – bei den anderen Themen antwortest du frei auf die Fragen. Mit 🔊 hörst du die Aussprache.</p></div>
+      ${D.speaking.map((s, i) => `<a class="tile" style="margin-bottom:8px" href="#/sprechen/${i}"><b>${s.images ? "🖼️ " : ""}${esc(s.topic)}</b><small>${s.images ? `${s.images.length} Bilder · ` : ""}${s.questions.length} Fragen</small></a>`).join("")}`);
     document.getElementById("rnd").onclick = () => go(`#/sprechen/${Math.floor(Math.random() * D.speaking.length)}`);
   }
 
@@ -360,7 +377,7 @@
         <a class="btn secondary" style="width:100%" href="#/sprechen/${idx}/${(imgIdx + 1) % s.images.length}">🔄 Anderes Bild (${imgIdx + 1}/${s.images.length})</a>
       </div>` : ""}
       <div class="card"><h3>Fragen der Prüfer</h3>
-        <ul style="padding-left:20px;margin:0">${s.questions.map((q) => `<li style="margin-bottom:6px"><b>${esc(q)}</b></li>`).join("")}</ul>
+        <ul style="padding-left:20px;margin:0">${s.questions.map((q, j) => `<li style="margin-bottom:6px"><b>${esc(q)}</b> ${audioBtn(`sq-${idx}-${j}`)}</li>`).join("")}</ul>
       </div>
       <div class="card">
         <h3>Deine Antwort</h3>
@@ -374,7 +391,7 @@
       </div>
       <details class="card"><summary>Musterantwort anzeigen</summary>
         <p><b>${esc(model)}</b></p>
-        ${speakBtn(model)}
+        ${audioBtn(img ? `sm-${idx}-${imgIdx}` : `sm-${idx}`, "Musterantwort anhören")}
         <p class="muted" style="margin-top:8px">${esc(modelDe)}</p>
       </details>
       <div class="row"><a class="btn secondary" href="#/sprechen">Alle Themen</a>
@@ -430,20 +447,19 @@
     render("Verstehen", `
       <div class="card"><p>Der Hörteil ist auf <b>Niveau B1</b> – also etwas schwerer als der Sprechteil.
       Typisch sind kurze Gespräche, Durchsagen und Radiomeldungen mit Multiple-Choice-Fragen.</p>
-      <p class="muted">Tipp: Lies zuerst die Fragen, dann den Text. Für echtes Hörtraining zusätzlich täglich RTL Radio oder Radio 100,7 hören.</p></div>
+      <p class="muted">Tipp: Lies zuerst die Fragen, dann höre den Text. Die Stimme hier ist computererzeugt – höre zusätzlich täglich RTL Radio oder Radio 100,7, um dich an echte Sprecher zu gewöhnen.</p></div>
       ${D.dialogues.map((d, i) => `<a class="tile" style="margin-bottom:8px" href="#/verstehen/${i}"><b>${esc(d.title)}</b><small>${d.questions.length} Fragen</small></a>`).join("")}`);
   }
 
   function viewDialog(idx) {
     const d = D.dialogues[idx];
     if (!d) return go("#/verstehen");
-    const full = d.text.join(" ");
     render(d.title, `
       <div class="card">
-        <p class="muted">Lies zuerst die Fragen, dann öffne den Text.</p>
-        <details><summary><b>Text anzeigen</b></summary>
+        <p class="muted">Wie in der Prüfung: Lies zuerst die Fragen, dann höre den Text (am besten zweimal) – ohne mitzulesen.</p>
+        ${audioBtn(`d-${idx}`, "Text anhören")}
+        <details style="margin-top:12px"><summary><b>Text mitlesen</b></summary>
           <div style="margin-top:8px">${d.text.map((l) => `<p class="dialog-line">${esc(l)}</p>`).join("")}</div>
-          ${speakBtn(full)}
         </details>
       </div>
       ${d.questions.map((q, qi) => `<div class="card"><h3>${qi + 1}. ${esc(q.q)}</h3>
@@ -531,7 +547,23 @@
           <button class="btn bad" id="reset">Zurücksetzen</button>
         </div>
       </div>
-      <p class="muted">Sprachausgabe: ${lbVoice ? "luxemburgische Stimme gefunden ✓" : "auf diesem Gerät keine luxemburgische Stimme verfügbar – nutze LOD.lu für die Aussprache."}</p>`);
+      <div class="card"><h3>Aussprache offline</h3>
+        <p class="muted">Die Audiodateien (ca. 4 MB) werden beim ersten Anhören gespeichert. Hier kannst du alle auf einmal laden, damit die Aussprache auch ohne Internet funktioniert.</p>
+        <button class="btn secondary" id="dl" style="width:100%">Alle Audios herunterladen</button>
+      </div>
+      <p class="muted">Die Aussprache stammt von einer computererzeugten luxemburgischen Stimme (Piper „MaryLux“). Sie ist gut verständlich, aber nicht perfekt – im Zweifel gilt <a href="https://lod.lu" target="_blank" rel="noopener">LOD.lu</a>.</p>`);
+    document.getElementById("dl").onclick = async (e) => {
+      const b = e.target, keys = audioKeys();
+      b.disabled = true;
+      let ok = 0;
+      for (let n = 0; n < keys.length; n += 6) {
+        const res = await Promise.all(keys.slice(n, n + 6).map((k) => fetch(`audio/${k}.mp3`).then((r) => r.ok && r.blob().then(() => true)).catch(() => false)));
+        ok += res.filter(Boolean).length;
+        b.textContent = `Lade … ${Math.min(n + 6, keys.length)} / ${keys.length}`;
+      }
+      b.textContent = ok === keys.length ? "✓ Alle Audios gespeichert" : `${ok} von ${keys.length} geladen – bitte mit Internet erneut versuchen`;
+      b.disabled = ok === keys.length;
+    };
     document.getElementById("exp").onclick = () => {
       const a = document.createElement("a");
       a.href = URL.createObjectURL(new Blob([JSON.stringify(state)], { type: "application/json" }));
@@ -556,7 +588,7 @@
   function go(hash) { if (location.hash === hash) route(); else location.hash = hash; }
   function route() {
     stopMedia();
-    if ("speechSynthesis" in window) speechSynthesis.cancel();
+    stopAudio();
     const parts = location.hash.replace(/^#\/?/, "").split("/").filter(Boolean);
     const [a, b, c] = parts;
     const tab = { lernen: "lernen", liste: "lernen", quiz: "quiz", sprechen: "sprechen", verstehen: "mehr", grammatik: "mehr", pruefung: "mehr", mehr: "mehr" }[a] || "home";
@@ -576,8 +608,8 @@
   }
 
   $view.addEventListener("click", (e) => {
-    const b = e.target.closest("[data-speak]");
-    if (b) { e.stopPropagation(); speak(b.dataset.speak); }
+    const b = e.target.closest("[data-audio]");
+    if (b) play(b.dataset.audio, b);
   });
   window.addEventListener("hashchange", route);
   route();

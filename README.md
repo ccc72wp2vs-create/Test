@@ -14,7 +14,8 @@ luxemburgische Staatsbürgerschaft ausgerichtet:
 | 🃏 **Karteikarten** | ca. 270 Wörter und Sätze in 13 Prüfungsthemen (Vorstellen, Familie, Wohnen, Arbeit, Alltag, Zahlen, Essen, Gesundheit, Freizeit, Verkehr, Wetter, Bildbeschreibung, Luxemburg). Mit Wiederholungssystem (Leitner-Boxen), das fällige Karten automatisch wieder vorlegt. Richtung umschaltbar (LB→DE / DE→LB). |
 | ✅ **Quiz** | Multiple Choice in beide Richtungen und ein Schreibmodus (Akzentfehler werden verziehen) |
 | 🎙️ **Sprechen** | Typische Prüfungsfragen pro Thema, vier Bilder zur Bildbeschreibung, Aufnahmefunktion mit Timer und A2-Musterantworten mit Übersetzung |
-| 👂 **Verstehen** | Kurze Dialoge und Durchsagen (Arzt, Bäckerei, Bahnhof, Wetter, Gemeinde) mit Multiple-Choice-Fragen |
+| 👂 **Verstehen** | Kurze Dialoge und Durchsagen (Arzt, Bäckerei, Bahnhof, Wetter, Gemeinde) zum Anhören, mit Multiple-Choice-Fragen |
+| 🔊 **Aussprache** | Alle Vokabeln, Beispielsätze, Prüferfragen, Musterantworten und Dialoge lassen sich anhören (auch offline) |
 | 📐 **Grammatik** | Nur das Nötige: Artikel, n-Regel, sinn/hunn, Perfekt, Modalverben, Possessivpronomen, Satzbau |
 | 🎓 **Prüfung** | Ablauf, Tipps und Links (INL, LOD.lu, RTL, Guichet.lu) |
 
@@ -33,6 +34,18 @@ python3 -m http.server 8000
 **Aufs Handy (empfohlen):** Repository-Einstellungen → *Pages* → Branch auswählen → Speichern.
 Danach die GitHub-Pages-Adresse in Safari/Chrome öffnen und **„Zum Home-Bildschirm“** wählen.
 Die App funktioniert dann wie eine normale App, auch offline.
+
+## Aussprache (Audio)
+
+Die Dateien in `audio/` wurden mit [Piper](https://github.com/OHF-Voice/piper1-gpl) und der luxemburgischen
+Stimme *MaryLux* erzeugt (Datensatz [marylux-data](https://github.com/marytts/marylux-data), Lizenz CC BY-NC-SA 4.0,
+also nur für nicht-kommerzielle Nutzung). Die Stimme ist computererzeugt und nicht fehlerfrei; im Zweifel gilt LOD.lu.
+
+Nach Änderungen an `js/data.js` die Audios neu erzeugen:
+```bash
+pip install piper-tts
+python3 tools/gen_audio.py /pfad/zu/lb_LU-marylux-medium.onnx
+```
 
 ## Inhalte erweitern
 
