@@ -4,6 +4,7 @@
   const D = window.LUX_DATA;
   const ME = window.LUX_ME;
   const TRAIN = window.LUX_TRAIN;
+  const VOICES = window.LUX_VOICES || []; // echte Aufnahmen von LOD.lu
   const $view = document.getElementById("view");
   const $title = document.getElementById("page-title");
   const STORE_KEY = "sproochentest-v1";
@@ -113,6 +114,7 @@
     D.dialogues.forEach((d, i) => keys.push(`d-${i}`));
     D.followups.forEach((f) => keys.push(`fq-${f.id}`));
     TRAIN.sets.forEach((s) => s.items.forEach((it) => keys.push(it.key)));
+    VOICES.forEach((v) => keys.push(v.key));
     return keys;
   }
 
@@ -153,6 +155,8 @@
         <a class="tile" href="#/ich"><div class="ico">⭐</div><b>Meine Vorstellung</b><small>Persönlicher Text</small></a>
         <a class="tile" href="#/verstehen"><div class="ico">👂</div><b>Verstehen</b><small>Dialoge & Fragen</small></a>
         <a class="tile" href="#/grammatik"><div class="ico">📐</div><b>Grammatik</b><small>Das Nötigste für A2</small></a>
+        <a class="tile" href="#/stemmen"><div class="ico">🗣️</div><b>Echte Stimmen</b><small>Sätze von Muttersprachlern</small></a>
+        <a class="tile" href="#/satzbau"><div class="ico">🧩</div><b>Satzbau</b><small>Sätze zusammensetzen</small></a>
         <a class="tile" href="#/zuelen"><div class="ico">🔢</div><b>Zahlen & Uhrzeit</b><small>Hörtraining</small></a>
         <a class="tile" href="#/simulation"><div class="ico">⏱️</div><b>Prüfungssimulation</b><small>${state.sims.length ? `Zuletzt: Hören ${state.sims[state.sims.length - 1].r}/${state.sims[state.sims.length - 1].t}` : "Kompletter Durchlauf"}</small></a>
         <a class="tile" href="#/pruefung"><div class="ico">🎓</div><b>Die Prüfung</b><small>Ablauf & Tipps</small></a>
@@ -248,6 +252,7 @@
         <a class="btn secondary" href="#/schwer">🔥 Schwierige Wörter (${hardCards().length})</a>
         <a class="btn secondary" href="#/zuelen">🔢 Zahlen & Uhrzeit</a>
       </div>
+      <a class="btn secondary" style="width:100%;margin-bottom:12px" href="#/satzbau">🧩 Satzbau üben</a>
       <label class="card" style="display:flex;gap:10px;align-items:center">
         <input type="checkbox" id="rev" ${state.reversed ? "checked" : ""}>
         <span>Richtung umkehren: Deutsch → Lëtzebuergesch<br><small class="muted">Schwieriger, aber besser fürs Sprechen</small></span>
@@ -577,7 +582,8 @@
       <div class="card"><p>Der Hörteil ist auf <b>Niveau B1</b> – also etwas schwerer als der Sprechteil.
       Typisch sind kurze Gespräche, Durchsagen und Radiomeldungen mit Multiple-Choice-Fragen.</p>
       <p class="muted">Tipp: Lies zuerst die Fragen, dann höre den Text. Die Stimme hier ist computererzeugt – höre zusätzlich täglich RTL Radio oder Radio 100,7, um dich an echte Sprecher zu gewöhnen.</p></div>
-      <a class="btn red" style="width:100%;margin-bottom:12px" href="#/simulation">🎓 Prüfungssimulation starten</a>
+      <a class="btn red" style="width:100%;margin-bottom:8px" href="#/simulation">🎓 Prüfungssimulation starten</a>
+      ${VOICES.length >= 8 ? `<a class="btn" style="width:100%;margin-bottom:12px" href="#/stemmen">🗣️ Echte Stimmen: ${VOICES.length} Sätze von Muttersprachlern</a>` : ""}
       ${D.dialogues.map((d, i) => `<a class="tile" style="margin-bottom:8px" href="#/verstehen/${i}"><b>${esc(d.title)}</b> <span class="box-badge">${d.level || "A2"}</span><small>${d.questions.length} Fragen</small></a>`).join("")}`);
   }
 
@@ -670,6 +676,9 @@
         <a class="tile" href="#/simulation"><div class="ico">⏱️</div><b>Prüfungssimulation</b><small>Kompletter Durchlauf</small></a>
         <a class="tile" href="#/zuelen"><div class="ico">🔢</div><b>Zahlen & Uhrzeit</b><small>Hörtraining</small></a>
         <a class="tile" href="#/schwer"><div class="ico">🔥</div><b>Schwierige Wörter</b><small>${hardCards().length} gesammelt</small></a>
+        <a class="tile" href="#/stemmen"><div class="ico">🗣️</div><b>Echte Stimmen</b><small>Sätze von Muttersprachlern</small></a>
+        <a class="tile" href="#/satzbau"><div class="ico">🧩</div><b>Satzbau</b><small>Sätze zusammensetzen</small></a>
+        <a class="tile" href="#/pruefliste"><div class="ico">📝</div><b>Prüfliste</b><small>Alle Texte zum Gegenlesen</small></a>
         <a class="tile" href="#/pruefung"><div class="ico">🎓</div><b>Die Prüfung</b><small>Ablauf, Tipps, Links</small></a>
         <a class="tile" href="#/profil"><div class="ico">👤</div><b>Mein Profil</b><small>${esc(activeProfile().name)}</small></a>
       </div>
@@ -682,7 +691,7 @@
         </div>
       </div>
       <div class="card"><h3>Aussprache offline</h3>
-        <p class="muted">Die Audiodateien (ca. 8 MB) werden beim ersten Anhören gespeichert. Hier kannst du alle auf einmal laden, damit die Aussprache auch ohne Internet funktioniert.</p>
+        <p class="muted">Die Audiodateien (ca. 11 MB) werden beim ersten Anhören gespeichert. Hier kannst du alle auf einmal laden, damit die Aussprache auch ohne Internet funktioniert.</p>
         <button class="btn secondary" id="dl" style="width:100%">Alle Audios herunterladen</button>
       </div>
       <p class="muted">Einzelne Wörter hörst du als <b>echte Aufnahmen</b> aus dem <a href="https://lod.lu" target="_blank" rel="noopener">Lëtzebuerger Online Dictionnaire (LOD.lu)</a> des Zenter fir d'Lëtzebuerger Sprooch (CC0).
@@ -1066,6 +1075,170 @@ ${sents.map((s) => `<p class="s"><span class="lb">${esc(s.lb)}</span><br><span c
     intro();
   }
 
+  // ---------- Echte Stimmen: Lückentext zum Hören ----------
+  const capFirst = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+  // LOD trennt "d'" als eigenes Wort ab – beim Zusammensetzen wieder anhängen: d' Vakanz → d'Vakanz
+  const voiceText = (v, gap) => capFirst(v.t.map((w, i) => (gap && i === v.hw ? "_____" : w)).join(" ").replace(/(['’]) /g, "$1")) + ".";
+
+  function viewVoices() {
+    if (VOICES.length < 8) return go("#/verstehen");
+    const qs = shuffle(VOICES).slice(0, 10);
+    let i = 0, score = 0;
+    function ask(autoplay) {
+      if (i >= qs.length) {
+        markActive();
+        state.quizBest.stemmen = Math.max(score, state.quizBest.stemmen || 0); save();
+        render("Echte Stimmen", `<div class="card"><h2>${score >= 8 ? "Super! 🎉" : score >= 5 ? "Gutt! 👍" : "Weider üben! 💪"}</h2>
+          <p>${score} von ${qs.length} richtig. Bestwert: ${state.quizBest.stemmen}/10</p>
+          <div class="row"><a class="btn" href="#/stemmen" id="again">Nochmal</a><a class="btn secondary" href="#/verstehen">Zurück</a></div></div>`);
+        document.getElementById("again").onclick = (e) => { e.preventDefault(); route(); };
+        return;
+      }
+      const v = qs[i], word = v.t[v.hw];
+      const upper = /^[A-ZÄÉËÖÜ]/.test(word);
+      // falsche Antworten: Stichwörter anderer Sätze mit gleicher Groß-/Kleinschreibung …
+      // … bevorzugt ähnlich klingende: gleicher Anfangsbuchstabe, ähnliche Länge
+      const close = (w) => (w[0].toLowerCase() === word[0].toLowerCase() ? 0 : 3) + Math.abs(w.length - word.length);
+      const pool = [...new Set(VOICES.map((x) => x.t[x.hw]))].filter((w) => w !== word && /^[A-ZÄÉËÖÜ]/.test(w) === upper);
+      const others = shuffle(pool.sort((x, y) => close(x) - close(y)).slice(0, 7)).slice(0, 3);
+      render("Echte Stimmen", `<div class="bar"><i style="width:${(i / qs.length) * 100}%"></i></div>
+        <p class="muted">Satz ${i + 1} / ${qs.length} · ${score} richtig</p>
+        <div class="card"><div class="lang">Höre den Satz. Welches Wort fehlt?</div>
+          <p style="text-align:center">${audioBtn(v.key, "Anhören")}</p>
+          <h2 id="gap">${esc(voiceText(v, true))}</h2>
+          ${shuffle([word, ...others]).map((o) => `<button class="opt" data-w="${esc(o)}">${esc(o)}</button>`).join("")}
+          <div id="fb"></div></div>`);
+      if (autoplay) play(v.key, $view.querySelector(".snd"));
+      $view.querySelectorAll(".opt").forEach((b) => {
+        b.onclick = () => {
+          const ok = b.dataset.w === word;
+          if (ok) score++;
+          $view.querySelectorAll(".opt").forEach((x) => {
+            x.disabled = true;
+            if (x.dataset.w === word) x.classList.add("right"); else if (x === b) x.classList.add("wrong");
+          });
+          document.getElementById("gap").textContent = voiceText(v);
+          document.getElementById("fb").innerHTML = `<p class="muted">${esc(v.lemma)} = ${esc(v.de)}</p><button class="btn" id="nx" style="width:100%">Weiter</button>`;
+          document.getElementById("nx").onclick = () => { i++; ask(true); };
+        };
+      });
+    }
+    ask(false);
+  }
+
+  // ---------- Satzbau ----------
+  const buildSources = {
+    de: () => cards.filter((c) => !/[…/]/.test(c.lb) && c.lb.split(" ").length >= 4 && c.lb.split(" ").length <= 9)
+      .map((c) => ({ words: c.lb.split(" "), de: c.de, audio: `c-${c.id}` })),
+    lauschteren: () => VOICES.map((v) => ({ words: voiceText(v).split(" "), audio: v.key, note: `${v.lemma} = ${v.de}`, listen: true })),
+    ech: () => mySentences().filter((s) => s.lb.split(" ").length >= 4 && s.lb.split(" ").length <= 10).map((s) => ({ words: s.lb.split(" "), de: s.de }))
+  };
+
+  function viewBuildMenu() {
+    const n = { de: buildSources.de().length, lauschteren: buildSources.lauschteren().length, ech: buildSources.ech().length };
+    render("Satzbau", `
+      <div class="card"><p>Tippe die Wörter in der richtigen Reihenfolge an. So übst du den Satzbau, den du beim Sprechen brauchst –
+      vor allem die Stellung des Verbs.</p></div>
+      <div class="grid">
+        <a class="tile" href="#/satzbau/de"><div class="ico">🇩🇪→🇱🇺</div><b>Übersetzen</b><small>Deutscher Satz → auf Luxemburgisch bauen (${n.de} Sätze)</small></a>
+        ${n.lauschteren ? `<a class="tile" href="#/satzbau/lauschteren"><div class="ico">👂</div><b>Hören & bauen</b><small>Echte Aufnahme hören und Satz zusammensetzen (${n.lauschteren} Sätze)</small></a>` : ""}
+        <a class="tile" href="${n.ech ? "#/satzbau/ech" : "#/ich"}"><div class="ico">⭐</div><b>Meine Vorstellung</b><small>${n.ech ? `Deine eigenen Sätze bauen (${n.ech})` : "Erst eigene Daten eintragen"}</small></a>
+      </div>`);
+  }
+
+  function viewBuild(mode) {
+    if (!buildSources[mode]) return go("#/satzbau");
+    const all = buildSources[mode]();
+    if (!all.length) return go("#/satzbau");
+    const qs = shuffle(all).slice(0, 8);
+    let i = 0, score = 0;
+    function ask(autoplay) {
+      if (i >= qs.length) {
+        markActive();
+        render("Satzbau", `<div class="card"><h2>${score >= qs.length - 1 ? "Super! 🎉" : score >= qs.length / 2 ? "Gutt! 👍" : "Weider üben! 💪"}</h2>
+          <p>${score} von ${qs.length} Sätzen auf Anhieb richtig.</p>
+          <div class="row"><a class="btn" href="#/satzbau/${mode}" id="again">Nochmal</a><a class="btn secondary" href="#/satzbau">Andere Übung</a></div></div>`);
+        document.getElementById("again").onclick = (e) => { e.preventDefault(); route(); };
+        return;
+      }
+      const q = qs[i], target = q.words.join(" ");
+      let pool = shuffle(q.words.map((w, k) => ({ w, k })));
+      if (pool.map((x) => x.w).join(" ") === target) pool.reverse(); // nicht schon fertig sortiert anbieten
+      const picked = [];
+      render("Satzbau", `<div class="bar"><i style="width:${(i / qs.length) * 100}%"></i></div>
+        <p class="muted">Satz ${i + 1} / ${qs.length} · ${score} richtig</p>
+        <div class="card">
+          ${q.listen ? `<div class="lang">Höre den Satz und baue ihn nach</div><p style="text-align:center">${audioBtn(q.audio, "Anhören")}</p>`
+            : `<div class="lang">Auf Lëtzebuergesch:</div><h2>${esc(q.de)}</h2>`}
+          <div class="build" id="ans" aria-label="Dein Satz"></div>
+          <div class="build pool" id="pool" aria-label="Wörter"></div>
+          <div class="row"><button class="btn secondary" id="skip">Lösung zeigen</button><button class="btn" id="chk" disabled>Prüfen</button></div>
+          <div id="fb"></div></div>`);
+      if (autoplay && q.listen) play(q.audio, $view.querySelector(".snd"));
+      const ans = document.getElementById("ans"), pl = document.getElementById("pool"), chk = document.getElementById("chk");
+      const draw = () => {
+        ans.innerHTML = picked.map((x, n) => `<button class="word" data-n="${n}">${esc(x.w)}</button>`).join("") || `<span class="muted">Wörter antippen …</span>`;
+        pl.innerHTML = pool.map((x, n) => `<button class="word" data-n="${n}">${esc(x.w)}</button>`).join("");
+        chk.disabled = pool.length > 0;
+        ans.querySelectorAll(".word").forEach((b) => { b.onclick = () => { pool.push(picked.splice(+b.dataset.n, 1)[0]); draw(); }; });
+        pl.querySelectorAll(".word").forEach((b) => { b.onclick = () => { picked.push(pool.splice(+b.dataset.n, 1)[0]); draw(); }; });
+      };
+      const finish = (ok) => {
+        if (ok) score++;
+        $view.querySelectorAll(".word, #chk, #skip").forEach((x) => { x.disabled = true; });
+        document.getElementById("fb").innerHTML = `<div class="feedback ${ok ? "ok" : "no"}">${ok ? "✓ Richtig!" : "✗ Richtig wäre:"} <b>${esc(target)}</b>${q.note ? `<br><small>${esc(q.note)}</small>` : ""}</div>
+          <div class="row" style="align-items:center">${q.audio ? audioBtn(q.audio, "Anhören") : ""}<button class="btn" id="nx">Weiter</button></div>`;
+        document.getElementById("nx").onclick = () => { i++; ask(true); };
+      };
+      chk.onclick = () => finish(picked.map((x) => x.w).join(" ") === target);
+      document.getElementById("skip").onclick = () => finish(false);
+      draw();
+    }
+    ask(false);
+  }
+
+  // ---------- Prüfliste zum Gegenlesen ----------
+  function viewChecklist() {
+    const box = `<td class="chk">☐</td>`;
+    const row = (lb, de, mark) => `<tr>${box}<td><b>${esc(lb)}</b>${mark ? ' <span class="box-badge">LOD ✓</span>' : ""}</td><td>${esc(de || "")}</td></tr>`;
+    const draw = (lod) => {
+      const sample = ME.build({ name: "Ana Silva", age: 35, country: "Portugal", years: 10, town: "Esch", home: "appartement", livesWith: "famill", status: "bestuet",
+        sons: 1, daughters: 2, work: "schaffen", job: "Verkeeferin", employer: "Cactus", workplace: "Luxemburg", mother: "Portugisesch", langs: ["Franséisch", "Englesch"],
+        hobbies: ME.HOBBIES.map((h) => h[0]), likes: ME.LIKES.map((l) => l[0]), reasons: ME.REASONS.map((r) => r[0]) })
+        .concat(ME.STATUS.map((s) => ({ lb: s[2], de: s[3] })), ME.build({ work: "sichen" }), ME.build({ work: "pensioun" }), ME.build({ work: "studium" }), ME.build({ work: "doheem" }), ME.build({ kids: "none" }), ME.build({ sons: 2 }));
+      render("Prüfliste", `
+        <div class="card noprint"><h2>Prüfliste zum Gegenlesen 📝</h2>
+          <p>Hier stehen <b>alle luxemburgischen Texte der App</b> auf einer Seite. Drucke sie aus (oder speichere sie als PDF) und gib sie einer Lehrkraft oder einem Muttersprachler zum Korrigieren.</p>
+          <p class="muted">Wörter mit „LOD ✓“ stimmen in der Schreibweise mit dem offiziellen Wörterbuch LOD.lu überein und müssen nicht geprüft werden.</p>
+          <button class="btn" id="print" style="width:100%">🖨️ Drucken / als PDF speichern</button></div>
+        <div class="checklist">
+          <h2 class="printonly">Sproochentest Trainer – Prüfliste</h2>
+          <p class="printonly">Bitte Fehler direkt im Text korrigieren und die Zeile ankreuzen. Merci villmools!</p>
+          <h2>1. Vokabeln und Sätze</h2>
+          ${D.topics.map((t) => `<h3>${esc(t.title)} – ${esc(t.de)}</h3><table>${t.words.map((w, i) =>
+            row(w[0], w[1], lod && lod[`c-${t.id}-${i}`]) + (w[2] ? row(w[2], "(Beispielsatz)") : "")).join("")}</table>`).join("")}
+          <h2>2. Sprechen: Fragen und Musterantworten</h2>
+          ${D.speaking.map((s) => `<h3>${esc(s.topic)}</h3><table>${s.questions.map((q) => row(q, "")).join("")}
+            ${(s.images || [s]).map((m) => row(m.model, m.de)).join("")}</table>`).join("")}
+          <h2>3. Rückfragen</h2>
+          <table>${D.followups.map((f) => row(f.q, f.de) + row(f.start, "(Satzanfang)")).join("")}</table>
+          <h2>4. Hörtexte</h2>
+          ${D.dialogues.map((d) => `<h3>${esc(d.title)} (${d.level || "A2"})</h3><table>${d.text.map((l) => row(l, "")).join("")}
+            ${d.questions.map((q) => row(q.q + " — " + q.options.join(" / "), "(Frage)")).join("")}</table>`).join("")}
+          <h2>5. Bausteine der persönlichen Vorstellung</h2>
+          <table>${sample.map((s) => row(s.lb, s.de)).join("")}
+</table>
+          <h2>6. Zahlen, Uhrzeiten, Preise, Jahre (Auswahl)</h2>
+          <table>${TRAIN.sets.map((s) => s.items.filter((x, i) => i % Math.ceil(s.items.length / 14) === 0).map((x) => row(x.lb, x.show)).join("")).join("")}</table>
+          <h2>7. Grammatik</h2>
+          ${D.grammar.map((g) => `<h3>${esc(g.title)}</h3>${g.body}`).join("")}
+        </div>`);
+      document.getElementById("print").onclick = () => window.print();
+    };
+    draw(null);
+    fetch("audio/lod-quellen.json").then((r) => (r.ok ? r.json() : null)).then((lod) => { if (lod && location.hash === "#/pruefliste") draw(lod); }).catch(() => {});
+  }
+
   // ---------- Router ----------
   function go(hash) { if (location.hash === hash) route(); else location.hash = hash; }
   function route() {
@@ -1073,7 +1246,7 @@ ${sents.map((s) => `<p class="s"><span class="lb">${esc(s.lb)}</span><br><span c
     stopAudio();
     const parts = location.hash.replace(/^#\/?/, "").split("/").filter(Boolean);
     const [a, b, c] = parts;
-    const tab = { lernen: "lernen", liste: "lernen", quiz: "quiz", sprechen: "sprechen", verstehen: "mehr", grammatik: "mehr", pruefung: "mehr", mehr: "mehr", profil: "mehr", ich: "sprechen", schwer: "lernen", zuelen: "lernen", simulation: "mehr" }[a] || "home";
+    const tab = { lernen: "lernen", liste: "lernen", quiz: "quiz", sprechen: "sprechen", verstehen: "mehr", grammatik: "mehr", pruefung: "mehr", mehr: "mehr", profil: "mehr", ich: "sprechen", schwer: "lernen", zuelen: "lernen", simulation: "mehr", stemmen: "mehr", satzbau: "lernen", pruefliste: "mehr" }[a] || "home";
     const who = document.getElementById("who");
     who.textContent = "👤 " + (activeProfile().name || "Profil");
     document.querySelectorAll(".tabs a").forEach((x) => x.classList.toggle("active", x.dataset.tab === tab));
@@ -1094,6 +1267,9 @@ ${sents.map((s) => `<p class="s"><span class="lb">${esc(s.lb)}</span><br><span c
       case "schwer": return viewHard();
       case "zuelen": return b ? viewNumbers(b) : viewNumbersMenu();
       case "simulation": return viewSim();
+      case "stemmen": return viewVoices();
+      case "satzbau": return b ? viewBuild(b) : viewBuildMenu();
+      case "pruefliste": return viewChecklist();
       default: return viewHome();
     }
   }

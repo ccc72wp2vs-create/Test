@@ -194,3 +194,20 @@ a { color: var(--accent); }
 .opt.sel { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, var(--card)); font-weight: 600; }
 .grid.two { grid-template-columns: 1fr 1fr; }
 .opt.big { text-align: center; font-size: 1.25rem; font-weight: 700; padding: 18px 8px; margin: 0; }
+/* Satzbau */
+.build { display: flex; flex-wrap: wrap; gap: 8px; min-height: 52px; padding: 8px; margin-bottom: 10px; border-radius: 10px; align-items: center; }
+#ans.build { border: 1.5px dashed var(--line); }
+.build.pool { background: var(--bg); }
+.word { font: inherit; font-weight: 600; padding: 9px 12px; border-radius: 10px; border: 1.5px solid var(--accent); background: var(--card); color: var(--text); cursor: pointer; }
+.word:disabled { opacity: .6; }
+/* Prüfliste */
+.checklist table { font-size: .9rem; }
+.checklist td { vertical-align: top; }
+.checklist td.chk { width: 24px; text-align: center; }
+.checklist h3 { margin-top: 16px; }
+@media print {
+  .checklist { font-size: 10pt; }
+  .checklist h2 { margin-top: 18pt; }
+  .checklist tr { break-inside: avoid; }
+  .box-badge { border: 1px solid #999; }
+}
