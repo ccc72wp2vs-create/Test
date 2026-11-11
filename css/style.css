@@ -149,3 +149,16 @@ a { color: var(--accent); }
 .flash .snd { margin-top: 12px; }
 .flash .ex .snd, .wordlist .snd, h2 .snd, li .snd { min-width: 34px; height: 34px; margin-top: 0; }
 .wordlist li > div { flex: 1; }
+.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.top h1 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#who {
+  flex: none; max-width: 45%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  text-decoration: none; font-size: .85rem; font-weight: 600; color: var(--accent);
+  border: 1.5px solid var(--accent); border-radius: 16px; padding: 4px 10px;
+}
+.profile.active { border-color: var(--accent); }
+.profile .who { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.avatar {
+  flex: none; width: 42px; height: 42px; border-radius: 50%; background: var(--accent); color: #fff;
+  display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.2rem;
+}

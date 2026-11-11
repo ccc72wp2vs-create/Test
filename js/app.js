@@ -20,25 +20,50 @@
   const cardById = Object.fromEntries(cards.map((c) => [c.id, c]));
   const topicById = Object.fromEntries(D.topics.map((t) => [t.id, t]));
 
-  // ---------- Speicher ----------
-  function load() {
+  // ---------- Speicher & Profile ----------
+  // Jedes Profil hat seinen eigenen Lernstand. Das erste Profil nutzt den ursprünglichen
+  // Speicherplatz, damit vorhandener Fortschritt erhalten bleibt.
+  const PROFILES_KEY = "sproochentest-profiles";
+  const storeKey = (id) => (id === "p1" ? STORE_KEY : `${STORE_KEY}:${id}`);
+  const emptyState = () => ({ cards: {}, days: [], quizBest: {}, reversed: false });
+  function loadProfiles() {
     try {
-      const s = JSON.parse(localStorage.getItem(STORE_KEY));
-      if (s && s.cards) return s;
+      const p = JSON.parse(localStorage.getItem(PROFILES_KEY));
+      if (p && Array.isArray(p.list) && p.list.length) {
+        if (!p.list.some((x) => x.id === p.active)) p.active = p.list[0].id;
+        return p;
+      }
     } catch (e) { /* ignorieren */ }
-    return { cards: {}, days: [], quizBest: {}, reversed: false };
+    return { active: "p1", list: [{ id: "p1", name: "" }] };
+  }
+  let profiles = loadProfiles();
+  const activeProfile = () => profiles.list.find((x) => x.id === profiles.active);
+  function saveProfiles() {
+    try { localStorage.setItem(PROFILES_KEY, JSON.stringify(profiles)); } catch (e) { /* voll/privat */ }
+  }
+  function load(id = profiles.active) {
+    try {
+      const s = JSON.parse(localStorage.getItem(storeKey(id)));
+      if (s && s.cards) return Object.assign(emptyState(), s);
+    } catch (e) { /* ignorieren */ }
+    return emptyState();
   }
   let state = load();
   function save() {
-    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) { /* voll/privat */ }
+    try { localStorage.setItem(storeKey(profiles.active), JSON.stringify(state)); } catch (e) { /* voll/privat */ }
+  }
+  function switchProfile(id) {
+    profiles.active = id;
+    saveProfiles();
+    state = load();
   }
   const today = () => new Date().toISOString().slice(0, 10);
   function markActive() {
     const d = today();
     if (!state.days.includes(d)) { state.days.push(d); state.days = state.days.slice(-400); save(); }
   }
-  function streak() {
-    const set = new Set(state.days);
+  function streak(s = state) {
+    const set = new Set(s.days);
     let n = 0;
     const d = new Date();
     if (!set.has(today())) d.setDate(d.getDate() - 1); // heute noch nicht gelernt → Serie zählt bis gestern
@@ -95,7 +120,10 @@
     const pct = Math.round((known / cards.length) * 100);
     render("Sproochentest Trainer", `
       <div class="card">
-        <h2>Moien! 👋</h2>
+        <h2>Moien${activeProfile().name ? ", " + esc(activeProfile().name) : ""}! 👋</h2>
+        ${activeProfile().name ? "" : `<form id="nameform" class="row" style="margin-bottom:12px">
+          <input type="text" id="myname" maxlength="20" placeholder="Wie heißt du?" style="flex:2;margin:0" aria-label="Dein Name">
+          <button class="btn" type="submit">Speichern</button></form>`}
         <p class="muted">Dein Ziel: der <b>Sproochentest</b> für die luxemburgische Staatsbürgerschaft –
         <b>Sprechen auf Niveau A2</b> und <b>Hörverstehen auf Niveau B1</b>.</p>
         <div class="stats">
@@ -124,6 +152,63 @@
         <a class="tile" href="#/grammatik"><div class="ico">📐</div><b>Grammatik</b><small>Das Nötigste für A2</small></a>
         <a class="tile" href="#/pruefung"><div class="ico">🎓</div><b>Die Prüfung</b><small>Ablauf & Tipps</small></a>
       </div>`);
+    const nf = document.getElementById("nameform");
+    if (nf) nf.onsubmit = (e) => {
+      e.preventDefault();
+      const name = cleanName(document.getElementById("myname").value);
+      if (name) { activeProfile().name = name; saveProfiles(); route(); }
+    };
+  }
+
+  // ---------- Profile ----------
+  const cleanName = (s) => String(s || "").replace(/\s+/g, " ").trim().slice(0, 20);
+  function viewProfiles() {
+    const rows = profiles.list.map((p) => {
+      const s = p.id === profiles.active ? state : load(p.id);
+      const known = cards.filter((c) => s.cards[c.id] && s.cards[c.id].box >= 3).length;
+      const active = p.id === profiles.active;
+      return `<div class="card profile${active ? " active" : ""}">
+        <div class="who"><span class="avatar">${esc((p.name || "?").charAt(0).toUpperCase())}</span>
+          <div><b>${esc(p.name || "Ohne Namen")}</b>${active ? ' <span class="box-badge">aktiv</span>' : ""}<br>
+          <small class="muted">${known} sicher gelernt · ${Object.keys(s.cards).length} Karten gesehen · ${streak(s)} Tage in Folge</small></div></div>
+        <div class="row">
+          ${active ? "" : `<button class="btn" data-act="use" data-id="${p.id}">Wechseln</button>`}
+          <button class="btn secondary" data-act="rename" data-id="${p.id}">Umbenennen</button>
+          ${profiles.list.length > 1 ? `<button class="btn secondary" data-act="del" data-id="${p.id}">Löschen</button>` : ""}
+        </div></div>`;
+    }).join("");
+    render("Profile", `
+      <p class="muted">Jedes Profil hat seinen eigenen Lernfortschritt. So können mehrere Personen die App auf diesem Gerät nutzen.</p>
+      ${rows}
+      <form class="card" id="addform"><h3>Neues Profil</h3>
+        <input type="text" id="newname" maxlength="20" placeholder="Name" aria-label="Name des neuen Profils">
+        <button class="btn" type="submit" style="width:100%">Profil anlegen</button></form>
+      <p class="muted">Die Profile werden nur auf diesem Gerät gespeichert. Wer die App auf dem eigenen Handy öffnet, hat dort automatisch einen eigenen Fortschritt.</p>`);
+    document.getElementById("addform").onsubmit = (e) => {
+      e.preventDefault();
+      const name = cleanName(document.getElementById("newname").value);
+      if (!name) return;
+      const id = "p" + Date.now();
+      profiles.list.push({ id, name });
+      switchProfile(id);
+      go("#/");
+    };
+    $view.querySelectorAll("[data-act]").forEach((b) => {
+      b.onclick = () => {
+        const p = profiles.list.find((x) => x.id === b.dataset.id);
+        if (b.dataset.act === "use") { switchProfile(p.id); return go("#/"); }
+        if (b.dataset.act === "rename") {
+          const name = cleanName(prompt("Neuer Name:", p.name));
+          if (name) { p.name = name; saveProfiles(); }
+        }
+        if (b.dataset.act === "del" && confirm(`Profil „${p.name || "Ohne Namen"}“ mit dem gesamten Lernfortschritt löschen?`)) {
+          try { localStorage.removeItem(storeKey(p.id)); } catch (e) { /* ignorieren */ }
+          profiles.list = profiles.list.filter((x) => x.id !== p.id);
+          if (profiles.active === p.id) switchProfile(profiles.list[0].id); else saveProfiles();
+        }
+        route();
+      };
+    });
   }
 
   // ---------- Lernen: Themenübersicht ----------
@@ -538,9 +623,10 @@
         <a class="tile" href="#/verstehen"><div class="ico">👂</div><b>Verstehen</b><small>Dialoge & Fragen</small></a>
         <a class="tile" href="#/grammatik"><div class="ico">📐</div><b>Grammatik</b><small>Das Nötigste für A2</small></a>
         <a class="tile" href="#/pruefung"><div class="ico">🎓</div><b>Die Prüfung</b><small>Ablauf, Tipps, Links</small></a>
+        <a class="tile" href="#/profil"><div class="ico">👤</div><b>Profile</b><small>${profiles.list.length} auf diesem Gerät</small></a>
       </div>
-      <div class="card" style="margin-top:12px"><h3>Fortschritt</h3>
-        <p class="muted">Dein Fortschritt wird nur auf diesem Gerät gespeichert.</p>
+      <div class="card" style="margin-top:12px"><h3>Fortschritt${activeProfile().name ? " von " + esc(activeProfile().name) : ""}</h3>
+        <p class="muted">Der Fortschritt wird nur auf diesem Gerät gespeichert. Sichern, Wiederherstellen und Zurücksetzen gelten für das aktive Profil.</p>
         <div class="row">
           <button class="btn secondary" id="exp">Sichern</button>
           <label class="btn secondary">Wiederherstellen<input type="file" id="imp" accept="application/json" hidden></label>
@@ -575,12 +661,12 @@
       try {
         const s = JSON.parse(await e.target.files[0].text());
         if (!s.cards) throw new Error();
-        state = Object.assign(load(), s); save(); alert("Fortschritt wiederhergestellt."); go("#/");
+        state = Object.assign(emptyState(), s); save(); alert("Fortschritt wiederhergestellt."); go("#/");
       } catch (err) { alert("Diese Datei konnte nicht gelesen werden."); }
     };
     document.getElementById("reset").onclick = () => {
       if (confirm("Wirklich den gesamten Lernfortschritt löschen?")) {
-        state = { cards: {}, days: [], quizBest: {}, reversed: false }; save(); go("#/");
+        state = emptyState(); save(); go("#/");
       }
     };
   }
@@ -592,7 +678,9 @@
     stopAudio();
     const parts = location.hash.replace(/^#\/?/, "").split("/").filter(Boolean);
     const [a, b, c] = parts;
-    const tab = { lernen: "lernen", liste: "lernen", quiz: "quiz", sprechen: "sprechen", verstehen: "mehr", grammatik: "mehr", pruefung: "mehr", mehr: "mehr" }[a] || "home";
+    const tab = { lernen: "lernen", liste: "lernen", quiz: "quiz", sprechen: "sprechen", verstehen: "mehr", grammatik: "mehr", pruefung: "mehr", mehr: "mehr", profil: "mehr" }[a] || "home";
+    const who = document.getElementById("who");
+    who.textContent = "👤 " + (activeProfile().name || "Profil");
     document.querySelectorAll(".tabs a").forEach((x) => x.classList.toggle("active", x.dataset.tab === tab));
     switch (a) {
       case undefined: return viewHome();
@@ -604,6 +692,7 @@
       case "grammatik": return viewGrammar();
       case "pruefung": return viewExam();
       case "mehr": return viewMore();
+      case "profil": return viewProfiles();
       default: return viewHome();
     }
   }
