@@ -222,12 +222,24 @@
           <button class="btn bad" id="reset">Zurücksetzen</button>
         </div>
       </div>
+      <div class="card"><h3>App-Version</h3>
+        <p class="muted">Version ${esc((window.LUX_VERSION || {}).id || "–")} vom ${esc(((window.LUX_VERSION || {}).date || "").split("-").reverse().join("."))}.
+        Die App sucht beim Öffnen selbst nach Updates und zeigt dann oben einen Hinweis.</p>
+        <button class="btn secondary" id="upd" style="width:100%">Jetzt nach Updates suchen</button>
+      </div>
       <div class="card"><h3>Aussprache offline</h3>
         <p class="muted">Die Audiodateien (ca. 11 MB) werden beim ersten Anhören gespeichert. Hier kannst du alle auf einmal laden, damit die Aussprache auch ohne Internet funktioniert.</p>
         <button class="btn secondary" id="dl" style="width:100%">Alle Audios herunterladen</button>
       </div>
       <p class="muted">Einzelne Wörter hörst du als <b>echte Aufnahmen</b> aus dem <a href="https://lod.lu" target="_blank" rel="noopener">Lëtzebuerger Online Dictionnaire (LOD.lu)</a> des Zenter fir d'Lëtzebuerger Sprooch (CC0).
       Ganze Sätze, Musterantworten und Hörtexte spricht eine computererzeugte luxemburgische Stimme (Piper „MaryLux“) – gut verständlich, aber nicht perfekt.</p>`);
+    document.getElementById("upd").onclick = async (e) => {
+      const b = e.target;
+      b.disabled = true; b.textContent = "Suche …";
+      let found = false;
+      try { found = await window.LUX_CHECK_UPDATE(); } catch (err) { b.textContent = "Keine Verbindung – bitte später erneut versuchen"; b.disabled = false; return; }
+      b.textContent = found ? "Neue Version wird geladen – der Hinweis erscheint gleich oben" : "Du hast die aktuelle Version";
+    };
     document.getElementById("dl").onclick = async (e) => {
       const b = e.target, keys = audioKeys();
       b.disabled = true;

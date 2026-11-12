@@ -49,7 +49,36 @@
   window.addEventListener("hashchange", route);
   route();
 
-  if ("serviceWorker" in navigator && location.protocol !== "file:") {
-    navigator.serviceWorker.register("sw.js").catch(() => {});
+  // ---------- Updates ----------
+  // Eine neue Version wird im Hintergrund geladen und wartet. Dann erscheint oben der Hinweis mit "Aktualisieren".
+  let swReg = null;
+  function showUpdate(worker) {
+    if (document.querySelector(".update")) return;
+    const bar = document.createElement("div");
+    bar.className = "update"; bar.setAttribute("role", "status");
+    bar.innerHTML = `<span class="update-ic">${UI.icon("refresh")}</span><span><b>Neue Version</b><small>Fortschritt bleibt erhalten</small></span>
+      <button class="btn red" id="upd-now">Aktualisieren</button><button class="update-x" id="upd-later" aria-label="Später">${UI.icon("cross")}</button>`;
+    document.body.appendChild(bar);
+    document.getElementById("upd-later").onclick = () => bar.remove();
+    document.getElementById("upd-now").onclick = (e) => { e.target.disabled = true; e.target.textContent = "Lädt …"; worker.postMessage("update-now"); };
   }
+  function watch(reg) {
+    swReg = reg;
+    const offer = () => { if (reg.waiting && navigator.serviceWorker.controller) showUpdate(reg.waiting); };
+    offer();
+    // Eine Installation kann schon laufen, bevor wir hier ankommen – deshalb beide Fälle beobachten
+    const track = (w) => { if (w) w.addEventListener("statechange", () => { if (w.state === "installed") offer(); }); };
+    track(reg.installing);
+    reg.addEventListener("updatefound", () => track(reg.installing));
+  }
+  if ("serviceWorker" in navigator && location.protocol !== "file:") {
+    const hadController = !!navigator.serviceWorker.controller;
+    let reloading = false;
+    // Sobald die neue Version übernimmt, einmal neu laden – aber nicht beim allerersten Start
+    navigator.serviceWorker.addEventListener("controllerchange", () => { if (hadController && !reloading) { reloading = true; location.reload(); } });
+    navigator.serviceWorker.register("sw.js").then(watch).catch(() => {});
+    // Auf dem Home-Bildschirm bleibt die App oft tagelang offen: bei jeder Rückkehr nach Updates sehen
+    document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible" && swReg) swReg.update().catch(() => {}); });
+  }
+  window.LUX_CHECK_UPDATE = () => (swReg ? swReg.update().then(() => !!(swReg.waiting || swReg.installing)) : Promise.resolve(false));
 })();

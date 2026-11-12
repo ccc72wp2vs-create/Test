@@ -798,12 +798,24 @@
           <button class="btn bad" id="reset">Zurücksetzen</button>
         </div>
       </div>
+      <div class="card"><h3>App-Version</h3>
+        <p class="muted">Version ${esc((window.LUX_VERSION || {}).id || "–")} vom ${esc(((window.LUX_VERSION || {}).date || "").split("-").reverse().join("."))}.
+        Die App sucht beim Öffnen selbst nach Updates und zeigt dann oben einen Hinweis.</p>
+        <button class="btn secondary" id="upd" style="width:100%">Jetzt nach Updates suchen</button>
+      </div>
       <div class="card"><h3>Aussprache offline</h3>
         <p class="muted">Die Audiodateien (ca. 11 MB) werden beim ersten Anhören gespeichert. Hier kannst du alle auf einmal laden, damit die Aussprache auch ohne Internet funktioniert.</p>
         <button class="btn secondary" id="dl" style="width:100%">Alle Audios herunterladen</button>
       </div>
       <p class="muted">Einzelne Wörter hörst du als <b>echte Aufnahmen</b> aus dem <a href="https://lod.lu" target="_blank" rel="noopener">Lëtzebuerger Online Dictionnaire (LOD.lu)</a> des Zenter fir d'Lëtzebuerger Sprooch (CC0).
       Ganze Sätze, Musterantworten und Hörtexte spricht eine computererzeugte luxemburgische Stimme (Piper „MaryLux“) – gut verständlich, aber nicht perfekt.</p>`);
+    document.getElementById("upd").onclick = async (e) => {
+      const b = e.target;
+      b.disabled = true; b.textContent = "Suche …";
+      let found = false;
+      try { found = await window.LUX_CHECK_UPDATE(); } catch (err) { b.textContent = "Keine Verbindung – bitte später erneut versuchen"; b.disabled = false; return; }
+      b.textContent = found ? "Neue Version wird geladen – der Hinweis erscheint gleich oben" : "Du hast die aktuelle Version";
+    };
     document.getElementById("dl").onclick = async (e) => {
       const b = e.target, keys = audioKeys();
       b.disabled = true;
@@ -1710,7 +1722,36 @@ ${sents.map((s) => `<p class="s"><span class="lb">${esc(s.lb)}</span><br><span c
   window.addEventListener("hashchange", route);
   route();
 
-  if ("serviceWorker" in navigator && location.protocol !== "file:") {
-    navigator.serviceWorker.register("sw.js").catch(() => {});
+  // ---------- Updates ----------
+  // Eine neue Version wird im Hintergrund geladen und wartet. Dann erscheint oben der Hinweis mit "Aktualisieren".
+  let swReg = null;
+  function showUpdate(worker) {
+    if (document.querySelector(".update")) return;
+    const bar = document.createElement("div");
+    bar.className = "update"; bar.setAttribute("role", "status");
+    bar.innerHTML = `<span class="update-ic">${UI.icon("refresh")}</span><span><b>Neue Version</b><small>Fortschritt bleibt erhalten</small></span>
+      <button class="btn red" id="upd-now">Aktualisieren</button><button class="update-x" id="upd-later" aria-label="Später">${UI.icon("cross")}</button>`;
+    document.body.appendChild(bar);
+    document.getElementById("upd-later").onclick = () => bar.remove();
+    document.getElementById("upd-now").onclick = (e) => { e.target.disabled = true; e.target.textContent = "Lädt …"; worker.postMessage("update-now"); };
   }
+  function watch(reg) {
+    swReg = reg;
+    const offer = () => { if (reg.waiting && navigator.serviceWorker.controller) showUpdate(reg.waiting); };
+    offer();
+    // Eine Installation kann schon laufen, bevor wir hier ankommen – deshalb beide Fälle beobachten
+    const track = (w) => { if (w) w.addEventListener("statechange", () => { if (w.state === "installed") offer(); }); };
+    track(reg.installing);
+    reg.addEventListener("updatefound", () => track(reg.installing));
+  }
+  if ("serviceWorker" in navigator && location.protocol !== "file:") {
+    const hadController = !!navigator.serviceWorker.controller;
+    let reloading = false;
+    // Sobald die neue Version übernimmt, einmal neu laden – aber nicht beim allerersten Start
+    navigator.serviceWorker.addEventListener("controllerchange", () => { if (hadController && !reloading) { reloading = true; location.reload(); } });
+    navigator.serviceWorker.register("sw.js").then(watch).catch(() => {});
+    // Auf dem Home-Bildschirm bleibt die App oft tagelang offen: bei jeder Rückkehr nach Updates sehen
+    document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible" && swReg) swReg.update().catch(() => {}); });
+  }
+  window.LUX_CHECK_UPDATE = () => (swReg ? swReg.update().then(() => !!(swReg.waiting || swReg.installing)) : Promise.resolve(false));
 })();

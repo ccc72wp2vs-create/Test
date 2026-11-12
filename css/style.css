@@ -368,3 +368,15 @@ audio { width: 100%; margin-top: 10px; }
 .tile .ico.pair { width: auto; display: inline-flex; align-items: center; gap: 5px; padding: 0 10px; font-size: 1.15rem; font-weight: 800; white-space: nowrap; }
 .tile .ico.pair .ic { margin: 0; vertical-align: 0; }
 .welcome-art .lion { z-index: 1; }
+
+/* ---------- Hinweis auf eine neue Version ---------- */
+.update { position: fixed; z-index: 40; left: 50%; top: calc(10px + env(safe-area-inset-top)); transform: translateX(-50%); width: min(460px, calc(100% - 20px)); display: flex; align-items: center; gap: 10px; padding: 10px 10px 10px 12px;
+  background: var(--card); color: var(--text); border: 1.5px solid var(--edge); border-radius: 18px; box-shadow: 0 5px 0 var(--press), 0 16px 30px rgba(0, 0, 0, .28); animation: drop .5s cubic-bezier(.3, 1.4, .5, 1) both; }
+.update::before { content: ""; position: absolute; inset: 0 14px auto 14px; height: 5px; border-radius: 0 0 4px 4px; background: var(--airmail), #fff; }
+.update > span:nth-child(2) { flex: 1; min-width: 0; } .update b { display: block; font-family: var(--display); line-height: 1.2; } .update small { color: var(--muted); font-size: .78rem; }
+.update-ic { width: 38px; height: 38px; flex: none; display: grid; place-items: center; border-radius: 50%; background: var(--gold); color: var(--ink); border: 1.5px solid var(--edge); font-size: 1.1rem; animation: spin 2.4s linear infinite; }
+.update .btn { padding: 9px 12px; font-size: .9rem; box-shadow: 0 3px 0 var(--press); flex: none; }
+.update-x { flex: none; width: 30px; height: 30px; display: grid; place-items: center; background: none; border: 0; color: var(--muted); cursor: pointer; font-size: .95rem; }
+@keyframes drop { from { transform: translate(-50%, -150%); } }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media print { .update { display: none; } }

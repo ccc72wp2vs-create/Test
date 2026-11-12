@@ -1,5 +1,11 @@
-// Service Worker: macht die App offline nutzbar.
-const CACHE = "sproochentest-v15";
+// Service Worker: macht die App offline nutzbar und liefert Updates kontrolliert aus.
+//
+// VERSION wird von tools/build.js aus dem Inhalt aller App-Dateien berechnet. Ändert sich eine Datei,
+// ändert sich diese Zeile – daran erkennt der Browser eine neue Version. Die neue Version wird im
+// Hintergrund vollständig geladen und wartet dann; die App zeigt den Hinweis "Neue Version verfügbar".
+// Erst nach dem Tippen auf "Aktualisieren" (oder nach dem vollständigen Schließen der App) wird sie aktiv.
+const VERSION = "dfc76f93";
+const CACHE = "moien-app-" + VERSION;
 const AUDIO = "sproochentest-audio-v2"; // bleibt bei App-Updates erhalten
 const FILES = [
   "./",
@@ -14,6 +20,7 @@ const FILES = [
   "js/stemmen.js",
   "js/verben.js",
   "js/vivre.js",
+  "js/version.js",
   "js/app.js",
   "manifest.webmanifest",
   "img/maart.svg",
@@ -33,7 +40,12 @@ const FILES = [
 ];
 
 self.addEventListener("install", (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(FILES)).then(() => self.skipWaiting()));
+  // { cache: "reload" } umgeht den Browser-Zwischenspeicher, damit wirklich die neuen Dateien geholt werden
+  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(FILES.map((f) => new Request(f, { cache: "reload" })))));
+});
+
+self.addEventListener("message", (e) => {
+  if (e.data === "update-now") self.skipWaiting();
 });
 
 self.addEventListener("activate", (e) => {
@@ -43,7 +55,6 @@ self.addEventListener("activate", (e) => {
       .then(() => self.clients.claim())
   );
 });
-
 // Audio: Cache zuerst. Safari fragt Audio in Teilstücken an (Range) – die schneiden wir selbst zu.
 async function audioResponse(req) {
   const cache = await caches.open(AUDIO);
@@ -73,14 +84,6 @@ self.addEventListener("fetch", (e) => {
   const url = new URL(e.request.url);
   if (e.request.method !== "GET" || url.origin !== location.origin) return;
   if (url.pathname.includes("/audio/")) return e.respondWith(audioResponse(e.request));
-  // Alles andere: Netzwerk zuerst (damit Updates ankommen), sonst Cache.
-  e.respondWith(
-    fetch(e.request)
-      .then((res) => {
-        const copy = res.clone();
-        caches.open(CACHE).then((c) => c.put(e.request, copy));
-        return res;
-      })
-      .catch(() => caches.match(e.request, { ignoreSearch: true }))
-  );
+  // App-Dateien: immer aus dem Cache dieser Version, damit alle Dateien zusammenpassen. Nur was dort fehlt, kommt aus dem Netz.
+  e.respondWith(caches.open(CACHE).then((c) => c.match(e.request, { ignoreSearch: true })).then((hit) => hit || fetch(e.request)));
 });
