@@ -58,6 +58,7 @@ Die Oberfläche hat eine eigene Bildsprache, die sich aus dem Thema ergibt – P
   npm install && npx playwright install chromium   # einmalig
   npm test
   ```
+  Derselbe Test läuft bei jedem Push automatisch auf GitHub (`.github/workflows/test.yml`); das Ergebnis steht im Repo unter „Actions“.
 - **Updates:** `tools/build.js` berechnet aus allen App-Dateien eine Versionskennung und trägt sie in `sw.js` und
   `js/version.js` ein. Deshalb nach **jeder** Änderung (auch an CSS, Daten oder Bildern) `node tools/build.js` ausführen.
   Geräte, auf denen die App installiert ist, laden die neue Version im Hintergrund und zeigen oben den Hinweis

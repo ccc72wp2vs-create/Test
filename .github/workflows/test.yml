@@ -1,0 +1,26 @@
+# Prüft bei jeder Änderung automatisch, ob die App noch funktioniert:
+# Daten, alle Seiten und die wichtigsten Abläufe in einem echten Browser (tests/smoke.js).
+name: Tests
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Abhängigkeiten installieren
+        run: npm install
+      - name: Browser installieren
+        run: npx playwright install --with-deps chromium
+      - name: Build aktuell? Durchlauftest
+        run: npm test
